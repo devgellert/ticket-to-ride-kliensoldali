@@ -1,0 +1,16 @@
+.GamePage {
+  .map-wrap {
+    width: calc(100vw - 134px);
+    height: calc(100vh - (134px * 2));
+
+    position: absolute;
+    left: 134px;
+    top: 134px;
+    background-color: red;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: scroll;
+  }
+}

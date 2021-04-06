@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import GamePage from "./components/GamePage";
+import GamePage from "./components/game_page/GamePage";
 import MainPage from "./components/MainPage";
 import WaitingPage from "./components/WaitingPage";
 

@@ -1,0 +1,27 @@
+.top-nav {
+  background-color: lightblue;
+  width: 100vw;
+  height: 134px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.left-nav {
+  background-color: yellow;
+  width: 134px;
+  height: calc(100vh - (134px * 2));
+
+  position: absolute;
+  top: 134px;
+  left: 0;
+}
+
+.bottom-nav {
+  background-color: blue;
+  width: 100vw;
+  height: 134px;
+  position: absolute;
+  top: calc(100vh - 134px);
+  left: 0;
+}
