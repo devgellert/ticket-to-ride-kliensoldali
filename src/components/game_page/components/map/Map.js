@@ -1,5 +1,5 @@
 import React from "react";
-import css from "../../GamePage.module.scss";
+import css from "./Map.module.scss";
 
 const Map = () => {
   return (

@@ -1,0 +1,13 @@
+.left-nav {
+  background-color: yellow;
+  width: 200px;
+  height: calc(100vh - (134px * 2));
+
+  position: absolute;
+  top: 134px;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
