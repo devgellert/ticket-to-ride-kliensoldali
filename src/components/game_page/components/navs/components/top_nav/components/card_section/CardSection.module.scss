@@ -1,0 +1,21 @@
+.card-section {
+  height: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // overflow-x: scroll;
+
+  .card {
+    height: 100%;
+    width: 88px;
+    background-color: lightgreen;
+    margin-left: 10px;
+  }
+
+  .deck {
+    height: 100%;
+    width: 88px;
+    background-color: lavender;
+    margin-left: 10px;
+  }
+}

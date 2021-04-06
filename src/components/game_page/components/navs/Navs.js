@@ -1,10 +1,11 @@
 import React from "react";
 import css from "./Navs.module.scss";
+import TopNav from "./components/top_nav/TopNav";
 
 const Navs = () => {
   return (
     <>
-      <nav className={css["top-nav"]}>Hello</nav>
+      <TopNav />
       <nav className={css["left-nav"]}>Hello</nav>
       <nav className={css["bottom-nav"]}>Hello</nav>
     </>
