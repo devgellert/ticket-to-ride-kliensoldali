@@ -1,0 +1,17 @@
+.bottom-nav {
+  background-color: blue;
+  width: 100vw;
+  height: 134px;
+  position: absolute;
+  top: calc(100vh - 134px);
+  left: 0;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .header-wrap {
+    height: 100%;
+    margin-left: 10px;
+  }
+}

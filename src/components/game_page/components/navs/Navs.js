@@ -2,13 +2,14 @@ import React from "react";
 import css from "./Navs.module.scss";
 import TopNav from "./components/top_nav/TopNav";
 import LeftNav from "./components/left_nav/LeftNav";
+import BottomNav from "./components/bottom_nav/BottomNav";
 
 const Navs = () => {
   return (
     <>
       <TopNav />
       <LeftNav />
-      <nav className={css["bottom-nav"]}>Hello</nav>
+      <BottomNav />
     </>
   );
 };
