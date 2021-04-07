@@ -4,8 +4,9 @@ import { ticketToRideData as data } from "../../../../ticket-to-ride-data";
 
 import css from "./Map.module.scss";
 import City from "./compontents/city/City";
+import Connection from "./compontents/connection/Connection";
 
-const { cities } = data;
+const { cities, connections, destinations } = data;
 
 const Map = () => {
   const wrapRef = createRef();
@@ -14,8 +15,12 @@ const Map = () => {
     <section ref={wrapRef} className={css["map-wrap"]}>
       <img width={800} height={544} src="/map.jpg" alt="map" />
 
-      {Object.keys(cities).map((key) => (
-        <City city={cities[key]} imgWrapRef={wrapRef} />
+      {Object.keys(cities).map((key, index) => (
+        <City key={index} city={cities[key]} imgWrapRef={wrapRef} />
+      ))}
+
+      {Object.keys(connections).map((key, index) => (
+        <Connection connection={connections[key]} imgWrapRef={wrapRef} />
       ))}
     </section>
   );
