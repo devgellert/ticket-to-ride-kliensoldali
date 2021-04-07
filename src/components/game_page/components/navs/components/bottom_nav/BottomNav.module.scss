@@ -1,7 +1,9 @@
 .bottom-nav {
-  background-color: blue;
+  background-color: cadetblue;
   width: 100vw;
   height: 134px;
+  padding-left: 200px;
+  box-sizing: border-box;
   position: absolute;
   top: calc(100vh - 134px);
   left: 0;
