@@ -53,7 +53,6 @@ const BottomNav = ({
         <h2>Vasutak:</h2>
       </div>
       <PlayerCardsWrap>
-        <PlayerLocomotiveCard color={"Piros"} quantity={5} />
         {Object.keys(playerLocomotivesInHand).map((key) => (
           <PlayerLocomotiveCard
             color={key}
