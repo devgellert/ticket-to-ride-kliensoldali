@@ -2,7 +2,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { ticketToRideData as data } from "../../../../../../../../ticket-to-ride-data";
 import css from "./CardSection.module.scss";
-import PlayerAimCard from "../../../bottom_nav/components/player_aim_card/PlayerAimCard";
+import { v4 as uuid } from "uuid";
+import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -28,6 +29,33 @@ const CardSection = () => {
   const { destinations } = data;
 
   const [aimDeck, setAimDeck] = useState([]);
+  const [locomotiveDeck, setLocomotiveDeck] = useState({
+    purple: 12,
+    white: 12,
+    blue: 12,
+    yellow: 12,
+    orange: 12,
+    black: 12,
+    red: 12,
+    green: 12,
+    // TODO mozdony
+  });
+  const [locomotiveField, setLocomotiveField] = useState([]);
+
+  const handlePutLocomotivesToField = () => {
+    const MAX_COUNT = 5;
+    const newLocomotiveField = [];
+    while (newLocomotiveField.length < MAX_COUNT) {
+      const keys = window.Object.keys(locomotiveDeck);
+      const shuffledKeys = shuffle(keys);
+      const newKey = shuffledKeys[0];
+      newLocomotiveField.push({
+        color: newKey,
+        id: uuid(),
+      });
+    }
+    setLocomotiveField(newLocomotiveField);
+  };
 
   useEffect(() => {
     const keys = window.Object.keys(destinations);
@@ -38,6 +66,8 @@ const CardSection = () => {
       newAimDeck.push(destinations[key]);
     });
     setAimDeck(newAimDeck);
+    //
+    handlePutLocomotivesToField();
   }, []);
 
   return (
@@ -57,10 +87,19 @@ const CardSection = () => {
         style={{ backgroundImage: 'url("/card-back.png")' }}
       />
 
-      <PlayerAimCard />
-      <PlayerAimCard />
-      <PlayerAimCard />
-      <PlayerAimCard />
+      {locomotiveField.map((elem) => (
+        <FieldLocomotiveCard
+          color={elem.color}
+          id={elem.id}
+          onClick={(id) => {
+            // remove card with id
+            const newLocomotiveField = locomotiveField.filter(
+              (elem) => elem.id !== id
+            );
+            setLocomotiveField(newLocomotiveField);
+          }}
+        />
+      ))}
     </div>
   );
 };
