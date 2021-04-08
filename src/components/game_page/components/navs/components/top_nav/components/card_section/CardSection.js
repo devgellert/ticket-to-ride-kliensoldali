@@ -4,43 +4,18 @@ import { ticketToRideData as data } from "../../../../../../../../ticket-to-ride
 import css from "./CardSection.module.scss";
 import { v4 as uuid } from "uuid";
 import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
+import { connect } from "react-redux";
+import { setLocomotiveField } from "../../../../../../../../redux/actions";
+import shuffle from "../../../../../../../../utils/shuffle";
 
-function shuffle(array) {
-  let currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
-
-const CardSection = () => {
+const CardSection = ({
+  locomotiveDeck,
+  setLocomotiveField,
+  locomotiveField,
+}) => {
   const { destinations } = data;
 
   const [aimDeck, setAimDeck] = useState([]);
-  const [locomotiveDeck, setLocomotiveDeck] = useState({
-    purple: 12,
-    white: 12,
-    blue: 12,
-    yellow: 12,
-    orange: 12,
-    black: 12,
-    red: 12,
-    green: 12,
-    // TODO mozdony
-  });
-  const [locomotiveField, setLocomotiveField] = useState([]);
 
   const handlePutLocomotivesToField = () => {
     const MAX_COUNT = 5;
@@ -70,8 +45,8 @@ const CardSection = () => {
     handlePutLocomotivesToField();
   }, []);
 
-  return (
-    <div className={css["card-section"]}>
+  const aims = (
+    <>
       <div className={css["title-wrap"]}>
         <h2>Célok:</h2>
       </div>
@@ -79,6 +54,10 @@ const CardSection = () => {
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
       />
+    </>
+  );
+  const locomotives = (
+    <>
       <div className={css["title-wrap"]}>
         <h2>Vasutak:</h2>
       </div>
@@ -86,7 +65,6 @@ const CardSection = () => {
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
       />
-
       {locomotiveField.map((elem) => (
         <FieldLocomotiveCard
           color={elem.color}
@@ -100,8 +78,24 @@ const CardSection = () => {
           }}
         />
       ))}
+    </>
+  );
+
+  return (
+    <div className={css["card-section"]}>
+      {aims}
+      {locomotives}
     </div>
   );
 };
 
-export default CardSection;
+const mapStatToProps = (state) => ({
+  locomotiveDeck: state.locomotiveDeck,
+  locomotiveField: state.locomotiveField,
+});
+
+const mapDispatchToProps = {
+  setLocomotiveField,
+};
+
+export default connect(mapStatToProps, mapDispatchToProps)(CardSection);

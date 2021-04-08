@@ -1,11 +1,20 @@
 import React from "react";
+import { useEffect } from "react";
 import css from "./BottomNav.module.scss";
 import PlayerCardsWrap from "./components/player_cards_wrap/PlayerCardsWrap";
 import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
+import { connect } from "react-redux";
+import { v4 as uuid } from "uuid";
+import shuffle from "../../../../../../utils/shuffle";
+import { setPlayerLocomotivesInHand } from "../../../../../../redux/actions";
 //
 
-const BottomNav = () => {
+const BottomNav = ({
+  playerLocomotivesInHand,
+  locomotiveDeck,
+  setPlayerLocomotivesInHand,
+}) => {
   const testAims = [
     { from: "Dallas", to: "New York" },
     { from: "London", to: "New York" },
@@ -13,17 +22,21 @@ const BottomNav = () => {
     { from: "Dallas", to: "New York" },
   ];
 
-  const locomotiveCards = [
-    { color: "lila", quantity: 1 },
-    { color: "fehér", quantity: 1 },
-    { color: "kék", quantity: 1 },
-    { color: "sárga", quantity: 1 },
-    { color: "narancs", quantity: 1 },
-    { color: "fekete", quantity: 1 },
-    { color: "piros", quantity: 1 },
-    { color: "zöld", quantity: 1 },
-    { color: "mozdony", quantity: 5 },
-  ];
+  const handleInitialLocomotivesInHand = () => {
+    const MAX_COUNT = 5;
+    const newLocomotiveDeck = { ...locomotiveDeck };
+    while (newLocomotiveDeck.length < MAX_COUNT) {
+      const keys = window.Object.keys(locomotiveDeck);
+      const shuffledKeys = shuffle(keys);
+      const newKey = shuffledKeys[0];
+      newLocomotiveDeck[newKey]++;
+    }
+    setPlayerLocomotivesInHand(newLocomotiveDeck);
+  };
+
+  useEffect(() => {
+    handleInitialLocomotivesInHand();
+  }, []);
 
   return (
     <nav className={css["bottom-nav"]}>
@@ -41,13 +54,24 @@ const BottomNav = () => {
       </div>
       <PlayerCardsWrap>
         <PlayerLocomotiveCard color={"Piros"} quantity={5} />
-        {locomotiveCards.map((elem) => (
-          <PlayerLocomotiveCard {...elem} />
+        {Object.keys(playerLocomotivesInHand).map((key) => (
+          <PlayerLocomotiveCard
+            color={key}
+            quantity={playerLocomotivesInHand[key]}
+          />
         ))}
       </PlayerCardsWrap>
-      <div></div>
     </nav>
   );
 };
 
-export default BottomNav;
+const mapStateToProps = (state) => ({
+  playerLocomotivesInHand: state.playerLocomotivesInHand,
+  locomotiveDeck: state.locomotiveDeck,
+});
+
+const mapDispatchToProps = {
+  setPlayerLocomotivesInHand,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BottomNav);
