@@ -12,7 +12,7 @@ import { setPlayerLocomotivesInHand } from "../../../../../../redux/actions";
 
 const BottomNav = ({
   playerLocomotivesInHand,
-  locomotiveDeck,
+  deck,
   setPlayerLocomotivesInHand,
 }) => {
   const testAims = [
@@ -24,14 +24,14 @@ const BottomNav = ({
 
   const handleInitialLocomotivesInHand = () => {
     const MAX_COUNT = 5;
-    const newLocomotiveDeck = { ...locomotiveDeck };
-    while (newLocomotiveDeck.length < MAX_COUNT) {
-      const keys = window.Object.keys(locomotiveDeck);
+    const newDeck = { ...deck };
+    while (newDeck.length < MAX_COUNT) {
+      const keys = window.Object.keys(deck);
       const shuffledKeys = shuffle(keys);
       const newKey = shuffledKeys[0];
-      newLocomotiveDeck[newKey]++;
+      newDeck[newKey]++;
     }
-    setPlayerLocomotivesInHand(newLocomotiveDeck);
+    setPlayerLocomotivesInHand(newDeck);
   };
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const BottomNav = ({
 
 const mapStateToProps = (state) => ({
   playerLocomotivesInHand: state.playerLocomotivesInHand,
-  locomotiveDeck: state.locomotiveDeck,
+  deck: state.deck,
 });
 
 const mapDispatchToProps = {

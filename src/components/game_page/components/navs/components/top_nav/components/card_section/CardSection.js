@@ -8,11 +8,7 @@ import { connect } from "react-redux";
 import { setLocomotiveField } from "../../../../../../../../redux/actions";
 import shuffle from "../../../../../../../../utils/shuffle";
 
-const CardSection = ({
-  locomotiveDeck,
-  setLocomotiveField,
-  locomotiveField,
-}) => {
+const CardSection = ({ deck, setLocomotiveField, locomotiveField }) => {
   const { destinations } = data;
 
   const [aimDeck, setAimDeck] = useState([]);
@@ -21,7 +17,7 @@ const CardSection = ({
     const MAX_COUNT = 5;
     const newLocomotiveField = [];
     while (newLocomotiveField.length < MAX_COUNT) {
-      const keys = window.Object.keys(locomotiveDeck);
+      const keys = window.Object.keys(deck);
       const shuffledKeys = shuffle(keys);
       const newKey = shuffledKeys[0];
       newLocomotiveField.push({
@@ -96,7 +92,7 @@ const CardSection = ({
 };
 
 const mapStatToProps = (state) => ({
-  locomotiveDeck: state.locomotiveDeck,
+  deck: state.deck,
   locomotiveField: state.locomotiveField,
 });
 
