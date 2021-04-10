@@ -4,6 +4,10 @@ import Navs from "./components/navs/Navs";
 import Map from "./components/map/Map";
 
 const GamePage = () => {
+  React.useEffect(() => {
+    // setup
+  }, []);
+
   return (
     <div className={css["GamePage"]}>
       <Navs />

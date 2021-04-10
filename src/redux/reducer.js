@@ -3,7 +3,7 @@ import {
   SET_PLAYER_LOCOMOTIVES_IN_HAND,
 } from "./constants";
 
-const deck = {
+const initialDeck = {
   purple: 12,
   white: 12,
   blue: 12,
@@ -13,13 +13,12 @@ const deck = {
   red: 12,
   green: 12,
   locomotive: 14,
-  // TODO mozdony
 };
 
 const locomotiveField = [];
 
 const initialState = {
-  deck,
+  deck: initialDeck,
   locomotiveField,
   //TODO replace dummy data
   playerLocomotivesInHand: {
@@ -31,7 +30,6 @@ const initialState = {
     black: 0,
     red: 0,
     green: 0,
-    // TODO mozdony
   },
 };
 
