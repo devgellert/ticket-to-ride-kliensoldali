@@ -51,20 +51,22 @@ const CardSection = ({
 
   const aims = (
     <>
-      <div className={css["title-wrap"]}>
-        <h2>Célok:</h2>
-      </div>
-      <div
-        className={css["deck"]}
-        style={{ backgroundImage: 'url("/card-back.png")' }}
-      />
+      {/*TODO: plusz pontért van cél húzás*/}
+      {/*<div className={css["title-wrap"]}>*/}
+      {/*  <h2>Célok:</h2>*/}
+      {/*</div>*/}
+      {/*<div*/}
+      {/*  className={css["deck"]}*/}
+      {/*  style={{ backgroundImage: 'url("/card-back.png")' }}*/}
+      {/*/>*/}
     </>
   );
   const locomotives = (
     <>
-      <div className={css["title-wrap"]}>
-        <h2>Vasutak:</h2>
-      </div>
+      {/*TODO: Ha bekerül a cél pakli, megkülönböztetésért*/}
+      {/*<div className={css["title-wrap"]}>*/}
+      {/*  <h2>Vasutak:</h2>*/}
+      {/*</div>*/}
       <div
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
