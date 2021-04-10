@@ -20,7 +20,7 @@ const Connection = ({ connection, imgWrapRef }) => {
   };
 
   return (
-    <div>
+    <>
       {elements.map((elem, index) => (
         <Element
           key={index}
@@ -33,7 +33,7 @@ const Connection = ({ connection, imgWrapRef }) => {
           onClick={buildConnection}
         />
       ))}
-    </div>
+    </>
   );
 };
 
