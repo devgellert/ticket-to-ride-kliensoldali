@@ -4,9 +4,20 @@ import { useState, useEffect } from "react";
 import constants from "../../../../../../../../constants";
 import { createPortal } from "react-dom";
 import css from "./Element.module.scss";
+import { useSelector } from "react-redux";
 
-const Element = ({ element, imgWrapRef, color, isHovered, setIsHovered }) => {
+const Element = ({
+  element,
+  imgWrapRef,
+  color,
+  isHovered,
+  setIsHovered,
+  onClick,
+  connectionId,
+}) => {
   const [style, setStyle] = useState({});
+
+  const buildConnectionIds = useSelector((state) => state.buildConnectionIds);
 
   useEffect(() => {
     const { x: imgX, y: imgY } = imgWrapRef.current.getBoundingClientRect();
@@ -15,6 +26,20 @@ const Element = ({ element, imgWrapRef, color, isHovered, setIsHovered }) => {
     const y = imgY + constants.onePercentHeight * element.y;
     setStyle({ left: x, top: y, backgroundColor: color });
   }, [imgWrapRef, element, color]);
+
+  const isBuild = buildConnectionIds.includes(connectionId);
+
+  if (isBuild)
+    // TODO if selected
+    return createPortal(
+      <img
+        src="/loco.svg"
+        alt="asd"
+        style={{ zIndex: 100000, ...style }}
+        className={css["loco-element"]}
+      />,
+      document.body
+    );
 
   return createPortal(
     <div
@@ -26,6 +51,7 @@ const Element = ({ element, imgWrapRef, color, isHovered, setIsHovered }) => {
           : { ...style, border: "1px solid black", boxShadow: "1px 1px black" }
       }
       className={css["element"]}
+      onClick={onClick}
     />,
     document.body
   );

@@ -1,4 +1,8 @@
-import { SET_LOCOMOTIVE_FIELD, SET_PLAYER_HAND } from "./constants";
+import {
+  SET_BUILD_CONNECTION_IDS,
+  SET_LOCOMOTIVE_FIELD,
+  SET_PLAYER_HAND,
+} from "./constants";
 import { ticketToRideData as data } from "../ticket-to-ride-data";
 
 const initialDeck = {
@@ -33,6 +37,8 @@ const initialState = {
     red: 0,
     green: 0,
   },
+
+  buildConnectionIds: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -47,6 +53,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         playerHand: action.payload.value,
+      };
+
+    case SET_BUILD_CONNECTION_IDS:
+      return {
+        ...state,
+        buildConnectionIds: action.payload.value,
       };
 
     default:

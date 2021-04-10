@@ -1,10 +1,23 @@
 import React from "react";
 import { useState } from "react";
 import Element from "./components/element/Element";
+import { useDispatch, useSelector } from "react-redux";
+import { setBuildConnectionIds } from "../../../../../../redux/actions";
 
 const Connection = ({ connection, imgWrapRef }) => {
+  const dispatch = useDispatch();
+  const buildConnectionIds = useSelector((state) => state.buildConnectionIds);
+
   const { elements } = connection;
   const [isHovered, setIsHovered] = useState(false);
+
+  const buildConnection = () => {
+    // TODO build by user
+
+    const newBuildConnectionIds = [...buildConnectionIds, connection.id];
+
+    dispatch(setBuildConnectionIds(newBuildConnectionIds));
+  };
 
   return (
     <div>
@@ -16,6 +29,8 @@ const Connection = ({ connection, imgWrapRef }) => {
           element={elem}
           imgWrapRef={imgWrapRef}
           color={connection.color}
+          connectionId={connection.id}
+          onClick={buildConnection}
         />
       ))}
     </div>
