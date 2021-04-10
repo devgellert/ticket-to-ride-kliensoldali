@@ -20,17 +20,17 @@ const CardSection = ({
   setPlayerHand,
   playerHand,
 }) => {
-  const { destinations } = data;
-
-  const [aimDeck, setAimDeck] = useState([]);
+  const getRandomValidColorFromDeck = () => {
+    const keys = window.Object.keys(deck);
+    const shuffledKeys = shuffle(keys);
+    return shuffledKeys[0];
+  };
 
   const handlePutLocomotivesToField = () => {
     const MAX_COUNT = 5;
     const newLocomotiveField = [];
     while (newLocomotiveField.length < MAX_COUNT) {
-      const keys = window.Object.keys(deck);
-      const shuffledKeys = shuffle(keys);
-      const newKey = shuffledKeys[0];
+      const newKey = getRandomValidColorFromDeck();
       newLocomotiveField.push({
         color: newKey,
         id: uuid(),
@@ -40,21 +40,8 @@ const CardSection = ({
   };
 
   useEffect(() => {
-    const keys = window.Object.keys(destinations);
-    const shuffledKeys = shuffle(keys);
-
-    const newAimDeck = [];
-    shuffledKeys.forEach((key) => {
-      newAimDeck.push(destinations[key]);
-    });
-    setAimDeck(newAimDeck);
-    //
     handlePutLocomotivesToField();
   }, []);
-
-  useEffect(() => {
-    // TODO: 3 mozdony kártyánál minden eldobása, 5 kártya húzása.
-  }, [locomotiveField]);
 
   const putCardInHand = (color) => {
     const newHand = { ...playerHand };
@@ -66,7 +53,7 @@ const CardSection = ({
     setPlayerHand(newHand);
   };
 
-  const removeCardFromField = (id) => {
+  const handleField = (id) => {
     const deckKeys = Object.keys(deck);
 
     const validKeys = compact(
@@ -80,21 +67,6 @@ const CardSection = ({
       { color: randomKey, id: uuid() },
     ];
 
-    ///setLocomotiveField(newField);
-
-    setLocomotiveField(newField);
-  };
-
-  const putNewCardToField = () => {
-    const deckKeys = Object.keys(deck);
-    const validKeys = compact(
-      deckKeys.map((key) => (deck[key] > 0 ? key : null))
-    );
-    if (validKeys.length === 0) return; // TODO handle empty deck
-    const randomKey = shuffle(validKeys)[0];
-
-    const newField = [...locomotiveField, { color: randomKey, id: uuid() }];
-
     setLocomotiveField(newField);
   };
 
@@ -102,20 +74,12 @@ const CardSection = ({
     const { id, color } = card;
 
     putCardInHand(color);
-    removeCardFromField(id);
-    // await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 500);
-    // });
-    // putNewCardToField();
+    handleField(id);
   };
 
   const handleCardClick = (id) => {
     const clickedElem = locomotiveField.find((elem) => elem.id === id);
     if (!clickedElem) return;
-
-    console.log(clickedElem, locomotiveField);
 
     handleCardPick(clickedElem);
   };
@@ -125,6 +89,9 @@ const CardSection = ({
       <div
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
+        onClick={() => {
+          putCardInHand(getRandomValidColorFromDeck());
+        }}
       />
       {locomotiveField.map((elem, index) => (
         <FieldLocomotiveCard
