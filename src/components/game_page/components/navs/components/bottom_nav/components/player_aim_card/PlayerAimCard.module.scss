@@ -3,7 +3,11 @@
   min-width: 88px;
   height: calc(100% - 5px);
   box-sizing: border-box;
-  background-color: lightgreen;
+  background-color: lightgrey;
   margin-left: 5px;
   padding: 5px;
+
+  .points {
+    color: grey;
+  }
 }

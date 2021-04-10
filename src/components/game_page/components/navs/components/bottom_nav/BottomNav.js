@@ -5,7 +5,6 @@ import PlayerCardsWrap from "./components/player_cards_wrap/PlayerCardsWrap";
 import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 import shuffle from "../../../../../../utils/shuffle";
 import { setPlayerLocomotivesInHand } from "../../../../../../redux/actions";
 //
@@ -14,13 +13,17 @@ const BottomNav = ({
   playerLocomotivesInHand,
   deck,
   setPlayerLocomotivesInHand,
+  destinations,
 }) => {
-  const testAims = [
-    { from: "Dallas", to: "New York" },
-    { from: "London", to: "New York" },
-    { from: "Dallas", to: "New York" },
-    { from: "Dallas", to: "New York" },
-  ];
+  const playerDestinations = (() => {
+    const keys = Object.keys(destinations);
+    const res = [];
+    for (let i = 0; i < keys.length && i < 6; i++) {
+      res.push(destinations[keys[i]]);
+    }
+    return res;
+  })();
+  console.log(destinations, playerDestinations);
 
   const handleInitialLocomotivesInHand = () => {
     const MAX_COUNT = 5;
@@ -44,8 +47,12 @@ const BottomNav = ({
         <h2>Célok:</h2>
       </div>
       <PlayerCardsWrap>
-        {testAims.map((aim) => (
-          <PlayerAimCard {...aim} />
+        {playerDestinations.map((aim) => (
+          <PlayerAimCard
+            from={aim.fromCity}
+            to={aim.toCity}
+            points={aim.value}
+          />
         ))}
       </PlayerCardsWrap>
 
@@ -67,6 +74,7 @@ const BottomNav = ({
 const mapStateToProps = (state) => ({
   playerLocomotivesInHand: state.playerLocomotivesInHand,
   deck: state.deck,
+  destinations: state.destinations,
 });
 
 const mapDispatchToProps = {

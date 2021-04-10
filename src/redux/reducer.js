@@ -2,6 +2,7 @@ import {
   SET_LOCOMOTIVE_FIELD,
   SET_PLAYER_LOCOMOTIVES_IN_HAND,
 } from "./constants";
+import { ticketToRideData as data } from "../ticket-to-ride-data";
 
 const initialDeck = {
   purple: 12,
@@ -17,10 +18,13 @@ const initialDeck = {
 
 const locomotiveField = [];
 
+const initialDestinations = data.destinations;
+
 const initialState = {
   deck: initialDeck,
   locomotiveField,
-  //TODO replace dummy data
+  destinations: initialDestinations,
+
   playerLocomotivesInHand: {
     purple: 0,
     white: 0,
