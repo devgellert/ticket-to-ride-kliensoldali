@@ -96,8 +96,9 @@ const CardSection = ({
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
       />
-      {locomotiveField.map((elem) => (
+      {locomotiveField.map((elem, index) => (
         <FieldLocomotiveCard
+          key={index}
           color={elem.color}
           id={elem.id}
           onClick={handleCardClick}

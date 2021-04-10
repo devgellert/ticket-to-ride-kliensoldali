@@ -14,7 +14,7 @@ const Element = ({ element, imgWrapRef, color, isHovered, setIsHovered }) => {
     const x = imgX + constants.onePercentWidth * element.x;
     const y = imgY + constants.onePercentHeight * element.y;
     setStyle({ left: x, top: y, backgroundColor: color });
-  }, [imgWrapRef, element]);
+  }, [imgWrapRef, element, color]);
 
   return createPortal(
     <div

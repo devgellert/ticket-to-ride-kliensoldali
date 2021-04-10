@@ -1,12 +1,12 @@
 import React from "react";
-import { useEffect, createRef } from "react";
+import { createRef } from "react";
 import { ticketToRideData as data } from "../../../../ticket-to-ride-data";
 
 import css from "./Map.module.scss";
 import City from "./compontents/city/City";
 import Connection from "./compontents/connection/Connection";
 
-const { cities, connections, destinations } = data;
+const { cities, connections } = data;
 
 const Map = () => {
   const wrapRef = createRef();
@@ -20,7 +20,11 @@ const Map = () => {
       ))}
 
       {Object.keys(connections).map((key, index) => (
-        <Connection connection={connections[key]} imgWrapRef={wrapRef} />
+        <Connection
+          key={index}
+          connection={connections[key]}
+          imgWrapRef={wrapRef}
+        />
       ))}
     </section>
   );

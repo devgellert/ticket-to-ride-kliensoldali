@@ -8,8 +8,9 @@ const Connection = ({ connection, imgWrapRef }) => {
 
   return (
     <div>
-      {elements.map((elem) => (
+      {elements.map((elem, index) => (
         <Element
+          key={index}
           isHovered={isHovered}
           setIsHovered={setIsHovered}
           element={elem}

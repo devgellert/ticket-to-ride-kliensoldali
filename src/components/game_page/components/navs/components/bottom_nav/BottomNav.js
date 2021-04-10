@@ -48,8 +48,9 @@ const BottomNav = ({
         <h2>Célok:</h2>
       </div>
       <PlayerCardsWrap>
-        {playerDestinations.map((aim) => (
+        {playerDestinations.map((aim, index) => (
           <PlayerAimCard
+            key={index}
             from={aim.fromCity}
             to={aim.toCity}
             points={aim.value}
@@ -63,6 +64,7 @@ const BottomNav = ({
       <PlayerCardsWrap>
         {Object.keys(playerLocomotivesInHand).map((key) => (
           <PlayerLocomotiveCard
+            key={key}
             color={key}
             quantity={playerLocomotivesInHand[key]}
           />
