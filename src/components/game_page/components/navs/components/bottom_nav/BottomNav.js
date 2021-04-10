@@ -6,15 +6,10 @@ import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
 import { connect } from "react-redux";
 import shuffle from "../../../../../../utils/shuffle";
-import { setPlayerLocomotivesInHand } from "../../../../../../redux/actions";
+import { setPlayerHand } from "../../../../../../redux/actions";
 //
 
-const BottomNav = ({
-  playerLocomotivesInHand,
-  deck,
-  setPlayerLocomotivesInHand,
-  destinations,
-}) => {
+const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
   const playerDestinations = (() => {
     const keys = Object.keys(destinations);
     const res = [];
@@ -27,7 +22,7 @@ const BottomNav = ({
 
   const handleInitialLocomotivesInHand = () => {
     const MAX_COUNT = 5;
-    const newHand = { ...playerLocomotivesInHand };
+    const newHand = { ...playerHand };
     for (let i = 0; i < MAX_COUNT; i++) {
       const keys = window.Object.keys(deck);
       const shuffledKeys = shuffle(keys);
@@ -35,7 +30,7 @@ const BottomNav = ({
       newHand[newKey]++;
     }
 
-    setPlayerLocomotivesInHand(newHand);
+    setPlayerHand(newHand);
   };
 
   useEffect(() => {
@@ -62,11 +57,11 @@ const BottomNav = ({
         <h2>Vasutak:</h2>
       </div>
       <PlayerCardsWrap>
-        {Object.keys(playerLocomotivesInHand).map((key) => (
+        {Object.keys(playerHand).map((key) => (
           <PlayerLocomotiveCard
             key={key}
             color={key}
-            quantity={playerLocomotivesInHand[key]}
+            quantity={playerHand[key]}
           />
         ))}
       </PlayerCardsWrap>
@@ -75,13 +70,13 @@ const BottomNav = ({
 };
 
 const mapStateToProps = (state) => ({
-  playerLocomotivesInHand: state.playerLocomotivesInHand,
+  playerHand: state.playerHand,
   deck: state.deck,
   destinations: state.destinations,
 });
 
 const mapDispatchToProps = {
-  setPlayerLocomotivesInHand,
+  setPlayerHand,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BottomNav);

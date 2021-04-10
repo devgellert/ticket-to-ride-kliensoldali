@@ -1,7 +1,4 @@
-import {
-  SET_LOCOMOTIVE_FIELD,
-  SET_PLAYER_LOCOMOTIVES_IN_HAND,
-} from "./constants";
+import { SET_LOCOMOTIVE_FIELD, SET_PLAYER_HAND } from "./constants";
 import { ticketToRideData as data } from "../ticket-to-ride-data";
 
 const initialDeck = {
@@ -25,7 +22,8 @@ const initialState = {
   locomotiveField,
   destinations: initialDestinations,
 
-  playerLocomotivesInHand: {
+  playerHand: {
+    locomotive: 0,
     purple: 0,
     white: 0,
     blue: 0,
@@ -45,10 +43,10 @@ const reducer = (state = initialState, action) => {
         locomotiveField: action.payload.value,
       };
 
-    case SET_PLAYER_LOCOMOTIVES_IN_HAND:
+    case SET_PLAYER_HAND:
       return {
         ...state,
-        playerLocomotivesInHand: action.payload.value,
+        playerHand: action.payload.value,
       };
 
     default:

@@ -5,9 +5,11 @@ import css from "./CardSection.module.scss";
 import { v4 as uuid } from "uuid";
 import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
 import { connect } from "react-redux";
+import { compact } from "lodash";
+
 import {
   setLocomotiveField,
-  setPlayerLocomotivesInHand,
+  setPlayerHand,
 } from "../../../../../../../../redux/actions";
 import shuffle from "../../../../../../../../utils/shuffle";
 
@@ -15,8 +17,8 @@ const CardSection = ({
   deck,
   setLocomotiveField,
   locomotiveField,
-  setPlayerLocomotivesInHand,
-  playerLocomotivesInHand,
+  setPlayerHand,
+  playerHand,
 }) => {
   const { destinations } = data;
 
@@ -54,22 +56,68 @@ const CardSection = ({
     // TODO: 3 mozdony kártyánál minden eldobása, 5 kártya húzása.
   }, [locomotiveField]);
 
-  const incrementHandWithColor = (color) => {
-    const newField = {
-      ...playerLocomotivesInHand,
-      [color]: locomotiveField[color] + 1,
-    };
+  const putCardInHand = (color) => {
+    const newHand = { ...playerHand };
+    if (newHand[color] !== 0 && !newHand[color])
+      throw new Error("Cant draw that card...");
 
-    setPlayerLocomotivesInHand(newField);
+    newHand[color]++;
+
+    setPlayerHand(newHand);
+  };
+
+  const removeCardFromField = (id) => {
+    const deckKeys = Object.keys(deck);
+
+    const validKeys = compact(
+      deckKeys.map((key) => (deck[key] > 0 ? key : null))
+    );
+    if (validKeys.length === 0) return; // TODO handle empty deck
+    const randomKey = shuffle(validKeys)[0];
+
+    const newField = [
+      ...locomotiveField.filter((elem) => elem.id !== id),
+      { color: randomKey, id: uuid() },
+    ];
+
+    ///setLocomotiveField(newField);
+
+    setLocomotiveField(newField);
+  };
+
+  const putNewCardToField = () => {
+    const deckKeys = Object.keys(deck);
+    const validKeys = compact(
+      deckKeys.map((key) => (deck[key] > 0 ? key : null))
+    );
+    if (validKeys.length === 0) return; // TODO handle empty deck
+    const randomKey = shuffle(validKeys)[0];
+
+    const newField = [...locomotiveField, { color: randomKey, id: uuid() }];
+
+    setLocomotiveField(newField);
+  };
+
+  const handleCardPick = async (card) => {
+    const { id, color } = card;
+
+    putCardInHand(color);
+    removeCardFromField(id);
+    // await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve();
+    //   }, 500);
+    // });
+    // putNewCardToField();
   };
 
   const handleCardClick = (id) => {
-    const clickedElem = locomotiveField.find((elem) => elem.id !== id);
+    const clickedElem = locomotiveField.find((elem) => elem.id === id);
     if (!clickedElem) return;
-    const { color } = clickedElem;
-    const newLocomotiveField = locomotiveField.filter((elem) => elem.id !== id);
-    setLocomotiveField(newLocomotiveField);
-    incrementHandWithColor(color);
+
+    console.log(clickedElem, locomotiveField);
+
+    handleCardPick(clickedElem);
   };
 
   const locomotives = (
@@ -95,12 +143,12 @@ const CardSection = ({
 const mapStatToProps = (state) => ({
   deck: state.deck,
   locomotiveField: state.locomotiveField,
-  playerLocomotivesInHand: state.playerLocomotivesInHand,
+  playerHand: state.playerHand,
 });
 
 const mapDispatchToProps = {
   setLocomotiveField,
-  setPlayerLocomotivesInHand,
+  setPlayerHand,
 };
 
 export default connect(mapStatToProps, mapDispatchToProps)(CardSection);

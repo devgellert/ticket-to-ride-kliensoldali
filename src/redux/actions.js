@@ -1,7 +1,4 @@
-import {
-  SET_LOCOMOTIVE_FIELD,
-  SET_PLAYER_LOCOMOTIVES_IN_HAND,
-} from "./constants";
+import { SET_LOCOMOTIVE_FIELD, SET_PLAYER_HAND } from "./constants";
 
 export const setLocomotiveField = (value) => ({
   type: SET_LOCOMOTIVE_FIELD,
@@ -10,8 +7,8 @@ export const setLocomotiveField = (value) => ({
   },
 });
 
-export const setPlayerLocomotivesInHand = (value) => ({
-  type: SET_PLAYER_LOCOMOTIVES_IN_HAND,
+export const setPlayerHand = (value) => ({
+  type: SET_PLAYER_HAND,
   payload: {
     value,
   },
