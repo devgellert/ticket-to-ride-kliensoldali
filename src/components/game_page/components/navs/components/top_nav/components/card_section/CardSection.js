@@ -54,19 +54,6 @@ const CardSection = ({
     // TODO: 3 mozdony kártyánál minden eldobása, 5 kártya húzása.
   }, [locomotiveField]);
 
-  const aims = (
-    <>
-      {/*TODO: plusz pontért van cél húzás*/}
-      {/*<div className={css["title-wrap"]}>*/}
-      {/*  <h2>Célok:</h2>*/}
-      {/*</div>*/}
-      {/*<div*/}
-      {/*  className={css["deck"]}*/}
-      {/*  style={{ backgroundImage: 'url("/card-back.png")' }}*/}
-      {/*/>*/}
-    </>
-  );
-
   const incrementHandWithColor = (color) => {
     const newField = {
       ...playerLocomotivesInHand,
@@ -77,7 +64,6 @@ const CardSection = ({
   };
 
   const handleCardClick = (id) => {
-    // remove card with id
     const clickedElem = locomotiveField.find((elem) => elem.id !== id);
     if (!clickedElem) return;
     const { color } = clickedElem;
@@ -88,10 +74,6 @@ const CardSection = ({
 
   const locomotives = (
     <>
-      {/*TODO: Ha bekerül a cél pakli, megkülönböztetésért*/}
-      {/*<div className={css["title-wrap"]}>*/}
-      {/*  <h2>Vasutak:</h2>*/}
-      {/*</div>*/}
       <div
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
@@ -107,12 +89,7 @@ const CardSection = ({
     </>
   );
 
-  return (
-    <div className={css["card-section"]}>
-      {aims}
-      {locomotives}
-    </div>
-  );
+  return <div className={css["card-section"]}>{locomotives}</div>;
 };
 
 const mapStatToProps = (state) => ({
