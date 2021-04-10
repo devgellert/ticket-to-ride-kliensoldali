@@ -1,0 +1,12 @@
+.waiting-page {
+  background-color: lavender;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  //overflow-x: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
