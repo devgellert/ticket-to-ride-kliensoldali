@@ -45,6 +45,10 @@ const CardSection = ({
     handlePutLocomotivesToField();
   }, []);
 
+  useEffect(() => {
+    // TODO: 3 mozdony kártyánál minden eldobása, 5 kártya húzása.
+  }, [locomotiveField]);
+
   const aims = (
     <>
       <div className={css["title-wrap"]}>
