@@ -23,18 +23,19 @@ const BottomNav = ({
     }
     return res;
   })();
-  console.log(destinations, playerDestinations);
+  //console.log(destinations, playerDestinations);
 
   const handleInitialLocomotivesInHand = () => {
     const MAX_COUNT = 5;
-    const newDeck = { ...deck };
-    while (newDeck.length < MAX_COUNT) {
+    const newHand = { ...playerLocomotivesInHand };
+    for (let i = 0; i < MAX_COUNT; i++) {
       const keys = window.Object.keys(deck);
       const shuffledKeys = shuffle(keys);
       const newKey = shuffledKeys[0];
-      newDeck[newKey]++;
+      newHand[newKey]++;
     }
-    setPlayerLocomotivesInHand(newDeck);
+
+    setPlayerLocomotivesInHand(newHand);
   };
 
   useEffect(() => {

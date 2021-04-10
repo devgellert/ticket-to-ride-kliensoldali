@@ -5,10 +5,19 @@ import css from "./CardSection.module.scss";
 import { v4 as uuid } from "uuid";
 import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
 import { connect } from "react-redux";
-import { setLocomotiveField } from "../../../../../../../../redux/actions";
+import {
+  setLocomotiveField,
+  setPlayerLocomotivesInHand,
+} from "../../../../../../../../redux/actions";
 import shuffle from "../../../../../../../../utils/shuffle";
 
-const CardSection = ({ deck, setLocomotiveField, locomotiveField }) => {
+const CardSection = ({
+  deck,
+  setLocomotiveField,
+  locomotiveField,
+  setPlayerLocomotivesInHand,
+  playerLocomotivesInHand,
+}) => {
   const { destinations } = data;
 
   const [aimDeck, setAimDeck] = useState([]);
@@ -57,6 +66,26 @@ const CardSection = ({ deck, setLocomotiveField, locomotiveField }) => {
       {/*/>*/}
     </>
   );
+
+  const incrementHandWithColor = (color) => {
+    const newField = {
+      ...playerLocomotivesInHand,
+      [color]: locomotiveField[color] + 1,
+    };
+
+    setPlayerLocomotivesInHand(newField);
+  };
+
+  const handleCardClick = (id) => {
+    // remove card with id
+    const clickedElem = locomotiveField.find((elem) => elem.id !== id);
+    if (!clickedElem) return;
+    const { color } = clickedElem;
+    const newLocomotiveField = locomotiveField.filter((elem) => elem.id !== id);
+    setLocomotiveField(newLocomotiveField);
+    incrementHandWithColor(color);
+  };
+
   const locomotives = (
     <>
       {/*TODO: Ha bekerül a cél pakli, megkülönböztetésért*/}
@@ -71,13 +100,7 @@ const CardSection = ({ deck, setLocomotiveField, locomotiveField }) => {
         <FieldLocomotiveCard
           color={elem.color}
           id={elem.id}
-          onClick={(id) => {
-            // remove card with id
-            const newLocomotiveField = locomotiveField.filter(
-              (elem) => elem.id !== id
-            );
-            setLocomotiveField(newLocomotiveField);
-          }}
+          onClick={handleCardClick}
         />
       ))}
     </>
@@ -94,10 +117,12 @@ const CardSection = ({ deck, setLocomotiveField, locomotiveField }) => {
 const mapStatToProps = (state) => ({
   deck: state.deck,
   locomotiveField: state.locomotiveField,
+  playerLocomotivesInHand: state.playerLocomotivesInHand,
 });
 
 const mapDispatchToProps = {
   setLocomotiveField,
+  setPlayerLocomotivesInHand,
 };
 
 export default connect(mapStatToProps, mapDispatchToProps)(CardSection);
