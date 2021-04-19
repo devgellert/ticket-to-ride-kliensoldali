@@ -17,7 +17,9 @@ const Element = ({
 }) => {
   const [style, setStyle] = useState({});
 
-  const buildConnectionIds = useSelector((state) => state.buildConnectionIds);
+  const buildConnectionIds = useSelector(
+    (state) => state.general.buildConnectionIds
+  );
 
   useEffect(() => {
     const { x: imgX, y: imgY } = imgWrapRef.current.getBoundingClientRect();

@@ -93,14 +93,14 @@ const CardSection = ({
           putCardInHand(getRandomValidColorFromDeck());
         }}
       />
-      {locomotiveField.map((elem, index) => (
-        <FieldLocomotiveCard
-          key={index}
-          color={elem.color}
-          id={elem.id}
-          onClick={handleCardClick}
-        />
-      ))}
+      {/*{locomotiveField.map((elem, index) => (*/}
+      {/*  <FieldLocomotiveCard*/}
+      {/*    key={index}*/}
+      {/*    color={elem.color}*/}
+      {/*    id={elem.id}*/}
+      {/*    onClick={handleCardClick}*/}
+      {/*  />*/}
+      {/*))}*/}
     </>
   );
 
@@ -108,9 +108,9 @@ const CardSection = ({
 };
 
 const mapStatToProps = (state) => ({
-  deck: state.deck,
-  locomotiveField: state.locomotiveField,
-  playerHand: state.playerHand,
+  deck: state.general.deck,
+  locomotiveField: state.general.locomotiveField,
+  playerHand: state.general.playerHand,
 });
 
 const mapDispatchToProps = {

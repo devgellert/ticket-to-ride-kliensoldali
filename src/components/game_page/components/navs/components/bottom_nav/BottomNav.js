@@ -70,9 +70,9 @@ const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
 };
 
 const mapStateToProps = (state) => ({
-  playerHand: state.playerHand,
-  deck: state.deck,
-  destinations: state.destinations,
+  playerHand: state.general.playerHand,
+  deck: state.general.deck,
+  destinations: state.general.destinations,
 });
 
 const mapDispatchToProps = {

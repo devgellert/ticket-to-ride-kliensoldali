@@ -1,11 +1,16 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import css from "./MainPage.module.scss";
 
-const MainPage = () => {
+const MainPage = ({ history }) => {
   const [newName, setNewName] = React.useState("");
   const [newCount, setNewCount] = React.useState(1);
   const [connectName, setConnectName] = React.useState("");
   const [connectId, setConnectId] = React.useState(1);
+
+  const playGame = () => {
+    history.push("/");
+  };
 
   return (
     <div className={css["main-page"]}>
@@ -67,7 +72,7 @@ const MainPage = () => {
           onChange={(e) => setNewName(e.target.value)}
         />
         <br />
-        <button>Indítás</button>
+        <button onClick={playGame}>Indítás</button>
       </section>
 
       <section>
@@ -86,10 +91,10 @@ const MainPage = () => {
           onChange={(e) => setConnectId(e.target.value)}
         />{" "}
         <br />
-        <button>Csatlakozás</button>
+        <button onClick={playGame}>Csatlakozás</button>
       </section>
     </div>
   );
 };
 
-export default MainPage;
+export default withRouter(MainPage);

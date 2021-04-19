@@ -1,50 +1,24 @@
 import React from "react";
 import Player from "./components/Player";
+import { useSelector } from "react-redux";
 import css from "./PlayerList.module.scss";
+import playersSelectors from "../../../../../../../../redux/players/playersSelectors";
 
 const PlayerList = () => {
+  const players = useSelector(playersSelectors.getPlayers);
+
   return (
     <div className={css["player-list"]}>
-      <Player
-        aims={10}
-        cards={2}
-        name={"Gellert Puskas"}
-        points={3}
-        round={4}
-        vagons={5}
-      />
-      <Player
-        aims={10}
-        cards={2}
-        name={"Gellert Puskas"}
-        points={3}
-        round={4}
-        vagons={5}
-      />
-      <Player
-        aims={10}
-        cards={2}
-        name={"Gellert Puskas"}
-        points={3}
-        round={4}
-        vagons={5}
-      />
-      <Player
-        aims={10}
-        cards={2}
-        name={"Gellert Puskas"}
-        points={3}
-        round={4}
-        vagons={5}
-      />
-      <Player
-        aims={10}
-        cards={2}
-        name={"Gellert Puskas"}
-        points={3}
-        round={4}
-        vagons={5}
-      />
+      {players.map(({ hand, name }) => (
+        <Player
+          aims={hand.aims.length}
+          cards={hand.cards.length}
+          name={name}
+          points={0}
+          round={0}
+          vagons={0}
+        />
+      ))}
     </div>
   );
 };
