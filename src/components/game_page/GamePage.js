@@ -3,7 +3,7 @@ import css from "./GamePage.module.scss";
 import Navs from "./components/navs/Navs";
 import Map from "./components/map/Map";
 import { useDispatch, useSelector } from "react-redux";
-import { keys, cloneDeep, unset, forEach } from "lodash";
+import { keys, unset, forEach } from "lodash";
 
 import generalSelectors from "../../redux/general/generalSelectors";
 import shuffle from "../../utils/shuffle";
@@ -26,6 +26,7 @@ const getNormalizedDeck = (deck) => {
 const GamePage = () => {
   const deck = useSelector(generalSelectors.getDeck);
   const players = useSelector(playersSelectors.getPlayers);
+  const destinations = useSelector(generalSelectors.getDestinations);
   const dispatch = useDispatch();
 
   const getInitialPlayerCards = (deck) => {
@@ -54,27 +55,38 @@ const GamePage = () => {
 
   const initPlayersHand = () => {
     let currentDeck = deck;
+    const newDestinationsDeck = { ...destinations };
 
-    csonst newPlayers = players.map((player) => {
+    const newPlayers = players.map((player) => {
+      // cards
       const initialCards = getInitialPlayerCards(currentDeck);
-      const newHand = {
-        ...player.hand,
-        cards: initialCards,
-      };
 
       deckColors.forEach((color) => {
         if (!initialCards[color]) return;
         currentDeck[color] -= initialCards[color];
       });
 
+      // destinations
+
+      const initialPlayerDestinations = [];
+      for (let i = 0; i < 6; i++) {
+        const randomKey = shuffle(keys(newDestinationsDeck))[0];
+        initialPlayerDestinations.push(newDestinationsDeck[randomKey]);
+        unset(newDestinationsDeck, randomKey);
+      }
+
       return {
         ...player,
-        hand: newHand,
+        hand: {
+          cards: initialCards,
+          destinations: initialPlayerDestinations,
+        },
       };
     });
 
     dispatch(playerActions.setPlayers(newPlayers));
     dispatch(generalActions.setDeck(currentDeck));
+    dispatch(generalActions.setDestinations(newDestinationsDeck));
   };
 
   React.useEffect(() => {

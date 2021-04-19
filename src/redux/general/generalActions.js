@@ -1,5 +1,6 @@
 export const generalConstants = {
   SET_DECK: "SET_DECK",
+  SET_DESTINATIONS: "SET_DESTINATIONS",
 };
 
 const setDeck = (value) => ({
@@ -7,8 +8,14 @@ const setDeck = (value) => ({
   payload: { value },
 });
 
+const setDestinations = (value) => ({
+  type: generalConstants.SET_DESTINATIONS,
+  payload: { value },
+});
+
 const generalActions = {
   setDeck,
+  setDestinations,
 };
 
 export default generalActions;

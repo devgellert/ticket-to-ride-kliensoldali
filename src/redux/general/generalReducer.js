@@ -77,6 +77,12 @@ const generalReducer = (state = initialState, action) => {
         deck: action.payload.value,
       };
 
+    case generalConstants.SET_DESTINATIONS:
+      return {
+        ...state,
+        destinations: action.payload.value,
+      };
+
     default:
       return state;
   }

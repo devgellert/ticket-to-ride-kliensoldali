@@ -1,41 +1,30 @@
 import React from "react";
-import { useEffect } from "react";
 import css from "./BottomNav.module.scss";
 import PlayerCardsWrap from "./components/player_cards_wrap/PlayerCardsWrap";
-import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
-import { connect } from "react-redux";
-import shuffle from "../../../../../../utils/shuffle";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { setPlayerHand } from "../../../../../../redux/actions";
+import playersSelectors from "../../../../../../redux/players/playersSelectors";
+import { map, keys } from "lodash";
+import playersActions from "../../../../../../redux/players/playersActions";
+import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
+
 //
 
 const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
-  const playerDestinations = (() => {
-    const keys = Object.keys(destinations);
-    const res = [];
-    for (let i = 0; i < keys.length && i < 6; i++) {
-      res.push(destinations[keys[i]]);
-    }
-    return res;
-  })();
-  //console.log(destinations, playerDestinations);
+  const activePlayer = useSelector(playersSelectors.getActivePlayer);
+  const dispatch = useDispatch();
 
-  const handleInitialLocomotivesInHand = () => {
-    const MAX_COUNT = 5;
-    const newHand = { ...playerHand };
-    for (let i = 0; i < MAX_COUNT; i++) {
-      const keys = window.Object.keys(deck);
-      const shuffledKeys = shuffle(keys);
-      const newKey = shuffledKeys[0];
-      newHand[newKey]++;
-    }
+  // const playerDestinations = (() => {
+  //   const keys = Object.keys(destinations);
+  //   const res = [];
+  //   for (let i = 0; i < keys.length && i < 6; i++) {
+  //     res.push(destinations[keys[i]]);
+  //   }
+  //   return res;
+  // })();
 
-    setPlayerHand(newHand);
-  };
-
-  useEffect(() => {
-    handleInitialLocomotivesInHand();
-  }, []);
+  // console.log(playerDestinations);
 
   return (
     <nav className={css["bottom-nav"]}>
@@ -43,12 +32,12 @@ const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
         <h2>Célok:</h2>
       </div>
       <PlayerCardsWrap>
-        {playerDestinations.map((aim, index) => (
+        {map(activePlayer?.hand?.destinations, (destination, index) => (
           <PlayerAimCard
             key={index}
-            from={aim.fromCity}
-            to={aim.toCity}
-            points={aim.value}
+            from={destination.fromCity}
+            to={destination.toCity}
+            points={destination.value}
           />
         ))}
       </PlayerCardsWrap>
@@ -57,11 +46,11 @@ const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
         <h2>Vasutak:</h2>
       </div>
       <PlayerCardsWrap>
-        {Object.keys(playerHand).map((key) => (
+        {map(keys(activePlayer?.hand?.cards), (key) => (
           <PlayerLocomotiveCard
             key={key}
             color={key}
-            quantity={playerHand[key]}
+            quantity={activePlayer.hand.cards[key]}
           />
         ))}
       </PlayerCardsWrap>

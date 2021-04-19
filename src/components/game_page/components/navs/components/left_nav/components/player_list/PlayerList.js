@@ -11,7 +11,7 @@ const PlayerList = () => {
     <div className={css["player-list"]}>
       {players.map(({ hand, name }) => (
         <Player
-          aims={hand.aims.length}
+          aims={hand.destinations.length}
           cards={hand.cards.length}
           name={name}
           points={0}
