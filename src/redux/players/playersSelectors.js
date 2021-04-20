@@ -1,9 +1,26 @@
 import { cardTypes } from "../general/generalReducer";
-import { forEach, compact } from "lodash";
+import { forEach, map } from "lodash";
 
 const getState = (state) => state.players;
 
 const getPlayers = (state) => getState(state).players;
+
+const getPlayersStatistics = (state) => {
+  const players = getState(state).players;
+
+  return map(players, (player) => {
+    const hand = player.hand;
+
+    return {
+      destinations: hand.destinations.length,
+      cards: hand.cards.length,
+      name: player.name,
+      points: player.points ?? 0,
+      round: "TODO",
+      vagons: "TODO",
+    };
+  });
+};
 
 const getPlayer = (state, id) => getState(state).players[id];
 
@@ -59,6 +76,7 @@ const playersSelectors = {
   getActivePlayer,
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
+  getPlayersStatistics,
 };
 
 export default playersSelectors;

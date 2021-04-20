@@ -1,7 +1,7 @@
 import React from "react";
 import css from "./Player.module.scss";
 
-const Player = ({ name, points, vagons, cards, aims, round }) => {
+const Player = ({ name, points, vagons, cards, aims: destinations, round }) => {
   return (
     <div className={css["player"]}>
       <div>
@@ -17,7 +17,7 @@ const Player = ({ name, points, vagons, cards, aims, round }) => {
             <b>Kártyák:</b> {cards}
           </li>
           <li>
-            <b>Célok:</b> {aims}
+            <b>Célok:</b> {destinations}
           </li>
           <li>
             <b>Kör:</b> {round}
