@@ -18,11 +18,11 @@ const setPlayers = (value) => ({
   },
 });
 
-const cardDrawSuccess = ({ field, card }) => ({
+const cardDrawSuccess = ({ field, players }) => ({
   type: playerConstants.CARD_DRAW_SUCCESS,
   payload: {
     field,
-    card,
+    players,
   },
 });
 
