@@ -1,27 +1,16 @@
 import React from "react";
+import { useEffect } from "react";
 import css from "./GamePage.module.scss";
 import Navs from "./components/navs/Navs";
 import Map from "./components/map/Map";
 import { useDispatch, useSelector } from "react-redux";
-import { keys, unset, forEach } from "lodash";
-
+import { map } from "lodash";
+import getInitialPlayerCardsViaMutation from "./helpers/getInitialPlayerCardsViaMutation";
+import getInitialDestinationsViaMutation from "./helpers/getInitialDestinationsViaMutation";
 import generalSelectors from "../../redux/general/generalSelectors";
-import shuffle from "../../utils/shuffle";
 import playersSelectors from "../../redux/players/playersSelectors";
-import { cardTypes } from "../../redux/general/generalReducer";
 import playerActions from "../../redux/players/playersActions";
 import generalActions from "../../redux/general/generalActions";
-
-const getNormalizedDeck = (deck) => {
-  const res = { ...deck };
-
-  forEach(cardTypes, (color) => {
-    if (res[color] !== 0) return;
-    unset(res, color);
-  });
-
-  return res;
-};
 
 const GamePage = () => {
   const deck = useSelector(generalSelectors.getDeck);
@@ -29,55 +18,35 @@ const GamePage = () => {
   const destinations = useSelector(generalSelectors.getDestinations);
   const dispatch = useDispatch();
 
-  const getInitialPlayerCards = (deck) => {
-    const MAX_COUNT = 5;
+  const createInitialPlayersViaMutation = (deck, destinations) => {
+    const currentDeck = [...deck];
+    const newDestinations = [...destinations];
 
-    const initialHand = [];
-    for (let i = 0; i < MAX_COUNT; i++) {
-      initialHand.push(deck.pop());
-    }
-
-    return initialHand;
+    return map(players, (player) => ({
+      ...player,
+      hand: {
+        cards: getInitialPlayerCardsViaMutation(currentDeck),
+        destinations: getInitialDestinationsViaMutation(newDestinations),
+      },
+    }));
   };
 
-  const initPlayersHand = () => {
-    let currentDeck = deck;
-    // const newDestinationsDeck = { ...destinations };
+  const initGame = () => {
+    const mutatedDeck = [...deck];
+    const mutatedDestinations = [...destinations];
 
-    const newPlayers = players.map((player) => {
-      // cards
-      const initialCards = getInitialPlayerCards(currentDeck);
-
-      // deckColors.forEach((color) => {
-      //   if (!initialCards[color]) return;
-      //   currentDeck[color] -= initialCards[color];
-      // });
-
-      // destinations
-
-      // const initialPlayerDestinations = [];
-      // for (let i = 0; i < 6; i++) {
-      //   const randomKey = shuffle(keys(newDestinationsDeck))[0];
-      //   initialPlayerDestinations.push(newDestinationsDeck[randomKey]);
-      //   unset(newDestinationsDeck, randomKey);
-      // }
-
-      return {
-        ...player,
-        hand: {
-          cards: initialCards,
-          // destinations: initialPlayerDestinations,
-        },
-      };
-    });
+    const newPlayers = createInitialPlayersViaMutation(
+      mutatedDeck,
+      mutatedDestinations
+    );
 
     dispatch(playerActions.setPlayers(newPlayers));
-    dispatch(generalActions.setDeck(currentDeck));
-    // dispatch(generalActions.setDestinations(newDestinationsDeck));
+    dispatch(generalActions.setDeck(mutatedDeck));
+    dispatch(generalActions.setDestinations(mutatedDestinations));
   };
 
-  React.useEffect(() => {
-    initPlayersHand();
+  useEffect(() => {
+    initGame();
   }, []);
 
   return (
