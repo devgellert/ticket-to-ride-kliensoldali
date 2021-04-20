@@ -4,17 +4,17 @@ import PlayerCardsWrap from "./components/player_cards_wrap/PlayerCardsWrap";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { setPlayerHand } from "../../../../../../redux/actions";
-import playersSelectors from "../../../../../../redux/players/playersSelectors";
 import { map, keys } from "lodash";
 import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
+import playersDerivativeSelectors from "../../../../../../redux/players/selectors/playersDerivativeSelectors";
 //
 
 const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
   const activePlayerCardTypeNumbers = useSelector(
-    playersSelectors.getActivePlayerCardTypeNumbers
+    playersDerivativeSelectors.getActivePlayerCardTypeNumbers
   );
   const activePlayerDestinations = useSelector(
-    playersSelectors.getActivePlayerDestinations
+    playersDerivativeSelectors.getActivePlayerDestinations
   );
   const dispatch = useDispatch();
 

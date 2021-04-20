@@ -1,6 +1,6 @@
-import { cardTypes } from "../general/generalReducer";
+import { cardTypes } from "../../general/generalReducer";
 import { forEach, map } from "lodash";
-import essentials from "./selectors/playersEssentialSelectors";
+import playersEssentialSelectors from "./playersEssentialSelectors";
 
 const {
   getActivePlayerIndex,
@@ -8,7 +8,7 @@ const {
   isPlayerIndexActive,
   getPlayerDestinations,
   getPlayerCards,
-} = essentials;
+} = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {
   const players = getPlayers(state);
@@ -58,10 +58,10 @@ const getActivePlayerCardTypeNumbers = (state) => {
   return getPlayerCardTypeNumbers(state, activePlayerIndex);
 };
 
-const playersSelectors = {
+const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
   getPlayersStatistics,
 };
 
-export default playersSelectors;
+export default playersDerivativeSelectors;
