@@ -21,6 +21,7 @@ const createInitialDeck = () => {
     for (let i = 0; i < typeToCountMap[key]; i++) {
       result.push({
         type: key,
+        id: `${key}-${i}`,
       });
     }
   });

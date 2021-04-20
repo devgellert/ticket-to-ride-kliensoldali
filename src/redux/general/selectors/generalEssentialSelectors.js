@@ -8,11 +8,11 @@ const getDestinations = (state) => getState(state).destinations;
 
 const getField = (state) => getState(state).field;
 
-const generalSelectors = {
+const generalEssentialSelectors = {
   getRoundCount,
   getDeck,
   getDestinations,
   getField,
 };
 
-export default generalSelectors;
+export default generalEssentialSelectors;

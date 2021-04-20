@@ -8,6 +8,7 @@ const {
   isPlayerIndexActive,
   getPlayerDestinations,
   getPlayerCards,
+  getMode,
 } = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {

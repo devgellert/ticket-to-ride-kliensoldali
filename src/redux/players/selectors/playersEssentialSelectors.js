@@ -19,6 +19,11 @@ const getPlayerHand = (state, id) => getPlayer(state, id).hand;
 const getActivePlayer = (state) =>
   getPlayer(state, getActivePlayerIndex(state));
 
+const getActivePlayerCards = (state) =>
+  getPlayerCards(state, getActivePlayerIndex(state));
+
+const getMode = (state) => getState(state).mode;
+
 const playersEssentialSelectors = {
   getPlayers,
   getActivePlayerIndex,
@@ -26,6 +31,8 @@ const playersEssentialSelectors = {
   isPlayerIndexActive,
   getPlayerDestinations,
   getPlayerCards,
+  getMode,
+  getActivePlayerCards,
 };
 
 export default playersEssentialSelectors;

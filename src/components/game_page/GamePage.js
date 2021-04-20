@@ -7,14 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { map } from "lodash";
 import getInitialPlayerCardsViaMutation from "./helpers/getInitialPlayerCardsViaMutation";
 import getInitialDestinationsViaMutation from "./helpers/getInitialDestinationsViaMutation";
-import generalSelectors from "../../redux/general/generalSelectors";
 import playerActions from "../../redux/players/playersActions";
 import generalActions from "../../redux/general/generalActions";
 import playersEssentialSelectors from "../../redux/players/selectors/playersEssentialSelectors";
+import generalEssentialSelectors from "../../redux/general/selectors/generalEssentialSelectors";
 
 const GamePage = () => {
-  const deck = useSelector(generalSelectors.getDeck);
-  const destinations = useSelector(generalSelectors.getDestinations);
+  const deck = useSelector(generalEssentialSelectors.getDeck);
+  const destinations = useSelector(generalEssentialSelectors.getDestinations);
   const players = useSelector(playersEssentialSelectors.getPlayers);
   const dispatch = useDispatch();
 
