@@ -1,7 +1,10 @@
 import { ticketToRideData as data } from "../../ticket-to-ride-data";
 import { generalConstants } from "./generalActions";
+import { keys, forEach } from "lodash";
+import shuffle from "../../utils/shuffle";
+import createInitialDeck from "./helpers/createInitialDeck";
 
-export const deckColors = [
+export const cardTypes = [
   "purple",
   "white",
   "blue",
@@ -13,17 +16,19 @@ export const deckColors = [
   "locomotive",
 ];
 
-const initialDeck = {
-  purple: 12,
-  white: 12,
-  blue: 12,
-  yellow: 12,
-  orange: 12,
-  black: 12,
-  red: 12,
-  green: 12,
-  locomotive: 14,
-};
+// const initialDeck = {
+//   purple: 12,
+//   white: 12,
+//   blue: 12,
+//   yellow: 12,
+//   orange: 12,
+//   black: 12,
+//   red: 12,
+//   green: 12,
+//   locomotive: 14,
+// };
+
+const initialDeck = createInitialDeck();
 
 const locomotiveField = [];
 

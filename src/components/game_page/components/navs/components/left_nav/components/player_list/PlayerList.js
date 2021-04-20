@@ -9,16 +9,16 @@ const PlayerList = () => {
 
   return (
     <div className={css["player-list"]}>
-      {players.map(({ hand, name }) => (
-        <Player
-          aims={hand.destinations.length}
-          cards={hand.cards.length}
-          name={name}
-          points={0}
-          round={0}
-          vagons={0}
-        />
-      ))}
+      {/*{players.map(({ hand, name }) => (*/}
+      {/*  <Player*/}
+      {/*    aims={hand.destinations.length}*/}
+      {/*    cards={hand.cards.length}*/}
+      {/*    name={name}*/}
+      {/*    points={0}*/}
+      {/*    round={0}*/}
+      {/*    vagons={0}*/}
+      {/*  />*/}
+      {/*))}*/}
     </div>
   );
 };

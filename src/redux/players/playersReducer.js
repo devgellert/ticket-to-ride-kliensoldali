@@ -6,14 +6,14 @@ const initialState = {
     {
       name: "Player 1",
       hand: {
-        cards: {},
+        cards: [],
         destinations: [],
       },
     },
     {
       name: "Player 2",
       hand: {
-        cards: {},
+        cards: [],
         destinations: [],
       },
     },

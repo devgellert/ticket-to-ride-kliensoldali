@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import css from "./BottomNav.module.scss";
 import PlayerCardsWrap from "./components/player_cards_wrap/PlayerCardsWrap";
 import PlayerLocomotiveCard from "./components/player_locomotive_card/PlayerLocomotiveCard";
@@ -6,13 +6,12 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { setPlayerHand } from "../../../../../../redux/actions";
 import playersSelectors from "../../../../../../redux/players/playersSelectors";
 import { map, keys } from "lodash";
-import playersActions from "../../../../../../redux/players/playersActions";
-import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
-
 //
 
 const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
-  const activePlayer = useSelector(playersSelectors.getActivePlayer);
+  const activePlayerCardTypeNumbers = useSelector(
+    playersSelectors.getActivePlayerCardTypeNumbers
+  );
   const dispatch = useDispatch();
 
   // const playerDestinations = (() => {
@@ -26,31 +25,35 @@ const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
 
   // console.log(playerDestinations);
 
+  useEffect(() => {
+    console.log(activePlayerCardTypeNumbers);
+  }, [activePlayerCardTypeNumbers]);
+
   return (
     <nav className={css["bottom-nav"]}>
       <div className={css["header-wrap"]}>
         <h2>Célok:</h2>
       </div>
       <PlayerCardsWrap>
-        {map(activePlayer?.hand?.destinations, (destination, index) => (
-          <PlayerAimCard
-            key={index}
-            from={destination.fromCity}
-            to={destination.toCity}
-            points={destination.value}
-          />
-        ))}
+        {/*{map(activePlayer?.hand?.destinations, (destination, index) => (*/}
+        {/*  <PlayerAimCard*/}
+        {/*    key={index}*/}
+        {/*    from={destination.fromCity}*/}
+        {/*    to={destination.toCity}*/}
+        {/*    points={destination.value}*/}
+        {/*  />*/}
+        {/*))}*/}
       </PlayerCardsWrap>
 
       <div className={css["header-wrap"]}>
         <h2>Vasutak:</h2>
       </div>
       <PlayerCardsWrap>
-        {map(keys(activePlayer?.hand?.cards), (key) => (
+        {map(keys(activePlayerCardTypeNumbers), (type) => (
           <PlayerLocomotiveCard
-            key={key}
-            color={key}
-            quantity={activePlayer.hand.cards[key]}
+            key={type}
+            color={type}
+            quantity={activePlayerCardTypeNumbers[type]}
           />
         ))}
       </PlayerCardsWrap>
