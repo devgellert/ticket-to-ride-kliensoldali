@@ -1,23 +1,20 @@
 import { cardTypes } from "../general/generalReducer";
 import { forEach, map } from "lodash";
+import essentials from "./selectors/playersEssentialSelectors";
 
-const getState = (state) => state.players;
-
-const getPlayers = (state) => getState(state).players;
-
-const getActivePlayerIndex = (state) => getState(state).activePlayerIndex;
-
-const isPlayerIndexActive = (state, playerIndex) => {
-  const activePlayerIndex = getActivePlayerIndex(state);
-
-  return activePlayerIndex === playerIndex;
-};
+const {
+  getActivePlayerIndex,
+  getPlayers,
+  isPlayerIndexActive,
+  getPlayerDestinations,
+  getPlayerCards,
+} = essentials;
 
 const getPlayersStatistics = (state) => {
-  const players = getState(state).players;
+  const players = getPlayers(state);
 
   return map(players, (player, index) => {
-    const hand = player.hand;
+    const { hand } = player;
 
     const isActive = isPlayerIndexActive(state, index);
 
@@ -33,30 +30,13 @@ const getPlayersStatistics = (state) => {
   });
 };
 
-const getPlayer = (state, id) => getState(state).players[id];
-
-const getPlayerHand = (state, id) => getPlayer(state, id).hand;
-
-const getPlayerDestinations = (state, id) =>
-  getPlayerHand(state, id).destinations;
-
 const getActivePlayerDestinations = (state) => {
   const index = getActivePlayerIndex(state);
-
   return getPlayerDestinations(state, index);
 };
 
-const getPlayerCards = (state, id) => getPlayerHand(state, id).cards;
-
-const getActivePlayer = (state) =>
-  getState(state).players[getState(state).activePlayerIndex];
-
 const getPlayerCardTypeNumbers = (state, playerIndex) => {
-  const playersState = getState(state); // TODO use getPlayer
-
-  const player = playersState.players[playerIndex];
-
-  const playerCards = player.hand.cards;
+  const playerCards = getPlayerCards(state, playerIndex);
 
   const cardTypeNumbers = {};
 
@@ -75,14 +55,10 @@ const getPlayerCardTypeNumbers = (state, playerIndex) => {
 
 const getActivePlayerCardTypeNumbers = (state) => {
   const activePlayerIndex = getActivePlayerIndex(state);
-
   return getPlayerCardTypeNumbers(state, activePlayerIndex);
 };
 
 const playersSelectors = {
-  getPlayers,
-  getActivePlayerIndex,
-  getActivePlayer,
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
   getPlayersStatistics,
