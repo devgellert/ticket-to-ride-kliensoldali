@@ -39,6 +39,7 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         players: action.payload.players,
+        mode: "draw",
       };
 
     default:

@@ -6,6 +6,7 @@ import { map } from "lodash";
 import generalEssentialSelectors from "../../../../../../../../redux/general/selectors/generalEssentialSelectors";
 import playersEssentialSelectors from "../../../../../../../../redux/players/selectors/playersEssentialSelectors";
 import playerActions from "../../../../../../../../redux/players/playersActions";
+import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 
 const CardSection = ({}) => {
   const field = useSelector(generalEssentialSelectors.getField);
@@ -13,10 +14,13 @@ const CardSection = ({}) => {
   const activePlayerIndex = useSelector(
     playersEssentialSelectors.getActivePlayerIndex
   );
+  const canDrawCard = useSelector(playersDerivativeSelectors.canDrawCard);
 
   const dispatch = useDispatch();
 
   const handleCardClick = (id) => {
+    if (!canDrawCard) return;
+
     const clickedCard = field.find((elem) => elem.id === id);
     if (!clickedCard) return;
 

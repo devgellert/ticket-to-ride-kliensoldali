@@ -1,6 +1,7 @@
 import { generalConstants } from "./generalActions";
 import createInitialDeck from "./helpers/createInitialDeck";
 import createInitialDestinations from "./helpers/createInitialDestinations";
+import { playerConstants } from "../players/playersActions";
 
 export const cardTypes = [
   "purple",
@@ -40,6 +41,12 @@ const generalReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case playerConstants.CARD_DRAW_SUCCESS:
+      return {
+        ...state,
+        field: action.payload.field,
       };
 
     default:

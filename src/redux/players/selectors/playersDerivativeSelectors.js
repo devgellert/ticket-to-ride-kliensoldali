@@ -59,10 +59,16 @@ const getActivePlayerCardTypeNumbers = (state) => {
   return getPlayerCardTypeNumbers(state, activePlayerIndex);
 };
 
+const canDrawCard = (state) => {
+  const mode = getMode(state);
+  return [null, "draw"].includes(mode);
+};
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
   getPlayersStatistics,
+  canDrawCard,
 };
 
 export default playersDerivativeSelectors;
