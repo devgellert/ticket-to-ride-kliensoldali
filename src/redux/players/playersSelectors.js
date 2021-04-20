@@ -5,11 +5,21 @@ const getState = (state) => state.players;
 
 const getPlayers = (state) => getState(state).players;
 
+const getActivePlayerIndex = (state) => getState(state).activePlayerIndex;
+
+const isPlayerIndexActive = (state, playerIndex) => {
+  const activePlayerIndex = getActivePlayerIndex(state);
+
+  return activePlayerIndex === playerIndex;
+};
+
 const getPlayersStatistics = (state) => {
   const players = getState(state).players;
 
-  return map(players, (player) => {
+  return map(players, (player, index) => {
     const hand = player.hand;
+
+    const isActive = isPlayerIndexActive(state, index);
 
     return {
       destinations: hand.destinations.length,
@@ -18,6 +28,7 @@ const getPlayersStatistics = (state) => {
       points: player.points ?? 0,
       round: "TODO",
       vagons: "TODO",
+      isActive,
     };
   });
 };
@@ -36,8 +47,6 @@ const getActivePlayerDestinations = (state) => {
 };
 
 const getPlayerCards = (state, id) => getPlayerHand(state, id).cards;
-
-const getActivePlayerIndex = (state) => getState(state).activePlayerIndex;
 
 const getActivePlayer = (state) =>
   getState(state).players[getState(state).activePlayerIndex];

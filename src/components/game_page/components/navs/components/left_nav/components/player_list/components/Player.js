@@ -1,9 +1,18 @@
 import React from "react";
 import css from "./Player.module.scss";
+import cn from "classnames";
 
-const Player = ({ name, points, vagons, cards, aims: destinations, round }) => {
+const Player = ({
+  name,
+  points,
+  vagons,
+  cards,
+  aims: destinations,
+  round,
+  isActive,
+}) => {
   return (
-    <div className={css["player"]}>
+    <div className={cn(css["player"], { [css["active"]]: isActive })}>
       <div>
         <p>{name}</p>
         <ul>
