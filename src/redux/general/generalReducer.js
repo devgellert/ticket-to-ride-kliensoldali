@@ -1,7 +1,4 @@
-import { ticketToRideData as data } from "../../ticket-to-ride-data";
 import { generalConstants } from "./generalActions";
-import { keys, map } from "lodash";
-import shuffle from "../../utils/shuffle";
 import createInitialDeck from "./helpers/createInitialDeck";
 import createInitialDestinations from "./helpers/createInitialDestinations";
 

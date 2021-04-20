@@ -5,13 +5,28 @@ const getState = (state) => state.players;
 
 const getPlayers = (state) => getState(state).players;
 
+const getPlayer = (state, id) => getState(state).players[id];
+
+const getPlayerHand = (state, id) => getPlayer(state, id).hand;
+
+const getPlayerDestinations = (state, id) =>
+  getPlayerHand(state, id).destinations;
+
+const getActivePlayerDestinations = (state) => {
+  const index = getActivePlayerIndex(state);
+
+  return getPlayerDestinations(state, index);
+};
+
+const getPlayerCards = (state, id) => getPlayerHand(state, id).cards;
+
 const getActivePlayerIndex = (state) => getState(state).activePlayerIndex;
 
 const getActivePlayer = (state) =>
   getState(state).players[getState(state).activePlayerIndex];
 
 const getPlayerCardTypeNumbers = (state, playerIndex) => {
-  const playersState = getState(state);
+  const playersState = getState(state); // TODO use getPlayer
 
   const player = playersState.players[playerIndex];
 
@@ -43,6 +58,7 @@ const playersSelectors = {
   getActivePlayerIndex,
   getActivePlayer,
   getActivePlayerCardTypeNumbers,
+  getActivePlayerDestinations,
 };
 
 export default playersSelectors;

@@ -6,11 +6,15 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { setPlayerHand } from "../../../../../../redux/actions";
 import playersSelectors from "../../../../../../redux/players/playersSelectors";
 import { map, keys } from "lodash";
+import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 //
 
 const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
   const activePlayerCardTypeNumbers = useSelector(
     playersSelectors.getActivePlayerCardTypeNumbers
+  );
+  const activePlayerDestinations = useSelector(
+    playersSelectors.getActivePlayerDestinations
   );
   const dispatch = useDispatch();
 
@@ -35,14 +39,14 @@ const BottomNav = ({ playerHand, deck, setPlayerHand, destinations }) => {
         <h2>Célok:</h2>
       </div>
       <PlayerCardsWrap>
-        {/*{map(activePlayer?.hand?.destinations, (destination, index) => (*/}
-        {/*  <PlayerAimCard*/}
-        {/*    key={index}*/}
-        {/*    from={destination.fromCity}*/}
-        {/*    to={destination.toCity}*/}
-        {/*    points={destination.value}*/}
-        {/*  />*/}
-        {/*))}*/}
+        {map(activePlayerDestinations, (destination, index) => (
+          <PlayerAimCard
+            key={index}
+            from={destination.fromCity}
+            to={destination.toCity}
+            points={destination.value}
+          />
+        ))}
       </PlayerCardsWrap>
 
       <div className={css["header-wrap"]}>
