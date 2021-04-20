@@ -18,17 +18,22 @@ const GamePage = () => {
   const players = useSelector(playersEssentialSelectors.getPlayers);
   const dispatch = useDispatch();
 
-  const createInitialPlayersViaMutation = (deck, destinations) => {
-    const currentDeck = [...deck];
-    const newDestinations = [...destinations];
-
-    return map(players, (player) => ({
+  const createInitialPlayersViaMutation = (deck, destinations) =>
+    map(players, (player) => ({
       ...player,
       hand: {
-        cards: getInitialPlayerCardsViaMutation(currentDeck),
-        destinations: getInitialDestinationsViaMutation(newDestinations),
+        cards: getInitialPlayerCardsViaMutation(deck),
+        destinations: getInitialDestinationsViaMutation(destinations),
       },
     }));
+
+  const createInitialFieldViaMutation = (deckToMutate) => {
+    const result = [];
+    const FIELD_SIZE = 5;
+    for (let i = 0; i < FIELD_SIZE; i++) {
+      result.push(deckToMutate.pop());
+    }
+    return result;
   };
 
   const initGame = () => {
@@ -40,9 +45,16 @@ const GamePage = () => {
       mutatedDestinations
     );
 
+    const newField = createInitialFieldViaMutation(mutatedDeck);
+
     dispatch(playerActions.setPlayers(newPlayers));
-    dispatch(generalActions.setDeck(mutatedDeck));
-    dispatch(generalActions.setDestinations(mutatedDestinations));
+    dispatch(
+      generalActions.initGameSuccess({
+        deck: mutatedDeck,
+        field: newField,
+        destinations: mutatedDestinations,
+      })
+    );
   };
 
   useEffect(() => {

@@ -19,6 +19,7 @@ const initialState = {
   destinations: createInitialDestinations(),
   buildConnectionIds: [],
   roundCount: 0,
+  field: [],
 };
 
 const generalReducer = (state = initialState, action) => {
@@ -33,6 +34,12 @@ const generalReducer = (state = initialState, action) => {
       return {
         ...state,
         destinations: action.payload.value,
+      };
+
+    case generalConstants.INIT_GAME_SUCCESS:
+      return {
+        ...state,
+        ...action.payload,
       };
 
     default:
