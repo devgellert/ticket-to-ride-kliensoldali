@@ -11,11 +11,14 @@ import playerActions from "../../redux/players/playersActions";
 import generalActions from "../../redux/general/generalActions";
 import playersEssentialSelectors from "../../redux/players/selectors/playersEssentialSelectors";
 import generalEssentialSelectors from "../../redux/general/selectors/generalEssentialSelectors";
+import roundEssentialSelectors from "../../redux/round/selectors/roundEssentialSelectors";
+import prepareNextRound from "../../redux/business/prepareNextRound";
 
 const GamePage = () => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
   const destinations = useSelector(generalEssentialSelectors.getDestinations);
   const players = useSelector(playersEssentialSelectors.getPlayers);
+  const isRoundEnded = useSelector(roundEssentialSelectors.isRoundEnded);
   const dispatch = useDispatch();
 
   const createInitialPlayersViaMutation = (deck, destinations) =>
@@ -60,6 +63,12 @@ const GamePage = () => {
   useEffect(() => {
     initGame();
   }, []);
+
+  useEffect(() => {
+    if (isRoundEnded) {
+      dispatch(prepareNextRound());
+    }
+  }, [isRoundEnded]);
 
   return (
     <div className={css["GamePage"]}>

@@ -2,6 +2,8 @@ const getState = (state) => state.players;
 
 const getPlayers = (state) => getState(state).players;
 
+const getPlayersCount = (state) => getState(state).players.length;
+
 const getActivePlayerIndex = (state) => getState(state).activePlayerIndex;
 
 const isPlayerIndexActive = (state, playerIndex) =>
@@ -33,6 +35,7 @@ const playersEssentialSelectors = {
   getPlayerCards,
   getMode,
   getActivePlayerCards,
+  getPlayersCount,
 };
 
 export default playersEssentialSelectors;

@@ -2,6 +2,7 @@ import {
   SET_BUILD_CONNECTION_IDS,
   SET_LOCOMOTIVE_FIELD,
   SET_PLAYER_HAND,
+  PREPARE_NEXT_ROUND_SUCCESS,
 } from "./constants";
 
 export const setLocomotiveField = (value) => ({
@@ -22,5 +23,12 @@ export const setBuildConnectionIds = (value) => ({
   type: SET_BUILD_CONNECTION_IDS,
   payload: {
     value,
+  },
+});
+
+export const prepareNextRoundSuccess = ({ activePlayerIndex }) => ({
+  type: PREPARE_NEXT_ROUND_SUCCESS,
+  payload: {
+    activePlayerIndex,
   },
 });

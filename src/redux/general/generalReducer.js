@@ -19,7 +19,6 @@ const initialState = {
   deck: createInitialDeck(),
   destinations: createInitialDestinations(),
   buildConnectionIds: [],
-  roundCount: 0,
   field: [],
 };
 
@@ -43,7 +42,7 @@ const generalReducer = (state = initialState, action) => {
         ...action.payload,
       };
 
-    case playerConstants.CARD_DRAW_SUCCESS:
+    case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,
         field: action.payload.field,

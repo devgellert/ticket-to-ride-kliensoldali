@@ -8,11 +8,6 @@ import reducer from "./redux/reducer";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-const middlewares = [
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  thunk,
-];
-
 const store = createStore(
   reducer,
   compose(

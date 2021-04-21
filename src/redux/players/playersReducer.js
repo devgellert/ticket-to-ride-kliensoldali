@@ -1,8 +1,8 @@
 import { playerConstants } from "./playersActions";
+import { PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 
 const initialState = {
   activePlayerIndex: 0,
-  mode: null, // draw || build || null
   players: [
     {
       name: "Player 1",
@@ -35,11 +35,16 @@ const playersReducer = (state = initialState, action) => {
         players: action.payload.value,
       };
 
-    case playerConstants.CARD_DRAW_SUCCESS:
+    case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,
         players: action.payload.players,
-        mode: "draw",
+      };
+
+    case PREPARE_NEXT_ROUND_SUCCESS:
+      return {
+        ...state,
+        activePlayerIndex: action.payload.activePlayerIndex,
       };
 
     default:

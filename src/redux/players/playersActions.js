@@ -1,7 +1,8 @@
 export const playerConstants = {
   SET_ACTIVE_PLAYER_INDEX: "SET_ACTIVE_PLAYER_INDEX",
   SET_PLAYERS: "SET_PLAYERS",
-  CARD_DRAW_SUCCESS: "CARD_DRAW_SUCCESS",
+  CARD_DRAW_FROM_FIELD_SUCCESS: "CARD_DRAW_FROM_FIELD_SUCCESS",
+  CARD_DRAW_FROM_DECK_SUCCESS: "CARD_DRAW_FROM_DECK_SUCCESS",
 };
 
 const setActivePlayerIndex = (value) => ({
@@ -18,18 +19,19 @@ const setPlayers = (value) => ({
   },
 });
 
-const cardDrawSuccess = ({ field, players }) => ({
-  type: playerConstants.CARD_DRAW_SUCCESS,
+const cardDrawFromFieldSuccess = ({ field, players, points }) => ({
+  type: playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS,
   payload: {
     field,
     players,
+    points,
   },
 });
 
 const playerActions = {
   setActivePlayerIndex,
   setPlayers,
-  cardDrawSuccess,
+  cardDrawFromFieldSuccess,
 };
 
 export default playerActions;

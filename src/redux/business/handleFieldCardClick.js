@@ -2,13 +2,9 @@ import generalEssentialSelectors from "../general/selectors/generalEssentialSele
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
 import { map } from "lodash";
 import playerActions from "../players/playersActions";
-import playersDerivativeSelectors from "../players/selectors/playersDerivativeSelectors";
 
 const handleFieldCardClick = (id) => async (dispatch, getState) => {
   const state = getState();
-
-  const canDrawCard = playersDerivativeSelectors.canDrawCard(state);
-  if (!canDrawCard) return;
 
   const field = generalEssentialSelectors.getField(state);
 
@@ -35,9 +31,10 @@ const handleFieldCardClick = (id) => async (dispatch, getState) => {
   });
 
   dispatch(
-    playerActions.cardDrawSuccess({
+    playerActions.cardDrawFromFieldSuccess({
       field: newField,
       players,
+      points: clickedCard.points,
     })
   );
 };

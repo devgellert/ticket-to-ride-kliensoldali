@@ -22,6 +22,7 @@ const createInitialDeck = () => {
       result.push({
         type: key,
         id: `${key}-${i}`,
+        points: key === "locomotive" ? 2 : 1,
       });
     }
   });
