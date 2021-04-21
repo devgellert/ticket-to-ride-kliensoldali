@@ -1,9 +1,12 @@
 const getState = (state) => state.round;
 
-const isRoundEnded = (state) => getState(state).points === 0;
+const getPoints = (state) => getState(state).points;
+
+const isRoundEnded = (state) => getPoints(state) === 0; // TODO derivative
 
 const roundEssentialSelectors = {
   isRoundEnded,
+  getPoints,
 };
 
 export default roundEssentialSelectors;
