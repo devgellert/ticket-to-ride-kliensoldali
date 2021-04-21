@@ -2,49 +2,14 @@ import React from "react";
 import css from "./CardSection.module.scss";
 import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
 import { useDispatch, useSelector } from "react-redux";
-import { map } from "lodash";
 import generalEssentialSelectors from "../../../../../../../../redux/general/selectors/generalEssentialSelectors";
-import playersEssentialSelectors from "../../../../../../../../redux/players/selectors/playersEssentialSelectors";
-import playerActions from "../../../../../../../../redux/players/playersActions";
-import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
+import handleFieldCardClick from "../../../../../../../../redux/business/handleFieldCardClick";
 
-const CardSection = ({}) => {
-  const field = useSelector(generalEssentialSelectors.getField);
-  const prevPlayers = useSelector(playersEssentialSelectors.getPlayers);
-  const activePlayerIndex = useSelector(
-    playersEssentialSelectors.getActivePlayerIndex
-  );
-  const canDrawCard = useSelector(playersDerivativeSelectors.canDrawCard);
-
+const CardSection = () => {
   const dispatch = useDispatch();
+  const field = useSelector(generalEssentialSelectors.getField);
 
-  const handleCardClick = (id) => {
-    if (!canDrawCard) return;
-
-    const clickedCard = field.find((elem) => elem.id === id);
-    if (!clickedCard) return;
-
-    const newField = field.filter((elem) => elem.id !== clickedCard.id);
-
-    const players = map(prevPlayers, (player, index) => {
-      if (activePlayerIndex !== index) return player;
-
-      return {
-        ...player,
-        hand: {
-          ...player.hand,
-          cards: [...player.hand.cards, clickedCard],
-        },
-      };
-    });
-
-    dispatch(
-      playerActions.cardDrawSuccess({
-        field: newField,
-        players,
-      })
-    );
-  };
+  const handleCardClick = (id) => dispatch(handleFieldCardClick(id));
 
   const locomotives = (
     <>
