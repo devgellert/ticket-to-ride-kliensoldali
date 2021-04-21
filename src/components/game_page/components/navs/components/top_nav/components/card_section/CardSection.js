@@ -4,6 +4,7 @@ import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomot
 import { useDispatch, useSelector } from "react-redux";
 import generalEssentialSelectors from "../../../../../../../../redux/general/selectors/generalEssentialSelectors";
 import handleFieldCardClick from "../../../../../../../../redux/business/handleFieldCardClick";
+import handleDeckCardClick from "../../../../../../../../redux/business/handleDeckCardClick";
 
 const CardSection = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const CardSection = () => {
         className={css["deck"]}
         style={{ backgroundImage: 'url("/card-back.png")' }}
         onClick={() => {
-          // putCardInHand(getRandomValidColorFromDeck());
+          dispatch(handleDeckCardClick());
         }}
       />
       {field.map((elem) => (

@@ -28,10 +28,18 @@ const cardDrawFromFieldSuccess = ({ field, players, points }) => ({
   },
 });
 
+const cardDrawFromDeckSuccess = ({ players }) => ({
+  type: playerConstants.CARD_DRAW_FROM_DECK_SUCCESS,
+  payload: {
+    players,
+  },
+});
+
 const playerActions = {
   setActivePlayerIndex,
   setPlayers,
   cardDrawFromFieldSuccess,
+  cardDrawFromDeckSuccess,
 };
 
 export default playerActions;
