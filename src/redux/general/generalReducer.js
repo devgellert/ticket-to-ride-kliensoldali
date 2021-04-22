@@ -18,7 +18,6 @@ export const cardTypes = [
 const initialState = {
   deck: createInitialDeck(),
   destinations: createInitialDestinations(),
-  buildConnectionIds: [],
   field: [],
 };
 

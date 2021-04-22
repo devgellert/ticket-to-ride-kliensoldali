@@ -1,5 +1,5 @@
 import { cardTypes } from "../../general/generalReducer";
-import { forEach, map } from "lodash";
+import { forEach, map, flatten } from "lodash";
 import playersEssentialSelectors from "./playersEssentialSelectors";
 
 const {
@@ -59,10 +59,19 @@ const getActivePlayerCardTypeNumbers = (state) => {
   return getPlayerCardTypeNumbers(state, activePlayerIndex);
 };
 
+const getAllBuiltConnectionIds = (state) => {
+  const players = getPlayers(state);
+  return flatten(map(players, (player) => player.connectionIds));
+};
+
+const getIsConnectionBuilt = (state, id) =>
+  getAllBuiltConnectionIds(state).includes(id);
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
   getPlayersStatistics,
+  getIsConnectionBuilt,
 };
 
 export default playersDerivativeSelectors;

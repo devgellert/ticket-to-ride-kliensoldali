@@ -2,27 +2,31 @@ import React from "react";
 import { useState } from "react";
 import Element from "./components/element/Element";
 import { useDispatch, useSelector } from "react-redux";
-import { setBuildConnectionIds } from "../../../../../../redux/actions";
+import buildConnection from "../../../../../../redux/business/buildConnection";
+import roundDerivativeSelectors from "../../../../../../redux/round/selectors/roundDerivativeSelectors";
+import playersDerivativeSelectors from "../../../../../../redux/players/selectors/playersDerivativeSelectors";
+import playerActions from "../../../../../../redux/players/playersActions";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const dispatch = useDispatch();
-  const buildConnectionIds = useSelector((state) => state.buildConnectionIds);
+
+  const canBuild = useSelector(roundDerivativeSelectors.canBuild);
+  const isBuilt = useSelector((state) =>
+    playersDerivativeSelectors.getIsConnectionBuilt(state, connection.id)
+  );
 
   const { elements } = connection;
   const [isHovered, setIsHovered] = useState(false);
 
-  const buildConnection = () => {
-    // TODO build by user
-
-    const newBuildConnectionIds = [...buildConnectionIds, connection.id];
-
-    dispatch(setBuildConnectionIds(newBuildConnectionIds));
-  };
+  const onClick = () =>
+    dispatch(playerActions.pushToBuildConnectionIds({ id: connection.id }));
 
   return (
     <>
       {elements.map((elem, index) => (
         <Element
+          isBuilt={isBuilt}
+          isDisabled={!canBuild || !!isBuilt}
           key={index}
           isHovered={isHovered}
           setIsHovered={setIsHovered}
@@ -30,7 +34,7 @@ const Connection = ({ connection, imgWrapRef }) => {
           imgWrapRef={imgWrapRef}
           color={connection.color}
           connectionId={connection.id}
-          onClick={buildConnection}
+          onClick={onClick}
         />
       ))}
     </>

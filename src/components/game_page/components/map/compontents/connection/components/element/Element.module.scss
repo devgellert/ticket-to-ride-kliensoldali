@@ -6,6 +6,10 @@
   position: absolute;
   cursor: pointer;
   box-sizing: border-box;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
 }
 
 .loco-element {
@@ -17,4 +21,8 @@
   position: absolute;
   cursor: pointer;
   box-sizing: border-box;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
 }

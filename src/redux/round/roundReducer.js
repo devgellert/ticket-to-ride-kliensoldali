@@ -25,6 +25,12 @@ const roundReducer = (state = initialState, action) => {
         points: 2,
       };
 
+    case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
+      return {
+        ...state,
+        points: state.points - 2,
+      };
+
     default:
       return state;
   }

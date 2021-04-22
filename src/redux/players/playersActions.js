@@ -3,6 +3,7 @@ export const playerConstants = {
   SET_PLAYERS: "SET_PLAYERS",
   CARD_DRAW_FROM_FIELD_SUCCESS: "CARD_DRAW_FROM_FIELD_SUCCESS",
   CARD_DRAW_FROM_DECK_SUCCESS: "CARD_DRAW_FROM_DECK_SUCCESS",
+  PUSH_TO_BUILD_CONNECTION_IDS: "PUSH_TO_BUILD_CONNECTION_IDS",
 };
 
 const setActivePlayerIndex = (value) => ({
@@ -36,11 +37,19 @@ const cardDrawFromDeckSuccess = ({ players }) => ({
   },
 });
 
+const pushToBuildConnectionIds = ({ id }) => ({
+  type: playerConstants.PUSH_TO_BUILD_CONNECTION_IDS,
+  payload: {
+    id,
+  },
+});
+
 const playerActions = {
   setActivePlayerIndex,
   setPlayers,
   cardDrawFromFieldSuccess,
   cardDrawFromDeckSuccess,
+  pushToBuildConnectionIds,
 };
 
 export default playerActions;

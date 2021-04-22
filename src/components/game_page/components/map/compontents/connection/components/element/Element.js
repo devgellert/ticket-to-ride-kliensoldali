@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
+import cn from "classnames";
 import constants from "../../../../../../../../constants";
 import { createPortal } from "react-dom";
 import css from "./Element.module.scss";
-import { useSelector } from "react-redux";
+import { noop } from "lodash";
 
 const Element = ({
   element,
@@ -13,13 +13,10 @@ const Element = ({
   isHovered,
   setIsHovered,
   onClick,
-  connectionId,
+  isDisabled,
+  isBuilt,
 }) => {
   const [style, setStyle] = useState({});
-
-  const buildConnectionIds = useSelector(
-    (state) => state.general.buildConnectionIds
-  );
 
   useEffect(() => {
     const { x: imgX, y: imgY } = imgWrapRef.current.getBoundingClientRect();
@@ -29,16 +26,14 @@ const Element = ({
     setStyle({ left: x, top: y, backgroundColor: color });
   }, [imgWrapRef, element, color]);
 
-  const isBuild = buildConnectionIds.includes(connectionId);
-
-  if (isBuild)
+  if (isBuilt)
     // TODO if selected
     return createPortal(
       <img
         src="/loco.svg"
         alt="asd"
         style={{ zIndex: 100000, ...style }}
-        className={css["loco-element"]}
+        className={cn(css["loco-element"], { [css["disabled"]]: isDisabled })}
       />,
       document.body
     );
@@ -52,8 +47,8 @@ const Element = ({
           ? style
           : { ...style, border: "1px solid black", boxShadow: "1px 1px black" }
       }
-      className={css["element"]}
-      onClick={onClick}
+      className={cn(css["element"], { [css["disabled"]]: isDisabled })}
+      onClick={isDisabled ? noop : onClick}
     />,
     document.body
   );
