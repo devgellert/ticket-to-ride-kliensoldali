@@ -67,11 +67,19 @@ const getAllBuiltConnectionIds = (state) => {
 const getIsConnectionBuilt = (state, id) =>
   getAllBuiltConnectionIds(state).includes(id);
 
+const activePlayerHasEnoughCards = (state) => {
+  // const activePlayerIndex = state.activePlayerIndex;
+  // const player = state.players[activePlayerIndex];
+
+  return false;
+};
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
   getPlayersStatistics,
   getIsConnectionBuilt,
+  activePlayerHasEnoughCards,
 };
 
 export default playersDerivativeSelectors;

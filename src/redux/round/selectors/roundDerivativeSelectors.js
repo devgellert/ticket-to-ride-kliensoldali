@@ -6,12 +6,15 @@ const canDrawLocomotive = (state) => {
   return points >= 2;
 };
 
-const canBuild = (state) => {
+const hasPointsToBuild = (state) => {
   const points = roundEssentialSelectors.getPoints(state);
 
   return points >= 2;
 };
 
-const roundDerivativeSelectors = { canDrawLocomotive, canBuild };
+const roundDerivativeSelectors = {
+  canDrawLocomotive,
+  hasPointsToBuild,
+};
 
 export default roundDerivativeSelectors;
