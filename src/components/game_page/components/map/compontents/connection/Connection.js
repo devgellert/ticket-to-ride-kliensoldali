@@ -29,7 +29,7 @@ const Connection = ({ connection, imgWrapRef }) => {
   //const onClick = () => setIsSelected(true);
   const onClick = () => dispatch(buildConnection(connection.id));
 
-  if (isSelected) return null;
+  //if (isSelected) return null;
 
   return (
     <>
