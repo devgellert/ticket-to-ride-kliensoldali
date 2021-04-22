@@ -1,6 +1,6 @@
+import { map } from "lodash";
 import generalEssentialSelectors from "../general/selectors/generalEssentialSelectors";
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
-import { map } from "lodash";
 import playerActions from "../players/playersActions";
 
 const handleFieldCardClick = (id) => async (dispatch, getState) => {
@@ -11,7 +11,14 @@ const handleFieldCardClick = (id) => async (dispatch, getState) => {
   const clickedCard = field.find((elem) => elem.id === id);
   if (!clickedCard) return;
 
-  const newField = field.filter((elem) => elem.id !== clickedCard.id);
+  // new card from deck
+  const deck = generalEssentialSelectors.getDeck(state);
+  const newCardFromDeck = deck.pop();
+
+  //const newField = field.filter((elem) => elem.id !== clickedCard.id);
+  const newField = map(field, (elem) =>
+    elem.id !== clickedCard.id ? elem : newCardFromDeck
+  );
 
   const prevPlayers = playersEssentialSelectors.getPlayers(state);
   const activePlayerIndex = playersEssentialSelectors.getActivePlayerIndex(
@@ -35,6 +42,7 @@ const handleFieldCardClick = (id) => async (dispatch, getState) => {
       field: newField,
       players,
       points: clickedCard.points,
+      deck,
     })
   );
 };

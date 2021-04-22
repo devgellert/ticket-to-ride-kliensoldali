@@ -46,6 +46,7 @@ const generalReducer = (state = initialState, action) => {
       return {
         ...state,
         field: action.payload.field,
+        deck: action.payload.deck,
       };
 
     default:
