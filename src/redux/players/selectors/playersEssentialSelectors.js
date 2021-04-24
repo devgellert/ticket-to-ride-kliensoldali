@@ -26,6 +26,9 @@ const getActivePlayerCards = (state) =>
 
 const getMode = (state) => getState(state).mode;
 
+const getPlayerConnections = (state, index) =>
+  getPlayer(state, index).connections;
+
 const playersEssentialSelectors = {
   getPlayers,
   getActivePlayerIndex,
@@ -36,6 +39,7 @@ const playersEssentialSelectors = {
   getMode,
   getActivePlayerCards,
   getPlayersCount,
+  getPlayerConnections,
 };
 
 export default playersEssentialSelectors;

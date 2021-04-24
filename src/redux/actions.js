@@ -3,6 +3,7 @@ import {
   SET_LOCOMOTIVE_FIELD,
   SET_PLAYER_HAND,
   PREPARE_NEXT_ROUND_SUCCESS,
+  BUILD_SUCCESS,
 } from "./constants";
 
 export const setLocomotiveField = (value) => ({
@@ -30,5 +31,13 @@ export const prepareNextRoundSuccess = ({ activePlayerIndex }) => ({
   type: PREPARE_NEXT_ROUND_SUCCESS,
   payload: {
     activePlayerIndex,
+  },
+});
+
+export const buildSuccess = ({ cardsToPutBackToHand, selectedConnection }) => ({
+  type: BUILD_SUCCESS,
+  payload: {
+    cardsToPutBackToHand,
+    selectedConnection,
   },
 });

@@ -1,5 +1,5 @@
 import { playerConstants } from "../players/playersActions";
-import { PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
+import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 
 const initialState = {
   points: 2,
@@ -23,9 +23,16 @@ const roundReducer = (state = initialState, action) => {
       return {
         ...state,
         points: 2,
+        nth: state.nth + 1,
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
+      return {
+        ...state,
+        points: state.points - 2,
+      };
+
+    case BUILD_SUCCESS:
       return {
         ...state,
         points: state.points - 2,

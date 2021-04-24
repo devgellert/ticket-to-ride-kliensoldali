@@ -1,6 +1,8 @@
 import { cardTypes } from "../../general/generalReducer";
-import { forEach, map, flatten } from "lodash";
+import { forEach, map, flatten, includes } from "lodash";
 import playersEssentialSelectors from "./playersEssentialSelectors";
+import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
+import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 
 const {
   getActivePlayerIndex,
@@ -8,7 +10,7 @@ const {
   isPlayerIndexActive,
   getPlayerDestinations,
   getPlayerCards,
-  getMode,
+  getPlayerConnections,
 } = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {
@@ -18,12 +20,20 @@ const getPlayersStatistics = (state) => {
     const { hand } = player;
 
     const isActive = isPlayerIndexActive(state, index);
+    const points = getPlayerPoints(state, index);
+    const isPlayerActive =
+      index === playersEssentialSelectors.getActivePlayerIndex(state);
+    const cards =
+      hand.cards.length +
+      (isPlayerActive
+        ? buildingEssentialSelectors.getSelectedCards(state).length
+        : 0);
 
     return {
       destinations: hand.destinations.length,
-      cards: hand.cards.length,
+      cards,
       name: player.name,
-      points: player.points ?? 0,
+      points: points,
       round: "TODO",
       vagons: "TODO",
       isActive,
@@ -64,19 +74,32 @@ const getActivePlayerCardTypeNumbers = (state) => {
   return getPlayerCardTypeNumbers(state, activePlayerIndex);
 };
 
-const getAllBuiltConnectionIds = (state) => {
+const getAllBuiltConnections = (state) => {
   const players = getPlayers(state);
-  return flatten(map(players, (player) => player.connectionIds));
+  return flatten(map(players, (player) => player.connections));
 };
 
 const getIsConnectionBuilt = (state, id) =>
-  getAllBuiltConnectionIds(state).includes(id);
+  includes(
+    map(getAllBuiltConnections(state), (elem) => elem.id),
+    id
+  );
 
 const activePlayerHasEnoughCards = (state) => {
   // const activePlayerIndex = state.activePlayerIndex;
   // const player = state.players[activePlayerIndex];
 
   return false;
+};
+
+const getPlayerPoints = (state, playerIndex) => {
+  const connections = getPlayerConnections(state, playerIndex);
+  let result = 0;
+  forEach(connections, (connection) => {
+    result += mapConnectionLengthToPoints[connection.elements.length];
+  });
+
+  return result;
 };
 
 const playersDerivativeSelectors = {
@@ -86,6 +109,7 @@ const playersDerivativeSelectors = {
   getIsConnectionBuilt,
   activePlayerHasEnoughCards,
   getActivePlayerCards,
+  getPlayerPoints,
 };
 
 export default playersDerivativeSelectors;

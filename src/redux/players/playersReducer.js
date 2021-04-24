@@ -1,6 +1,5 @@
 import { playerConstants } from "./playersActions";
-import { PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
-import playersEssentialSelectors from "./selectors/playersEssentialSelectors";
+import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 import { map } from "lodash";
 
 const initialState = {
@@ -12,7 +11,7 @@ const initialState = {
         cards: [],
         destinations: [],
       },
-      connectionIds: [],
+      connections: [],
     },
     {
       name: "Player 2",
@@ -20,7 +19,7 @@ const initialState = {
         cards: [],
         destinations: [],
       },
-      connectionIds: [],
+      connections: [],
     },
   ],
 };
@@ -49,6 +48,18 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         activePlayerIndex: action.payload.activePlayerIndex,
+        players: map(state.players, (player, index) => {
+          if (index === action.payload.prevActivePlayerIndex) {
+            return {
+              ...player,
+              hand: {
+                ...player.hand,
+                cards: [...player.hand.cards, ...action.payload.selectedCards],
+              },
+            };
+          }
+          return player;
+        }),
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
@@ -75,6 +86,29 @@ const playersReducer = (state = initialState, action) => {
                   cards: action.payload,
                 },
               }
+        ),
+      };
+
+    case BUILD_SUCCESS:
+      return {
+        ...state,
+        players: map(state.players, (player, index) =>
+          index === state.activePlayerIndex
+            ? {
+                ...player,
+                connections: [
+                  ...player.connections,
+                  action.payload.selectedConnection,
+                ],
+                hand: {
+                  ...player.hand,
+                  cards: [
+                    ...player.hand.cards,
+                    ...action.payload.cardsToPutBackToHand,
+                  ],
+                },
+              }
+            : player
         ),
       };
 
