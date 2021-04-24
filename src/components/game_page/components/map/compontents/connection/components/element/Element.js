@@ -15,6 +15,7 @@ const Element = ({
   onClick,
   isDisabled,
   isBuilt,
+  isSelected,
 }) => {
   const [style, setStyle] = useState({});
 
@@ -47,8 +48,11 @@ const Element = ({
           ? style
           : { ...style, border: "1px solid black", boxShadow: "1px 1px black" }
       }
-      className={cn(css["element"], { [css["disabled"]]: isDisabled })}
-      onClick={isDisabled ? noop : onClick}
+      className={cn(css["element"], {
+        [css["disabled"]]: isDisabled,
+        [css["selected"]]: isSelected,
+      })}
+      onClick={isDisabled || isSelected ? noop : onClick}
     />,
     document.body
   );

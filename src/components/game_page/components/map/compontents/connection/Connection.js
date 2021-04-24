@@ -6,6 +6,8 @@ import buildConnection from "../../../../../../redux/business/buildConnection";
 import roundDerivativeSelectors from "../../../../../../redux/round/selectors/roundDerivativeSelectors";
 import playersDerivativeSelectors from "../../../../../../redux/players/selectors/playersDerivativeSelectors";
 import playerActions from "../../../../../../redux/players/playersActions";
+import buildingActions from "../../../../../../redux/building/buildingActions";
+import buildingDerivativeSelectors from "../../../../../../redux/building/selectors/buildingDerivativeSelectors";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const dispatch = useDispatch();
@@ -19,6 +21,12 @@ const Connection = ({ connection, imgWrapRef }) => {
   const activePlayerHasEnoughCards = useSelector((state) =>
     playersDerivativeSelectors.activePlayerHasEnoughCards()
   );
+  const isConnectionSelected = useSelector((state) =>
+    buildingDerivativeSelectors.getIsConnectionSelectedById(
+      state,
+      connection.id
+    )
+  );
 
   const { elements } = connection;
   const [isHovered, setIsHovered] = useState(false);
@@ -27,14 +35,19 @@ const Connection = ({ connection, imgWrapRef }) => {
   //const [isSelected, setIsSelected] = useState(false);
 
   //const onClick = () => setIsSelected(true);
-  const onClick = () => dispatch(buildConnection(connection.id));
+  const onClick = () => {
+    dispatch(async () => {
+      // clear all cards in selectedcards
+    });
 
-  //if (isSelected) return null;
+    dispatch(buildingActions.setSelectedConnection(connection));
+  };
 
   return (
     <>
       {elements.map((elem, index) => (
         <Element
+          isSelected={isConnectionSelected}
           isBuilt={isBuilt}
           isDisabled={
             !hasPointsToBuild || !!isBuilt // || !activePlayerHasEnoughCards

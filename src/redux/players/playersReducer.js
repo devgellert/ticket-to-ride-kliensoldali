@@ -1,6 +1,7 @@
 import { playerConstants } from "./playersActions";
 import { PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 import playersEssentialSelectors from "./selectors/playersEssentialSelectors";
+import { map } from "lodash";
 
 const initialState = {
   activePlayerIndex: 0,
@@ -59,6 +60,22 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         players: newPlayers,
+      };
+
+    case playerConstants.SET_ACTIVE_PLAYERS_CARDS:
+      return {
+        ...state,
+        players: map(state.players, (player, index) =>
+          index !== state.activePlayerIndex
+            ? player
+            : {
+                ...player,
+                hand: {
+                  ...player.hand,
+                  cards: action.payload,
+                },
+              }
+        ),
       };
 
     default:

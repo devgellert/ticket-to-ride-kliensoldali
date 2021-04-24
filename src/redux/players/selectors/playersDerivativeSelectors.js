@@ -36,6 +36,11 @@ const getActivePlayerDestinations = (state) => {
   return getPlayerDestinations(state, index);
 };
 
+const getActivePlayerCards = (state) => {
+  const index = getActivePlayerIndex(state);
+  return getPlayerCards(state, index);
+};
+
 const getPlayerCardTypeNumbers = (state, playerIndex) => {
   const playerCards = getPlayerCards(state, playerIndex);
 
@@ -80,6 +85,7 @@ const playersDerivativeSelectors = {
   getPlayersStatistics,
   getIsConnectionBuilt,
   activePlayerHasEnoughCards,
+  getActivePlayerCards,
 };
 
 export default playersDerivativeSelectors;
