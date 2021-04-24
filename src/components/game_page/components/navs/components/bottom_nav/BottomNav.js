@@ -8,6 +8,9 @@ import PlayerAimCard from "./components/player_aim_card/PlayerAimCard";
 import playersDerivativeSelectors from "../../../../../../redux/players/selectors/playersDerivativeSelectors";
 import buildingActions from "../../../../../../redux/building/buildingActions";
 import playerActions from "../../../../../../redux/players/playersActions";
+import SelectedCardDisplay from "./components/selected_card_display/SelectedCardDisplay";
+import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
+import selectCardForBuilding from "./thunks/selectCardForBuilding";
 //
 
 const BottomNav = () => {
@@ -18,61 +21,53 @@ const BottomNav = () => {
   const activePlayerDestinations = useSelector(
     playersDerivativeSelectors.getActivePlayerDestinations
   );
+  const selectedConnection = useSelector(
+    buildingEssentialSelectors.getSelectedConnection
+  );
 
   return (
-    <nav className={css["bottom-nav"]}>
-      <div className={css["header-wrap"]}>
-        <h2>Célok:</h2>
-      </div>
-      <PlayerCardsWrap>
-        {map(activePlayerDestinations, (destination, index) => (
-          <PlayerAimCard
-            key={index}
-            from={destination.fromCity}
-            to={destination.toCity}
-            points={destination.value}
-          />
-        ))}
-      </PlayerCardsWrap>
+    <>
+      <SelectedCardDisplay />
+      <nav className={css["bottom-nav"]}>
+        <div className={css["header-wrap"]}>
+          <h2>Célok:</h2>
+        </div>
+        <PlayerCardsWrap>
+          {map(activePlayerDestinations, (destination, index) => (
+            <PlayerAimCard
+              key={index}
+              from={destination.fromCity}
+              to={destination.toCity}
+              points={destination.value}
+            />
+          ))}
+        </PlayerCardsWrap>
 
-      <div className={css["header-wrap"]}>
-        <h2>Vasutak:</h2>
-      </div>
-      <PlayerCardsWrap>
-        {map(keys(activePlayerCardTypeNumbers), (type) => (
-          <PlayerLocomotiveCard
-            onClick={() => {
-              dispatch(async (dispatch, getState) => {
-                const state = getState();
-                const activePlayerCards = playersDerivativeSelectors.getActivePlayerCards(
-                  state
-                );
-                let cardPicker = null;
-                const newActivePlayerCards = compact(
-                  map(activePlayerCards, (card) => {
-                    if (card.type === type && cardPicker === null) {
-                      cardPicker = card;
-                      return null;
-                    }
-                    return card;
-                  })
-                );
-                if (cardPicker === null)
-                  throw new Error("No card in hand like this");
+        <div className={css["header-wrap"]}>
+          <h2>Vasutak:</h2>
+        </div>
 
-                dispatch(buildingActions.pushSelectedCard(cardPicker));
-                dispatch(
-                  playerActions.setActivePlayersCards(newActivePlayerCards)
-                );
-              });
-            }}
-            key={type}
-            color={type}
-            quantity={activePlayerCardTypeNumbers[type]}
-          />
-        ))}
-      </PlayerCardsWrap>
-    </nav>
+        <PlayerCardsWrap>
+          {map(keys(activePlayerCardTypeNumbers), (type) => {
+            const onClick = () => dispatch(selectCardForBuilding(type));
+            const isEmpty = activePlayerCardTypeNumbers[type] === 0;
+            if (isEmpty) return null;
+
+            const isDisabled = !selectedConnection;
+
+            return (
+              <PlayerLocomotiveCard
+                isDisabled={isDisabled}
+                onClick={onClick}
+                key={type}
+                color={type}
+                quantity={activePlayerCardTypeNumbers[type]}
+              />
+            );
+          })}
+        </PlayerCardsWrap>
+      </nav>
+    </>
   );
 };
 

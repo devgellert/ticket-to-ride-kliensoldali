@@ -1,14 +1,18 @@
 import React from "react";
+import { noop } from "lodash";
+import cn from "classnames";
 import css from "./PlayerLocomotiveCard.module.scss";
 
-const PlayerLocomotiveCard = ({ color, quantity, onClick }) => (
+const PlayerLocomotiveCard = ({ color, quantity, onClick, isDisabled }) => (
   <div
-    className={css["player-locomotive-card"]}
+    className={cn(css["player-locomotive-card"], {
+      [css["disabled"]]: isDisabled,
+    })}
     style={{
       backgroundColor: color !== "locomotive" ? color : "khaki",
       backgroundImage: color === "locomotive" ? `url(/loco.jpg)` : undefined,
     }}
-    onClick={onClick}
+    onClick={isDisabled ? noop : onClick}
   >
     <span>{quantity}</span>
   </div>
