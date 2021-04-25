@@ -4,6 +4,10 @@ import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 const initialState = {
   selectedConnection: null,
   selectedCards: [],
+  hover: {
+    from: null,
+    to: null,
+  },
 };
 
 const buildingReducer = (state = initialState, action) => {
@@ -47,6 +51,11 @@ const buildingReducer = (state = initialState, action) => {
         selectedCards: action.payload.selectedCards,
       };
 
+    case buildingConstants.SET_HOVER:
+      return {
+        ...state,
+        hover: action.payload,
+      };
     default:
       return state;
   }

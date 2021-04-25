@@ -3,6 +3,7 @@ export const buildingConstants = {
   PUSH_SELECTED_CARD: "PUSH_SELECTED_CARD",
   CANCEL_BUILDING_SUCCESS: "CANCEL_BUILDING_SUCCESS",
   UNSELECT_CARD_SUCCESS: "UNSELECT_CARD_SUCCESS",
+  SET_HOVER: "SET_HOVER",
 };
 
 const setSelectedConnection = (selectedConnection) => ({
@@ -30,11 +31,17 @@ const unselectCardSuccess = ({ selectedCards, activePlayerCards }) => ({
   },
 });
 
+const setHover = ({ from, to }) => ({
+  type: buildingConstants.SET_HOVER,
+  payload: { from, to },
+});
+
 const buildingActions = {
   setSelectedConnection,
   pushSelectedCard,
   cancelBuildingSuccess,
   unselectCardSuccess,
+  setHover,
 };
 
 export default buildingActions;
