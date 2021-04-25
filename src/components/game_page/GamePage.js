@@ -16,8 +16,9 @@ import prepareNextRound from "../../redux/business/prepareNextRound";
 import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativeSelectors";
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import roundActions from "../../redux/round/roundActions";
+import { withRouter } from "react-router-dom";
 
-const GamePage = () => {
+const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
   const destinations = useSelector(generalEssentialSelectors.getDestinations);
   const players = useSelector(playersEssentialSelectors.getPlayers);
@@ -85,7 +86,7 @@ const GamePage = () => {
 
   useEffect(() => {
     if (isGameEnded) {
-      alert("game ended");
+      history.push("/final");
     }
   }, [isGameEnded]);
 
@@ -97,4 +98,4 @@ const GamePage = () => {
   );
 };
 
-export default GamePage;
+export default withRouter(GamePage);

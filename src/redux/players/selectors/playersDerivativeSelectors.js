@@ -105,7 +105,7 @@ const getPlayerPoints = (state, playerIndex) => {
 };
 
 const getPlayerAvailableVagons = (state, playerIndex) => {
-  let result = 45;
+  let result = 5; // TODO 45
 
   const connections = getPlayerConnections(state, playerIndex);
 
@@ -118,10 +118,9 @@ const getPlayerAvailableVagons = (state, playerIndex) => {
 
 const getIsLastRoundNeeded = (state) => {
   const playerCount = playersEssentialSelectors.getPlayers(state).length;
-  const lastRoundSat =
-    roundEssentialSelectors.getLastRoundsCount(state) !== null;
+  const lastRoundsCount = roundEssentialSelectors.getLastRoundsCount(state);
 
-  if (lastRoundSat) return false; // If already sat, dont need to set anymore
+  if (lastRoundsCount !== null) return false; // If already sat, dont need to set anymore
 
   for (let i = 0; i < playerCount; i++) {
     const isLastRoundNeeded = getPlayerAvailableVagons(state, i) <= 2;
