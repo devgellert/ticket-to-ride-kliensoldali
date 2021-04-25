@@ -1,6 +1,7 @@
 import { playerConstants } from "./playersActions";
 import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 import { map } from "lodash";
+import { buildingConstants } from "../building/buildingActions";
 
 const initialState = {
   activePlayerIndex: 0,
@@ -48,18 +49,18 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         activePlayerIndex: action.payload.activePlayerIndex,
-        players: map(state.players, (player, index) => {
-          if (index === action.payload.prevActivePlayerIndex) {
-            return {
-              ...player,
-              hand: {
-                ...player.hand,
-                cards: [...player.hand.cards, ...action.payload.selectedCards],
-              },
-            };
-          }
-          return player;
-        }),
+        // players: map(state.players, (player, index) => {
+        //   if (index === action.payload.prevActivePlayerIndex) {
+        //     return {
+        //       ...player,
+        //       hand: {
+        //         ...player.hand,
+        //         cards: [...player.hand.cards, ...action.payload.selectedCards],
+        //       },
+        //     };
+        //   }
+        //   return player;
+        // }),
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
@@ -110,6 +111,40 @@ const playersReducer = (state = initialState, action) => {
               }
             : player
         ),
+      };
+
+    case buildingConstants.CANCEL_BUILDING_SUCCESS:
+      return {
+        ...state,
+        players: map(state.players, (player, index) => {
+          if (index === state.activePlayerIndex) {
+            return {
+              ...player,
+              hand: {
+                ...player.hand,
+                cards: action.payload.activePlayerCards,
+              },
+            };
+          }
+          return player;
+        }),
+      };
+
+    case buildingConstants.UNSELECT_CARD_SUCCESS:
+      return {
+        ...state,
+        players: map(state.players, (player, index) => {
+          if (index === state.activePlayerIndex) {
+            return {
+              ...player,
+              hand: {
+                ...player.hand,
+                cards: action.payload.activePlayerCards,
+              },
+            };
+          }
+          return player;
+        }),
       };
 
     default:

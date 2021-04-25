@@ -66,6 +66,8 @@ const GamePage = () => {
 
   useEffect(() => {
     if (isRoundEnded) {
+      // TODO: Alert next player coming
+
       dispatch(prepareNextRound());
     }
   }, [isRoundEnded]);

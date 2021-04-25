@@ -1,6 +1,8 @@
 export const buildingConstants = {
   SET_SELECTED_CONNECTION: "SET_SELECTED_CONNECTION",
   PUSH_SELECTED_CARD: "PUSH_SELECTED_CARD",
+  CANCEL_BUILDING_SUCCESS: "CANCEL_BUILDING_SUCCESS",
+  UNSELECT_CARD_SUCCESS: "UNSELECT_CARD_SUCCESS",
 };
 
 const setSelectedConnection = (selectedConnection) => ({
@@ -13,9 +15,26 @@ const pushSelectedCard = (card) => ({
   payload: card,
 });
 
+const cancelBuildingSuccess = ({ activePlayerCards }) => ({
+  type: buildingConstants.CANCEL_BUILDING_SUCCESS,
+  payload: {
+    activePlayerCards,
+  },
+});
+
+const unselectCardSuccess = ({ selectedCards, activePlayerCards }) => ({
+  type: buildingConstants.UNSELECT_CARD_SUCCESS,
+  payload: {
+    selectedCards,
+    activePlayerCards,
+  },
+});
+
 const buildingActions = {
   setSelectedConnection,
   pushSelectedCard,
+  cancelBuildingSuccess,
+  unselectCardSuccess,
 };
 
 export default buildingActions;

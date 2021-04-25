@@ -5,12 +5,18 @@ import { useSelector } from "react-redux";
 import roundDerivativeSelectors from "../../../../../../../../../../redux/round/selectors/roundDerivativeSelectors";
 import cn from "classnames";
 
-const FieldLocomotiveCard = ({ color, onClick = noop, id }) => {
+const FieldLocomotiveCard = ({
+  color,
+  onClick = noop,
+  id,
+  isDisabled: isDisabledProp,
+}) => {
   const canDrawLocomotive = useSelector(
     roundDerivativeSelectors.canDrawLocomotive
   );
 
-  const isDisabled = color === "locomotive" && !canDrawLocomotive;
+  const isDisabled =
+    isDisabledProp || (color === "locomotive" && !canDrawLocomotive);
 
   return (
     <div

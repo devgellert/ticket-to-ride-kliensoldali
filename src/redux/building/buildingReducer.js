@@ -31,7 +31,20 @@ const buildingReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedConnection: null,
+        // selectedCards: [],
+      };
+
+    case buildingConstants.CANCEL_BUILDING_SUCCESS:
+      return {
+        ...state,
         selectedCards: [],
+        selectedConnection: null,
+      };
+
+    case buildingConstants.UNSELECT_CARD_SUCCESS:
+      return {
+        ...state,
+        selectedCards: action.payload.selectedCards,
       };
 
     default:
