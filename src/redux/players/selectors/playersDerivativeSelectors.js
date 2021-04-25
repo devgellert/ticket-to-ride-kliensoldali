@@ -3,6 +3,7 @@ import { forEach, map, flatten, includes } from "lodash";
 import playersEssentialSelectors from "./playersEssentialSelectors";
 import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
+import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
 
 const {
   getActivePlayerIndex,
@@ -11,6 +12,7 @@ const {
   getPlayerDestinations,
   getPlayerCards,
   getPlayerConnections,
+  getPlayer,
 } = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {
@@ -102,6 +104,35 @@ const getPlayerPoints = (state, playerIndex) => {
   return result;
 };
 
+const getPlayerAvailableVagons = (state, playerIndex) => {
+  let result = 45;
+
+  const connections = getPlayerConnections(state, playerIndex);
+
+  forEach(connections, (connection) => {
+    result -= connection.elements.length;
+  });
+
+  return result;
+};
+
+const getIsLastRoundNeeded = (state) => {
+  const playerCount = playersEssentialSelectors.getPlayers(state).length;
+  const lastRoundSat =
+    roundEssentialSelectors.getLastRoundsCount(state) !== null;
+
+  if (lastRoundSat) return false; // If already sat, dont need to set anymore
+
+  for (let i = 0; i < playerCount; i++) {
+    const isLastRoundNeeded = getPlayerAvailableVagons(state, i) <= 2;
+    if (isLastRoundNeeded) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
@@ -110,6 +141,7 @@ const playersDerivativeSelectors = {
   activePlayerHasEnoughCards,
   getActivePlayerCards,
   getPlayerPoints,
+  getIsLastRoundNeeded,
 };
 
 export default playersDerivativeSelectors;

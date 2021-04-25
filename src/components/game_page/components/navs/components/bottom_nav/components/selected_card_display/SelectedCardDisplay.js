@@ -37,6 +37,7 @@ const SelectedCardDisplay = () => {
     });
   };
 
+  //TODO: separate
   const unselectCard = (type) => {
     dispatch(async (dispatch, getState) => {
       const state = getState();
@@ -47,7 +48,7 @@ const SelectedCardDisplay = () => {
 
       const newSelectedCards = filter(
         selectedCards,
-        (card) => card.type !== type
+        (card) => card.id !== cardToUnselect.id
       );
 
       const activePlayerCards = playersDerivativeSelectors.getActivePlayerCards(

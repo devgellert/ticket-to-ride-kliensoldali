@@ -1,9 +1,11 @@
 import { playerConstants } from "../players/playersActions";
+import { roundConstants } from "./roundActions";
 import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 
 const initialState = {
   points: 2,
   nth: 0,
+  lastRoundsCount: null, // null | number
 };
 
 const roundReducer = (state = initialState, action) => {
@@ -24,6 +26,8 @@ const roundReducer = (state = initialState, action) => {
         ...state,
         points: 2,
         nth: state.nth + 1,
+        lastRoundsCount:
+          state.lastRoundsCount === null ? null : state.lastRoundsCount - 1,
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
@@ -36,6 +40,12 @@ const roundReducer = (state = initialState, action) => {
       return {
         ...state,
         points: state.points - 2,
+      };
+
+    case roundConstants.SET_LAST_ROUNDS_COUNT:
+      return {
+        ...state,
+        lastRoundsCount: action.payload.value,
       };
 
     default:

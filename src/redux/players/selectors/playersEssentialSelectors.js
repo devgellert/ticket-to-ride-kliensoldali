@@ -39,6 +39,7 @@ const playersEssentialSelectors = {
   getMode,
   getActivePlayerCards,
   getPlayersCount,
+  getPlayer,
   getPlayerConnections,
 };
 

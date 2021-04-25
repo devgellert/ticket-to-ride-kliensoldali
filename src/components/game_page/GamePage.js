@@ -13,6 +13,9 @@ import playersEssentialSelectors from "../../redux/players/selectors/playersEsse
 import generalEssentialSelectors from "../../redux/general/selectors/generalEssentialSelectors";
 import roundEssentialSelectors from "../../redux/round/selectors/roundEssentialSelectors";
 import prepareNextRound from "../../redux/business/prepareNextRound";
+import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativeSelectors";
+import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
+import roundActions from "../../redux/round/roundActions";
 
 const GamePage = () => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
@@ -20,6 +23,10 @@ const GamePage = () => {
   const players = useSelector(playersEssentialSelectors.getPlayers);
   const isRoundEnded = useSelector(roundEssentialSelectors.isRoundEnded);
   const dispatch = useDispatch();
+  const isLastRoundNeeded = useSelector(
+    playersDerivativeSelectors.getIsLastRoundNeeded
+  );
+  const isGameEnded = useSelector(roundDerivativeSelectors.isGameEnded);
 
   const createInitialPlayersViaMutation = (deck, destinations) =>
     map(players, (player) => ({
@@ -69,8 +76,18 @@ const GamePage = () => {
       // TODO: Alert next player coming
 
       dispatch(prepareNextRound());
+
+      if (isLastRoundNeeded) {
+        dispatch(roundActions.setLastRoundsCount({ value: players.length }));
+      }
     }
   }, [isRoundEnded]);
+
+  useEffect(() => {
+    if (isGameEnded) {
+      alert("game ended");
+    }
+  }, [isGameEnded]);
 
   return (
     <div className={css["GamePage"]}>
