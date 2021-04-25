@@ -4,6 +4,7 @@ import playersEssentialSelectors from "./playersEssentialSelectors";
 import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
+import React from "react";
 
 const {
   getActivePlayerIndex,
@@ -22,7 +23,7 @@ const getPlayersStatistics = (state) => {
     const { hand } = player;
 
     const isActive = isPlayerIndexActive(state, index);
-    const points = getPlayerPoints(state, index);
+    const points = getPlayerRoutePoints(state, index);
     const isPlayerActive =
       index === playersEssentialSelectors.getActivePlayerIndex(state);
     const cards =
@@ -94,7 +95,7 @@ const activePlayerHasEnoughCards = (state) => {
   return false;
 };
 
-const getPlayerPoints = (state, playerIndex) => {
+const getPlayerRoutePoints = (state, playerIndex) => {
   const connections = getPlayerConnections(state, playerIndex);
   let result = 0;
   forEach(connections, (connection) => {
@@ -132,6 +133,29 @@ const getIsLastRoundNeeded = (state) => {
   return false;
 };
 
+const getFinalStatistics = (state) => {
+  const players = playersEssentialSelectors.getPlayers(state);
+
+  const statistics = map(players, (player, index) => {
+    const routePoints = getPlayerRoutePoints(state, index);
+    const destinationPoints = 0;
+    const allPoints = routePoints + destinationPoints;
+
+    return {
+      name: player.name,
+      routePoints,
+      destinationPoints,
+      allPoints,
+    };
+  });
+
+  const statisticsInOrder = statistics.sort(
+    (a, b) => b.allPoints - a.allPoints // desc
+  );
+
+  return statisticsInOrder;
+};
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
@@ -139,8 +163,9 @@ const playersDerivativeSelectors = {
   getIsConnectionBuilt,
   activePlayerHasEnoughCards,
   getActivePlayerCards,
-  getPlayerPoints,
+  getPlayerRoutePoints,
   getIsLastRoundNeeded,
+  getFinalStatistics,
 };
 
 export default playersDerivativeSelectors;

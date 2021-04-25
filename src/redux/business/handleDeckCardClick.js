@@ -1,6 +1,5 @@
 import generalEssentialSelectors from "../general/selectors/generalEssentialSelectors";
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
-import { map } from "lodash";
 import playerActions from "../players/playersActions";
 
 const handleDeckCardClick = () => async (dispatch, getState) => {
@@ -12,11 +11,13 @@ const handleDeckCardClick = () => async (dispatch, getState) => {
 
   const players = [...playersEssentialSelectors.getPlayers(state)];
 
+  if (!firstElement) return;
+
   players[
     playersEssentialSelectors.getActivePlayerIndex(state)
   ].hand.cards.push(firstElement);
 
-  dispatch(playerActions.cardDrawFromDeckSuccess({ players }));
+  dispatch(playerActions.cardDrawFromDeckSuccess({ players, deck }));
 };
 
 export default handleDeckCardClick;

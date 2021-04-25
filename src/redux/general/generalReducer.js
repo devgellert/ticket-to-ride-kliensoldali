@@ -48,6 +48,12 @@ const generalReducer = (state = initialState, action) => {
         deck: action.payload.deck,
       };
 
+    case playerConstants.CARD_DRAW_FROM_DECK_SUCCESS:
+      return {
+        ...state,
+        deck: action.payload.deck,
+      };
+
     default:
       return state;
   }

@@ -7,12 +7,16 @@ import handleFieldCardClick from "../../../../../../../../redux/business/handleF
 import handleDeckCardClick from "../../../../../../../../redux/business/handleDeckCardClick";
 import buildingEssentialSelectors from "../../../../../../../../redux/building/selectors/buildingEssentialSelectors";
 import cn from "classnames";
+import generalDerivativeSelectors from "../../../../../../../../redux/general/selectors/generalDerivativeSelectors";
 
 const CardSection = () => {
   const dispatch = useDispatch();
   const field = useSelector(generalEssentialSelectors.getField);
   const selectedConnection = useSelector(
     buildingEssentialSelectors.getSelectedConnection
+  );
+  const isCardDeckEmpty = useSelector(
+    generalDerivativeSelectors.isCardDeckEmpty
   );
 
   const isCardClickDisabled = selectedConnection !== null;
@@ -21,13 +25,17 @@ const CardSection = () => {
     dispatch(handleFieldCardClick(id));
   };
 
+  const isDeckClickDisabled = isCardClickDisabled || isCardDeckEmpty;
+
   const cards = (
     <>
       <div
-        className={cn(css["deck"], { [css["disabled"]]: isCardClickDisabled })}
+        className={cn(css["deck"], {
+          [css["disabled"]]: isDeckClickDisabled,
+        })}
         style={{ backgroundImage: 'url("/card-back.png")' }}
         onClick={() => {
-          if (isCardClickDisabled) return;
+          if (isDeckClickDisabled) return;
 
           dispatch(handleDeckCardClick());
         }}

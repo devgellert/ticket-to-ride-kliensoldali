@@ -1,7 +1,15 @@
 import generalEssentialSelectors from "./generalEssentialSelectors";
 
-const {} = generalEssentialSelectors;
+const { getDeck } = generalEssentialSelectors;
 
-const generalDerivativeSelectors = {};
+const isCardDeckEmpty = (state) => {
+  const deck = getDeck(state);
+
+  return deck.length === 0;
+};
+
+const generalDerivativeSelectors = {
+  isCardDeckEmpty,
+};
 
 export default generalDerivativeSelectors;

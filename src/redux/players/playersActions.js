@@ -31,10 +31,11 @@ const cardDrawFromFieldSuccess = ({ field, players, points, deck }) => ({
   },
 });
 
-const cardDrawFromDeckSuccess = ({ players }) => ({
+const cardDrawFromDeckSuccess = ({ players, deck }) => ({
   type: playerConstants.CARD_DRAW_FROM_DECK_SUCCESS,
   payload: {
     players,
+    deck,
   },
 });
 
