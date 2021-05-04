@@ -6,10 +6,13 @@ const isRoundEnded = (state) => getPoints(state) === 0; // TODO derivative
 
 const getLastRoundsCount = (state) => getState(state).lastRoundsCount;
 
+const getNth = (state) => getState(state).nth;
+
 const roundEssentialSelectors = {
   isRoundEnded,
   getPoints,
   getLastRoundsCount,
+  getNth
 };
 
 export default roundEssentialSelectors;

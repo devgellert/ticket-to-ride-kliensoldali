@@ -4,7 +4,7 @@ import playersEssentialSelectors from "./playersEssentialSelectors";
 import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
-import React from "react";
+import { reduce, size } from "lodash";
 
 const {
   getActivePlayerIndex,
@@ -20,7 +20,7 @@ const getPlayersStatistics = (state) => {
   const players = getPlayers(state);
 
   return map(players, (player, index) => {
-    const { hand } = player;
+    const { hand, connections } = player;
 
     const isActive = isPlayerIndexActive(state, index);
     const points = getPlayerRoutePoints(state, index);
@@ -32,13 +32,17 @@ const getPlayersStatistics = (state) => {
         ? buildingEssentialSelectors.getSelectedCards(state).length
         : 0);
 
+    const vagons = getPlayerAvailableVagons(state, index);
+
+    const round = roundEssentialSelectors.getNth(state);
+
     return {
       destinations: hand.destinations.length,
       cards,
       name: player.name,
       points: points,
-      round: "TODO",
-      vagons: "TODO",
+      round,
+      vagons,
       isActive,
     };
   });
@@ -106,7 +110,7 @@ const getPlayerRoutePoints = (state, playerIndex) => {
 };
 
 const getPlayerAvailableVagons = (state, playerIndex) => {
-  let result = 5; // TODO 45
+  let result = 45;
 
   const connections = getPlayerConnections(state, playerIndex);
 
