@@ -66,6 +66,7 @@ const GamePage = ({ history }) => {
         destinations: mutatedDestinations,
       })
     );
+    dispatch(roundActions.pushLog({ value: "A játék elkezdődött" }));
   };
 
   useEffect(() => {

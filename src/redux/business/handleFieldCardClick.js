@@ -3,9 +3,12 @@ import generalEssentialSelectors from "../general/selectors/generalEssentialSele
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
 import playerActions from "../players/playersActions";
 import { compact } from "lodash";
+import roundActions from "../round/roundActions";
 
 const handleFieldCardClick = (id) => async (dispatch, getState) => {
   const state = getState();
+
+  const activePlayer = playersEssentialSelectors.getActivePlayer(state);
 
   const field = generalEssentialSelectors.getField(state);
 
@@ -44,6 +47,12 @@ const handleFieldCardClick = (id) => async (dispatch, getState) => {
       players,
       points: clickedCard.points,
       deck,
+    })
+  );
+
+  dispatch(
+    roundActions.pushLog({
+      value: `${activePlayer.name} húzott egy kártyát a kintlévők közül (${clickedCard.type})`,
     })
   );
 };

@@ -6,6 +6,7 @@ const initialState = {
   points: 2,
   nth: 0,
   lastRoundsCount: null, // null | number
+  logs: [],
 };
 
 const roundReducer = (state = initialState, action) => {
@@ -46,6 +47,12 @@ const roundReducer = (state = initialState, action) => {
       return {
         ...state,
         lastRoundsCount: action.payload.value,
+      };
+
+    case roundConstants.PUSH_LOG:
+      return {
+        ...state,
+        logs: [action.payload.value, ...state.logs],
       };
 
     default:

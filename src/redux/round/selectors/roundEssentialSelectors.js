@@ -8,11 +8,14 @@ const getLastRoundsCount = (state) => getState(state).lastRoundsCount;
 
 const getNth = (state) => getState(state).nth;
 
+const getLogs = (state) => getState(state).logs;
+
 const roundEssentialSelectors = {
   isRoundEnded,
   getPoints,
   getLastRoundsCount,
-  getNth
+  getNth,
+  getLogs,
 };
 
 export default roundEssentialSelectors;
