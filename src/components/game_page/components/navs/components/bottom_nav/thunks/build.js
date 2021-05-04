@@ -1,10 +1,32 @@
 import buildingEssentialSelectors from "../../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import { compact, map } from "lodash";
+import { compact, map, reduce } from "lodash";
 import { buildSuccess } from "../../../../../../../redux/actions";
-import mapConnectionLengthToPoints from "../../../../../../../utils/mapConnectionLengthToPoints";
+import roundActions from "../../../../../../../redux/round/roundActions";
+import playersEssentialSelectors from "../../../../../../../redux/players/selectors/playersEssentialSelectors";
+
+const isLoco = (elem) => elem.type === "locomotive";
+
+const cMap = (arr, cb) => compact(map(arr, cb));
+
+const getLocoCount = (cards) =>
+  reduce(cards, (acc, card) => (isLoco(card) ? acc + 1 : acc), 0);
+
+const countType = (cards, type) =>
+  reduce(cards, (acc, elem) => (elem.type === type ? acc + 1 : acc), 0);
+
+const forNumber = (num, cb) => {
+  for (let i = 0; i < num; i++) {
+    cb();
+  }
+};
+
+const dropType = (cards, type) =>
+  cMap(cards, (card) => (card.type === type ? null : card));
 
 const build = () => async (dispatch, getState) => {
   const state = getState();
+
+  const activePlayer = playersEssentialSelectors.getActivePlayer(state);
 
   const selectedConnection = buildingEssentialSelectors.getSelectedConnection(
     state
@@ -12,59 +34,57 @@ const build = () => async (dispatch, getState) => {
   if (!selectedConnection) return;
 
   const {
-    color,
+    color, // === type
     elements,
     locomotive: locomotivesNeeded = 0,
   } = selectedConnection;
   const cardsNeeded = elements.length;
   const selectedCards = buildingEssentialSelectors.getSelectedCards(state);
+  const locomotiveCount = getLocoCount(selectedCards);
 
-  if (locomotivesNeeded > 0) {
-    // check if enough locomotives
-    // count locomotives
-    const locomotiveCount = selectedCards.reduce(
-      (acc, elem) => (elem.type === "locomotive" ? acc + 1 : acc),
-      0
-    );
-    if (locomotiveCount < locomotivesNeeded) {
-      alert("Nincs elég mozdonyod"); // TODO replace
-      return;
-    }
-  }
+  const isNotEnoughLoco =
+    locomotivesNeeded > 0 && locomotiveCount < locomotivesNeeded;
+  if (isNotEnoughLoco) return alert("Nincs elég mozdonyod");
 
-  // check if enough cards
   const colorCardsNeeded = cardsNeeded - locomotivesNeeded;
+  const rightColorCount = countType(selectedCards, color);
 
-  const rightColorCount = selectedCards.reduce(
-    (acc, elem) => (elem.type === color ? acc + 1 : acc),
-    0
-  );
-  if (rightColorCount < colorCardsNeeded) {
-    alert(`Több kell ebből a színből: ${color}`); // TODO replace
-    return;
+  let moreLocosCount = 0;
+
+  const isNotEnoughColorCard = rightColorCount < colorCardsNeeded;
+  if (isNotEnoughColorCard) {
+    const moreLocoNeeded = colorCardsNeeded - rightColorCount;
+    const moreLocos = locomotiveCount - locomotivesNeeded;
+    const isNoLocoEnough = moreLocos < moreLocoNeeded;
+    if (isNoLocoEnough)
+      return alert(
+        `Több kell ebből a színből: ${color}, nem lehet pótolni elég mozdonnyal sem...`
+      );
+    moreLocosCount = moreLocos;
   }
 
-  // handle build
   let cardsToPutBackToHand = [...selectedCards];
 
-  for (let i = 0; i < colorCardsNeeded; i++) {
-    cardsToPutBackToHand = compact(
-      map(cardsToPutBackToHand, (elem) => (elem.type === color ? null : elem))
-    );
-  }
+  const countOfColorsToDrop = colorCardsNeeded - locomotivesNeeded;
+  forNumber(countOfColorsToDrop, () => {
+    cardsToPutBackToHand = dropType(cardsToPutBackToHand, color);
+  });
 
-  for (let i = 0; i < locomotivesNeeded; i++) {
-    cardsToPutBackToHand = compact(
-      map(cardsToPutBackToHand, (elem) =>
-        elem.type === "locomotive" ? null : elem
-      )
-    );
-  }
+  const countOfLocosToDrop = locomotivesNeeded + moreLocosCount;
+  forNumber(countOfLocosToDrop + moreLocosCount, () => {
+    cardsToPutBackToHand = dropType(cardsToPutBackToHand, "locomotive");
+  });
 
   dispatch(
     buildSuccess({
       cardsToPutBackToHand,
       selectedConnection: selectedConnection,
+    })
+  );
+  console.log(selectedConnection);
+  dispatch(
+    roundActions.pushLog({
+      value: `${activePlayer.name} megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
     })
   );
 };

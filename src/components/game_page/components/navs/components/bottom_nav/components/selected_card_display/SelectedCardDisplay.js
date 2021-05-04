@@ -20,6 +20,7 @@ const SelectedCardDisplay = () => {
   if (!selectedConnection) return null;
 
   const onBuildClick = () => dispatch(build());
+
   const onCancelClick = () => {
     dispatch(async (dispatch, getState) => {
       const state = getState();

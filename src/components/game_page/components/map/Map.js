@@ -11,6 +11,8 @@ const { cities, connections } = data;
 const Map = () => {
   const wrapRef = createRef();
 
+  console.log(data);
+
   return (
     <section ref={wrapRef} className={css["map-wrap"]}>
       <img width={800} height={544} src="/map.jpg" alt="map" />
