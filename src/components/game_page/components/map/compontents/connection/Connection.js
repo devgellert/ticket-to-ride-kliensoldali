@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useState } from "react";
 import Element from "./components/element/Element";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,8 +7,26 @@ import playersDerivativeSelectors from "../../../../../../redux/players/selector
 import buildingActions from "../../../../../../redux/building/buildingActions";
 import buildingDerivativeSelectors from "../../../../../../redux/building/selectors/buildingDerivativeSelectors";
 import { map } from "lodash";
+import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
+import GraphService from "../../../../../../services/GraphService";
+import playersEssentialSelectors from "../../../../../../redux/players/selectors/playersEssentialSelectors";
 
 const Connection = ({ connection, imgWrapRef }) => {
+  const hover = useSelector(buildingEssentialSelectors.getHover);
+
+  const activePlayersDestinations = useSelector(
+    playersEssentialSelectors.getActivePlayerConnections
+  );
+
+  // const isActive = useMemo(() => {
+  //   if (hover.from && hover.to) {
+  //     const graphService = new GraphService();
+  //     console.log("active", activePlayersDestinations);
+  //
+  //     graphService.construct([]);
+  //   }
+  // }, [hover.from, hover.to]);
+
   const dispatch = useDispatch();
 
   const hasPointsToBuild = useSelector(

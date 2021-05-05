@@ -12,6 +12,8 @@ const City = ({ city, imgWrapRef }) => {
 
   const isHovered = [hover.from, hover.to].includes(city.city);
 
+  // is connection built
+
   const [style, setStyle] = useState({});
 
   useEffect(() => {
