@@ -12,8 +12,8 @@ const PlayerList = () => {
 
   return (
     <div className={css["player-list"]}>
-      {map(playersStatistics, (stat) => (
-        <Player {...stat} />
+      {map(playersStatistics, (stat, index) => (
+        <Player key={index} {...stat} />
       ))}
     </div>
   );

@@ -17,7 +17,6 @@ import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativ
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import roundActions from "../../redux/round/roundActions";
 import { withRouter } from "react-router-dom";
-import GraphModel from "../../services/GraphModel";
 
 const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);

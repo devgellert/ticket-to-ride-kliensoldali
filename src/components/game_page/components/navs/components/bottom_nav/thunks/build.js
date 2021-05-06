@@ -3,6 +3,7 @@ import { compact, map, reduce } from "lodash";
 import { buildSuccess } from "../../../../../../../redux/actions";
 import roundActions from "../../../../../../../redux/round/roundActions";
 import playersEssentialSelectors from "../../../../../../../redux/players/selectors/playersEssentialSelectors";
+import { cardTypes } from "../../../../../../../redux/general/generalReducer";
 
 const isLoco = (elem) => elem.type === "locomotive";
 
@@ -13,6 +14,28 @@ const getLocoCount = (cards) =>
 
 const countType = (cards, type) =>
   reduce(cards, (acc, elem) => (elem.type === type ? acc + 1 : acc), 0);
+
+const handleMaxGreyType = (cards, isType = false) => {
+  let maxType = null;
+  let max = 0;
+  for (let type of cardTypes) {
+    let count = 0;
+    for (let card of cards) {
+      if (card.type === type) {
+        count++;
+      }
+    }
+    if (count > max) {
+      max = count;
+      maxType = type;
+    }
+  }
+  if (!isType) {
+    return max;
+  }
+
+  return maxType;
+};
 
 const forNumber = (num, cb) => {
   for (let i = 0; i < num; i++) {
@@ -38,6 +61,7 @@ const build = () => async (dispatch, getState) => {
     elements,
     locomotive: locomotivesNeeded = 0,
   } = selectedConnection;
+  const isGray = color === "gray";
   const cardsNeeded = elements.length;
   const selectedCards = buildingEssentialSelectors.getSelectedCards(state);
   const locomotiveCount = getLocoCount(selectedCards);
@@ -47,7 +71,10 @@ const build = () => async (dispatch, getState) => {
   if (isNotEnoughLoco) return alert("Nincs elég mozdonyod");
 
   const colorCardsNeeded = cardsNeeded - locomotivesNeeded;
-  const rightColorCount = countType(selectedCards, color);
+  const rightColorCount = !isGray
+    ? countType(selectedCards, color)
+    : handleMaxGreyType(selectedCards);
+  const grayType = handleMaxGreyType(selectedCards, true);
 
   let moreLocosCount = 0;
 
@@ -58,7 +85,9 @@ const build = () => async (dispatch, getState) => {
     const isNoLocoEnough = moreLocos < moreLocoNeeded;
     if (isNoLocoEnough)
       return alert(
-        `Több kell ebből a színből: ${color}, nem lehet pótolni elég mozdonnyal sem...`
+        `Több kell ebből a színből: ${
+          !isGray ? color : grayType
+        }, nem lehet pótolni elég mozdonnyal sem...`
       );
     moreLocosCount = moreLocos;
   }
@@ -66,8 +95,12 @@ const build = () => async (dispatch, getState) => {
   let cardsToPutBackToHand = [...selectedCards];
 
   const countOfColorsToDrop = colorCardsNeeded - locomotivesNeeded;
+
   forNumber(countOfColorsToDrop, () => {
-    cardsToPutBackToHand = dropType(cardsToPutBackToHand, color);
+    cardsToPutBackToHand = dropType(
+      cardsToPutBackToHand,
+      !isGray ? color : grayType
+    );
   });
 
   const countOfLocosToDrop = locomotivesNeeded + moreLocosCount;
@@ -81,7 +114,6 @@ const build = () => async (dispatch, getState) => {
       selectedConnection: selectedConnection,
     })
   );
-  console.log(selectedConnection);
   dispatch(
     roundActions.pushLog({
       value: `${activePlayer.name} megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
