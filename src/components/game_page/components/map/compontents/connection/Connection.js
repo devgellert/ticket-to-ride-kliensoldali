@@ -8,11 +8,12 @@ import buildingActions from "../../../../../../redux/building/buildingActions";
 import buildingDerivativeSelectors from "../../../../../../redux/building/selectors/buildingDerivativeSelectors";
 import { map } from "lodash";
 import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import GraphService from "../../../../../../services/GraphService";
 import playersEssentialSelectors from "../../../../../../redux/players/selectors/playersEssentialSelectors";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const hover = useSelector(buildingEssentialSelectors.getHover);
+
+  const isActive = hover.connectionIds.includes(connection.id);
 
   const activePlayersDestinations = useSelector(
     playersEssentialSelectors.getActivePlayerConnections
@@ -56,6 +57,7 @@ const Connection = ({ connection, imgWrapRef }) => {
     <>
       {map(elements, (elem, index) => (
         <Element
+          isActive={isActive}
           isSelected={isConnectionSelected}
           isBuilt={isBuilt}
           isDisabled={!hasPointsToBuild || !!isBuilt}

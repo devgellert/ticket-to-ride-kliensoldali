@@ -17,7 +17,7 @@ import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativ
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import roundActions from "../../redux/round/roundActions";
 import { withRouter } from "react-router-dom";
-import GraphService from "../../services/GraphService";
+import GraphModel from "../../services/GraphModel";
 
 const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
@@ -72,29 +72,6 @@ const GamePage = ({ history }) => {
 
   useEffect(() => {
     initGame();
-
-    // const graphService = new GraphService();
-    //
-    // const testData = [
-    //   {
-    //     from: 1,
-    //     to: 2,
-    //   },
-    //   {
-    //     from: 2,
-    //     to: 4,
-    //   },
-    //   {
-    //     from: 4,
-    //     to: 6,
-    //   },
-    // ];
-    //
-    // graphService.construct(testData);
-    //
-    // const isConnected = graphService.isConnected(1, 6);
-    //
-    // console.log(isConnected);
   }, []);
 
   useEffect(() => {

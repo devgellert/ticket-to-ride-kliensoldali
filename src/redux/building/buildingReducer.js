@@ -7,6 +7,7 @@ const initialState = {
   hover: {
     from: null,
     to: null,
+    connectionIds: [],
   },
 };
 

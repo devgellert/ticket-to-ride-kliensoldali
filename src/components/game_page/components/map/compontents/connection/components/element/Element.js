@@ -16,6 +16,7 @@ const Element = ({
   isDisabled,
   isBuilt,
   isSelected,
+  isActive,
 }) => {
   const [style, setStyle] = useState({});
 
@@ -51,6 +52,7 @@ const Element = ({
       className={cn(css["element"], {
         [css["disabled"]]: isDisabled,
         [css["selected"]]: isSelected,
+        [css["active"]]: isActive,
       })}
       onClick={isDisabled || isSelected ? noop : onClick}
     />,

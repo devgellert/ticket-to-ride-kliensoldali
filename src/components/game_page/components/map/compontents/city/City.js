@@ -10,7 +10,7 @@ import cn from "classnames";
 const City = ({ city, imgWrapRef }) => {
   const hover = useSelector(buildingEssentialSelectors.getHover);
 
-  const isHovered = [hover.from, hover.to].includes(city.city);
+  const isHovered = [hover.from, hover.to].includes(city.id);
 
   // is connection built
 

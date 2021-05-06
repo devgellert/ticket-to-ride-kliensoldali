@@ -31,9 +31,9 @@ const unselectCardSuccess = ({ selectedCards, activePlayerCards }) => ({
   },
 });
 
-const setHover = ({ from, to }) => ({
+const setHover = ({ from, to, connectionIds }) => ({
   type: buildingConstants.SET_HOVER,
-  payload: { from, to },
+  payload: { from, to, connectionIds },
 });
 
 const buildingActions = {

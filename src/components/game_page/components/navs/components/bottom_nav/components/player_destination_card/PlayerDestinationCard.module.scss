@@ -7,6 +7,10 @@
   margin-left: 5px;
   padding: 5px;
 
+  &.active {
+    background-color: lightgreen;
+  }
+
   .points {
     color: grey;
   }

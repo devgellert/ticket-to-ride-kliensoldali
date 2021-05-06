@@ -20,10 +20,13 @@ const Destinations = () => {
       <PlayerCardsWrap>
         {map(activePlayerDestinations, (destination, index) => (
           <PlayerDestinationCard
+            connectionIds={destination.elements}
             key={index}
             from={destination.fromCity}
             to={destination.toCity}
             points={destination.value}
+            fromId={destination.from}
+            toId={destination.to}
           />
         ))}
       </PlayerCardsWrap>
