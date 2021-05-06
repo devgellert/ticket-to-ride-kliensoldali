@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import GamePage from "./components/game_page/GamePage";
 import MainPage from "./components/MainPage";
 import WaitingPage from "./components/WaitingPage";
-import FinalTable from "./components/game_page/components/final_table/FinalTable";
+import FinalTable from "./components/final_table/FinalTable";
 
 const App = () => {
   return (

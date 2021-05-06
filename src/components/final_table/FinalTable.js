@@ -2,7 +2,7 @@ import React from "react";
 import css from "./FinalTable.module.scss";
 import { useSelector } from "react-redux";
 import { map } from "lodash";
-import playersDerivativeSelectors from "../../../../redux/players/selectors/playersDerivativeSelectors";
+import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 
 const FinalTable = () => {
   const playerFinalStatistics = useSelector(

@@ -5,6 +5,7 @@ import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoi
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
 import { reduce, size } from "lodash";
+import GraphModel from "../../../services/GraphModel";
 
 const {
   getActivePlayerIndex,
@@ -110,7 +111,7 @@ const getPlayerRoutePoints = (state, playerIndex) => {
 };
 
 const getPlayerAvailableVagons = (state, playerIndex) => {
-  let result = 45;
+  let result = 10;
 
   const connections = getPlayerConnections(state, playerIndex);
 
@@ -137,12 +138,39 @@ const getIsLastRoundNeeded = (state) => {
   return false;
 };
 
+const getPlayerDestinationPoints = (state, playerIndex) => {
+  const connections = getPlayerConnections(state, playerIndex);
+  const destinations = getPlayerDestinations(state, playerIndex);
+  const formattedConnections = connections.map(({ from, to }) => ({
+    from: Number(from),
+    to: Number(to),
+  }));
+  console.log(formattedConnections);
+  const graphModel = new GraphModel(formattedConnections);
+
+  let result = 0;
+  forEach(destinations, (destination) => {
+    console.log(Number(destination.from), Number(destination.to));
+    const isConnected = graphModel.areVertexesConnected(
+      Number(destination.from),
+      Number(destination.to)
+    );
+    console.log(isConnected);
+    if (isConnected) {
+      console.log("truie");
+      result += Number(destination.value);
+    }
+  });
+
+  return result;
+};
+
 const getFinalStatistics = (state) => {
   const players = playersEssentialSelectors.getPlayers(state);
 
   const statistics = map(players, (player, index) => {
     const routePoints = getPlayerRoutePoints(state, index);
-    const destinationPoints = 0;
+    const destinationPoints = getPlayerDestinationPoints(state, index);
     const allPoints = routePoints + destinationPoints;
 
     return {
