@@ -183,6 +183,7 @@ const getFinalStatistics = (state) => {
     const allPoints = routePoints + destinationPoints;
 
     return {
+      index,
       name: player.name,
       routePoints,
       destinationPoints,
@@ -197,6 +198,17 @@ const getFinalStatistics = (state) => {
   return statisticsInOrder;
 };
 
+const getFinalDestinationConnections = (state) => {
+  const destinations = [];
+  for (let player of playersEssentialSelectors.getPlayers(state)) {
+    destinations.push({
+      destinations: player.hand.destinations,
+      connections: player.connections,
+    });
+  }
+  return destinations;
+};
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
@@ -207,6 +219,7 @@ const playersDerivativeSelectors = {
   getPlayerRoutePoints,
   getIsLastRoundNeeded,
   getFinalStatistics,
+  getFinalDestinationConnections,
 };
 
 export default playersDerivativeSelectors;

@@ -9,6 +9,12 @@ const FinalTable = () => {
     playersDerivativeSelectors.getFinalStatistics
   );
 
+  const finalDestinationConnections = useSelector(
+    playersDerivativeSelectors.getFinalDestinationConnections
+  );
+
+  const makeDestinations = () => {};
+
   const makeRows = () => {
     return map(playerFinalStatistics, (statistics, index) => {
       return (
@@ -17,6 +23,7 @@ const FinalTable = () => {
           <td>{statistics.routePoints}</td>
           <td>{statistics.destinationPoints}</td>
           <td>{statistics.allPoints}</td>
+          <td></td>
           <td>{index + 1}</td>
         </tr>
       );
@@ -38,6 +45,7 @@ const FinalTable = () => {
             <th>Cél pontok</th>
             <th>Összes pont</th>
             <th>Helyezett</th>
+            <th>Célok</th>
           </tr>
         </thead>
         <tbody>{makeRows()}</tbody>

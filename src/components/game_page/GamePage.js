@@ -16,7 +16,15 @@ import prepareNextRound from "../../redux/business/prepareNextRound";
 import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativeSelectors";
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import roundActions from "../../redux/round/roundActions";
-import { withRouter } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  withRouter,
+} from "react-router-dom";
+import MainPage from "../MainPage";
+import WaitingPage from "../WaitingPage";
+import FinalTable from "../final_table/FinalTable";
 
 const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
@@ -75,8 +83,6 @@ const GamePage = ({ history }) => {
 
   useEffect(() => {
     if (isRoundEnded) {
-      // TODO: Alert next player coming
-
       dispatch(prepareNextRound());
 
       if (isLastRoundNeeded) {
@@ -93,6 +99,9 @@ const GamePage = ({ history }) => {
 
   return (
     <div className={css["GamePage"]}>
+      <Router>
+        <Route path="/final" component={FinalTable} />
+      </Router>
       <Navs />
       <Map />
     </div>
