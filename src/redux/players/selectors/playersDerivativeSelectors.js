@@ -141,23 +141,32 @@ const getIsLastRoundNeeded = (state) => {
 const getPlayerDestinationPoints = (state, playerIndex) => {
   const connections = getPlayerConnections(state, playerIndex);
   const destinations = getPlayerDestinations(state, playerIndex);
-  const formattedConnections = connections.map(({ from, to }) => ({
-    from: Number(from),
-    to: Number(to),
-  }));
-  console.log(formattedConnections);
-  const graphModel = new GraphModel(formattedConnections);
+  const formattedConnections = reduce(
+    connections,
+    (acc, elem) => [
+      ...(acc || []),
+      {
+        from: Number(elem.from),
+        to: Number(elem.to),
+      },
+      {
+        from: Number(elem.to),
+        to: Number(elem.from),
+      },
+    ],
+    []
+  );
 
   let result = 0;
   forEach(destinations, (destination) => {
-    console.log(Number(destination.from), Number(destination.to));
+    const graphModel = new GraphModel(formattedConnections);
+
     const isConnected = graphModel.areVertexesConnected(
-      Number(destination.from),
-      Number(destination.to)
+      destination.from,
+      destination.to
     );
-    console.log(isConnected);
+
     if (isConnected) {
-      console.log("truie");
       result += Number(destination.value);
     }
   });

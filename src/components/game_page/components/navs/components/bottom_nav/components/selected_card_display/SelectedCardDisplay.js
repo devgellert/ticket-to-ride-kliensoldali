@@ -73,9 +73,9 @@ const SelectedCardDisplay = () => {
       <h4>Kiválasztott kártyák:</h4>
 
       {!!isEmpty(selectedCards) && <div>Válasszon kártyákat</div>}
-      {map(selectedCards, (card) => {
+      {map(selectedCards, (card, index) => {
         return (
-          <p>
+          <p key={index}>
             {card.type}{" "}
             <button onClick={() => unselectCard(card.type)}>Törlés</button>
           </p>

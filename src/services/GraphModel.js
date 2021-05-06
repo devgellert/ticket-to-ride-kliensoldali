@@ -1,37 +1,3 @@
-import { map, forEach, findIndex } from "lodash";
-
-// TODO: delete
-const testConnections = [
-  {
-    from: 1,
-    to: 2,
-  },
-  {
-    from: 2,
-    to: 3,
-  },
-  {
-    from: 2,
-    to: 10,
-  },
-  {
-    from: 2,
-    to: 21,
-  },
-  {
-    from: 3,
-    to: 4,
-  },
-  {
-    from: 4,
-    to: 5,
-  },
-  {
-    from: 5,
-    to: 6,
-  },
-];
-
 class GraphModel {
   constructor(connections) {
     this.connections = connections;
@@ -60,12 +26,12 @@ class GraphModel {
     let isConnected = false;
 
     const cb = (vertex) => {
-      if (vertex === to) {
+      if (vertex === Number(to)) {
         isConnected = true;
       }
     };
 
-    this.depthFirst(from, cb);
+    this.depthFirst(Number(from), cb);
 
     return isConnected;
   }
