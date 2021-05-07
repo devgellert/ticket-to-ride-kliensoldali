@@ -1,25 +1,48 @@
+import { reduce, forEach } from "lodash";
+
 class GraphModel {
+  static createUndirectedFromDirectedData = (data) =>
+    reduce(
+      data,
+      (acc, elem) => [
+        ...(acc || []),
+        {
+          from: Number(elem.from),
+          to: Number(elem.to),
+        },
+        {
+          from: Number(elem.to),
+          to: Number(elem.from),
+        },
+      ],
+      []
+    );
+
   constructor(connections) {
     this.connections = connections;
     this.initiate();
   }
 
   initiate = () => {
-    const vertexes = this.connections.reduce((acc, { from, to }) => {
-      const result = acc || [];
-      if (!result.includes(from)) {
-        result.push(from);
-      }
+    const vertexes = reduce(
+      this.connections,
+      (acc, { from, to }) => {
+        const result = acc || [];
+        if (!result.includes(from)) {
+          result.push(from);
+        }
 
-      if (!result.includes(to)) {
-        result.push(to);
-      }
+        if (!result.includes(to)) {
+          result.push(to);
+        }
 
-      return result;
-    }, []);
+        return result;
+      },
+      []
+    );
 
     this.color = {};
-    vertexes.forEach((vertex) => (this.color[vertex] = "white"));
+    forEach(vertexes, (vertex) => (this.color[vertex] = "white"));
   };
 
   areVertexesConnected(from, to) {
@@ -58,6 +81,36 @@ class GraphModel {
       }
     }
     return neighbours;
+  };
+
+  depthFirst2 = (visited, currentVertex, destinationVertex, path, cb) => {
+    visited[currentVertex] = true;
+    if (currentVertex === destinationVertex) {
+      console.log("path found:", path);
+      cb([...path]);
+    } else {
+      const neighbourVertexes = this.getNeighbours(currentVertex);
+
+      for (let nextVertex of neighbourVertexes) {
+        if (!visited[nextVertex]) {
+          visited[nextVertex] = true;
+          path.push(nextVertex);
+          this.depthFirst2(visited, nextVertex, destinationVertex, path, cb);
+          path.pop(nextVertex);
+        }
+      }
+    }
+    visited[currentVertex] = false;
+  };
+
+  getPath = (from, to) => {
+    let res = [];
+    const visited = [];
+    const path = [Number(from)];
+    this.depthFirst2(visited, Number(from), Number(to), path, (path) => {
+      res = path;
+    });
+    return res;
   };
 }
 

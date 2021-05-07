@@ -8,25 +8,17 @@ import buildingActions from "../../../../../../redux/building/buildingActions";
 import buildingDerivativeSelectors from "../../../../../../redux/building/selectors/buildingDerivativeSelectors";
 import { map } from "lodash";
 import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import playersEssentialSelectors from "../../../../../../redux/players/selectors/playersEssentialSelectors";
 
 const Connection = ({ connection, imgWrapRef }) => {
-  const hover = useSelector(buildingEssentialSelectors.getHover);
-
-  const isActive = hover.connectionIds.includes(connection.id);
-
-  const activePlayersDestinations = useSelector(
-    playersEssentialSelectors.getActivePlayerConnections
+  const hoverConnectionIds = useSelector(
+    buildingEssentialSelectors.getHoverConnectionIds
   );
 
-  // const isActive = useMemo(() => {
-  //   if (hover.from && hover.to) {
-  //     const graphService = new GraphService();
-  //     console.log("active", activePlayersDestinations);
-  //
-  //     graphService.construct([]);
-  //   }
-  // }, [hover.from, hover.to]);
+  const isActive =
+    hoverConnectionIds.includes(Number(connection.from)) ||
+    hoverConnectionIds.includes(Number(connection.to));
+
+  console.log("active:", isActive, hoverConnectionIds);
 
   const dispatch = useDispatch();
 
@@ -41,10 +33,6 @@ const Connection = ({ connection, imgWrapRef }) => {
       state,
       connection.id
     )
-  );
-
-  const builtBy = useSelector((state) =>
-    playersDerivativeSelectors.getIsConnectionBuilt(state, connection.id)
   );
 
   const { elements } = connection;

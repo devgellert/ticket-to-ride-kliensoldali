@@ -14,22 +14,9 @@ const PlayerDestinationCard = ({ from, to, points, fromId, toId }) => {
     playersEssentialSelectors.getActivePlayerConnections
   );
 
-  const hover = useSelector(buildingEssentialSelectors.getHover);
-
   const isActive = useMemo(() => {
-    const connections = activePlayerConnections.reduce(
-      (acc, elem) => [
-        ...(acc || []),
-        {
-          from: Number(elem.from),
-          to: Number(elem.to),
-        },
-        {
-          from: Number(elem.to),
-          to: Number(elem.from),
-        },
-      ],
-      []
+    const connections = GraphModel.createUndirectedFromDirectedData(
+      activePlayerConnections
     );
     const graphModel = new GraphModel(connections);
     return graphModel.areVertexesConnected(Number(fromId), Number(toId));
@@ -38,11 +25,17 @@ const PlayerDestinationCard = ({ from, to, points, fromId, toId }) => {
   return (
     <div
       onMouseEnter={() => {
+        const connections = GraphModel.createUndirectedFromDirectedData(
+          activePlayerConnections
+        );
+        const graphModel = new GraphModel(connections);
+
+        const connectionIds = graphModel.getPath(fromId, toId);
         dispatch(
           buildingActions.setHover({
             from: fromId,
             to: toId,
-            connectionIds: [], // TODO del
+            connectionIds,
           })
         );
       }}
@@ -51,7 +44,7 @@ const PlayerDestinationCard = ({ from, to, points, fromId, toId }) => {
           buildingActions.setHover({
             from: null,
             to: null,
-            connectionIds: [], // TODO del
+            connectionIds: [],
           })
         );
       }}
