@@ -35,7 +35,10 @@ const Element = ({
         src="/loco.svg"
         alt="asd"
         style={{ zIndex: 100000, ...style }}
-        className={cn(css["loco-element"], { [css["disabled"]]: isDisabled })}
+        className={cn(css["loco-element"], {
+          [css["disabled"]]: isDisabled,
+          [css["active"]]: isActive,
+        })}
       />,
       document.body
     );

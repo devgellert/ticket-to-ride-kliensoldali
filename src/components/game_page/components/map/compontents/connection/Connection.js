@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useState } from "react";
 import Element from "./components/element/Element";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ const Connection = ({ connection, imgWrapRef }) => {
   );
 
   const isActive =
-    hoverConnectionIds.includes(Number(connection.from)) ||
+    hoverConnectionIds.includes(Number(connection.from)) &&
     hoverConnectionIds.includes(Number(connection.to));
 
   console.log("active:", isActive, hoverConnectionIds);
