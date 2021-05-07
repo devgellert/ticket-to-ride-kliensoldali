@@ -1,10 +1,12 @@
 import React from "react";
 import css from "./FinalTable.module.scss";
-import { useSelector } from "react-redux";
-import { map } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { map, forEach } from "lodash";
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
+import buildingActions from "../../redux/building/buildingActions";
 
 const FinalTable = () => {
+  const dispatch = useDispatch();
   const playerFinalStatistics = useSelector(
     playersDerivativeSelectors.getFinalStatistics
   );
@@ -13,7 +15,35 @@ const FinalTable = () => {
     playersDerivativeSelectors.getFinalDestinationConnections
   );
 
-  const makeDestinations = () => {};
+  const makeDestinations = (playerIndex) => {
+    const destinationConnection = finalDestinationConnections[playerIndex];
+
+    return <div>
+      {map(destinationConnection.destinations, destination => (
+        <div
+          onMouseEnter={() => {
+            dispatch(
+              buildingActions.setHover({
+
+                from: destination.from,
+                to: destination.to,
+                connectionIds: [], // TODO del
+              })
+            );
+          }}
+          onMouseLeave={() => {
+            dispatch(
+              buildingActions.setHover({
+                from: null,
+                to: null,
+                connectionIds: [], // TODO del
+              })
+            );
+          }}
+          className={css["destination"]}>{destination.fromCity + " - " + destination.toCity}</div>
+      ))}
+    </div>
+  };
 
   const makeRows = () => {
     return map(playerFinalStatistics, (statistics, index) => {
@@ -23,7 +53,7 @@ const FinalTable = () => {
           <td>{statistics.routePoints}</td>
           <td>{statistics.destinationPoints}</td>
           <td>{statistics.allPoints}</td>
-          <td></td>
+          <td>{makeDestinations(statistics.index)}</td>
           <td>{index + 1}</td>
         </tr>
       );
