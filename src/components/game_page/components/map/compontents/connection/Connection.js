@@ -14,11 +14,7 @@ const Connection = ({ connection, imgWrapRef }) => {
     buildingEssentialSelectors.getHoverConnectionIds
   );
 
-  const isActive =
-    hoverConnectionIds.includes(Number(connection.from)) &&
-    hoverConnectionIds.includes(Number(connection.to));
 
-  console.log("active:", isActive, hoverConnectionIds);
 
   const dispatch = useDispatch();
 
@@ -28,6 +24,13 @@ const Connection = ({ connection, imgWrapRef }) => {
   const isBuilt = useSelector((state) =>
     playersDerivativeSelectors.getIsConnectionBuilt(state, connection.id)
   );
+
+  const isActive =
+    hoverConnectionIds.includes(Number(connection.from)) &&
+    hoverConnectionIds.includes(Number(connection.to)) && isBuilt
+
+  console.log("active:", isActive, hoverConnectionIds);
+
   const isConnectionSelected = useSelector((state) =>
     buildingDerivativeSelectors.getIsConnectionSelectedById(
       state,

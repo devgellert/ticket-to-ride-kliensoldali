@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import css from "./FinalTable.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { map, forEach } from "lodash";
+import { map } from "lodash";
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import buildingActions from "../../redux/building/buildingActions";
 import GraphModel from "../../services/GraphModel";
@@ -9,7 +9,6 @@ import playersEssentialSelectors from "../../redux/players/selectors/playersEsse
 import cn from "classnames";
 
 const FinalTable = () => {
-  const dispatch = useDispatch();
   const playerFinalStatistics = useSelector(
     playersDerivativeSelectors.getFinalStatistics
   );
@@ -27,24 +26,11 @@ const FinalTable = () => {
           const FinalDestination = () => {
             const dispatch = useDispatch();
 
-            const activePlayerConnections = useSelector(
-              playersEssentialSelectors.getActivePlayerConnections
+            const activePlayerConnections = useSelector(state =>
+              playersEssentialSelectors.getPlayerConnections(state, playerIndex)
             );
             const isActive = useMemo(() => {
-              const connections = activePlayerConnections.reduce(
-                (acc, elem) => [
-                  ...(acc || []),
-                  {
-                    from: Number(elem.from),
-                    to: Number(elem.to),
-                  },
-                  {
-                    from: Number(elem.to),
-                    to: Number(elem.from),
-                  },
-                ],
-                []
-              );
+              const connections = GraphModel.createUndirectedFromDirectedData(activePlayerConnections);
               const graphModel = new GraphModel(connections);
               return graphModel.areVertexesConnected(
                 Number(destination.from),
@@ -55,11 +41,18 @@ const FinalTable = () => {
             return (
               <div
                 onMouseEnter={() => {
+                  const connections = GraphModel.createUndirectedFromDirectedData(
+                    activePlayerConnections
+                  );
+                  const graphModel = new GraphModel(connections);
+
+                  const connectionIds = graphModel.getPath(Number(destination.from), Number(destination.to));
+
                   dispatch(
                     buildingActions.setHover({
                       from: destination.from,
                       to: destination.to,
-                      connectionIds: [], // TODO del
+                      connectionIds
                     })
                   );
                 }}
@@ -68,7 +61,7 @@ const FinalTable = () => {
                     buildingActions.setHover({
                       from: null,
                       to: null,
-                      connectionIds: [], // TODO del
+                      connectionIds: []
                     })
                   );
                 }}

@@ -27,6 +27,8 @@ const getActivePlayerDestinations = (state) =>
 const getActivePlayerConnections = (state) =>
   getPlayer(state, getActivePlayerIndex(state)).connections;
 
+
+
 const getActivePlayerCards = (state) =>
   getPlayerCards(state, getActivePlayerIndex(state));
 

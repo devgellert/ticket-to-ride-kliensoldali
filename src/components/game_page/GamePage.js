@@ -99,9 +99,6 @@ const GamePage = ({ history }) => {
 
   return (
     <div className={css["GamePage"]}>
-      <Router>
-        <Route path="/final" component={FinalTable} />
-      </Router>
       <Navs />
       <Map />
     </div>

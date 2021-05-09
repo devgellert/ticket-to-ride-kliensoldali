@@ -15,7 +15,7 @@ const hasPointsToBuild = (state) => {
 const isGameEnded = (state) => {
   const lastRoundsCount = roundEssentialSelectors.getLastRoundsCount(state);
 
-  return lastRoundsCount === 0;
+  return lastRoundsCount !== null && lastRoundsCount <= 0;
 };
 
 const roundDerivativeSelectors = {

@@ -1,3 +1,1 @@
-Játékoldal: teljesített cél fölé víve az egeret a két végpont megjelölésre kerül a térképen és az útvonal is kiemelt lesz (2pt)
-Játékoldal: összegző táblázatban a célok listájában fölé víve az egeret megjelenik az útvonal (2pt)
 Játékoldal: összegző táblázatban a leghosszabb út (1pt)

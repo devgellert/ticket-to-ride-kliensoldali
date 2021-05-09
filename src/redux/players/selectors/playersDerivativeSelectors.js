@@ -122,6 +122,11 @@ const getPlayerAvailableVagons = (state, playerIndex) => {
   return result;
 };
 
+const getActivePlayerAvailableVagons = (state) => {
+  const index = playersEssentialSelectors.getActivePlayerIndex(state);
+  return getPlayerAvailableVagons(state, index);
+};
+
 const getIsLastRoundNeeded = (state) => {
   const playerCount = playersEssentialSelectors.getPlayers(state).length;
   const lastRoundsCount = roundEssentialSelectors.getLastRoundsCount(state);
@@ -220,6 +225,8 @@ const playersDerivativeSelectors = {
   getIsLastRoundNeeded,
   getFinalStatistics,
   getFinalDestinationConnections,
+  getPlayerAvailableVagons,
+  getActivePlayerAvailableVagons
 };
 
 export default playersDerivativeSelectors;

@@ -4,6 +4,7 @@ import { buildSuccess } from "../../../../../../../redux/actions";
 import roundActions from "../../../../../../../redux/round/roundActions";
 import playersEssentialSelectors from "../../../../../../../redux/players/selectors/playersEssentialSelectors";
 import { cardTypes } from "../../../../../../../redux/general/generalReducer";
+import playersDerivativeSelectors from "../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 
 const isLoco = (elem) => elem.type === "locomotive";
 
@@ -63,6 +64,10 @@ const build = () => async (dispatch, getState) => {
   } = selectedConnection;
   const isGray = color === "gray";
   const cardsNeeded = elements.length;
+  const availableVagons = playersDerivativeSelectors.getActivePlayerAvailableVagons(state);
+  if (availableVagons - cardsNeeded < 0) {
+    return alert("Nincs elég vagon...");
+  }
   const selectedCards = buildingEssentialSelectors.getSelectedCards(state);
   const locomotiveCount = getLocoCount(selectedCards);
 
@@ -85,8 +90,7 @@ const build = () => async (dispatch, getState) => {
     const isNoLocoEnough = moreLocos < moreLocoNeeded;
     if (isNoLocoEnough)
       return alert(
-        `Több kell ebből a színből: ${
-          !isGray ? color : grayType
+        `Több kell ebből a színből: ${!isGray ? color : grayType
         }, nem lehet pótolni elég mozdonnyal sem...`
       );
     moreLocosCount = moreLocos;
