@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withRouter } from "react-router-dom";
 import css from "./MainPage.module.scss";
+import { SocketContext } from "../SocketContext";
 
 const MainPage = ({ history }) => {
   const [newName, setNewName] = React.useState("");
@@ -8,9 +9,17 @@ const MainPage = ({ history }) => {
   const [connectName, setConnectName] = React.useState("");
   const [connectId, setConnectId] = React.useState(1);
 
-  const playGame = () => {
-    history.push("/");
-  };
+  const { createRoom, joinRoom } = useContext(SocketContext);
+
+  const createRoomClick = () =>
+    createRoom(newCount, () => {
+      history.push("/waiting");
+    });
+
+  const joinGameClick = () =>
+    joinRoom(connectId, () => {
+      history.push("/waiting");
+    });
 
   return (
     <div className={css["main-page"]}>
@@ -72,7 +81,7 @@ const MainPage = ({ history }) => {
           onChange={(e) => setNewName(e.target.value)}
         />
         <br />
-        <button onClick={playGame}>Indítás</button>
+        <button onClick={createRoomClick}>Indítás</button>
       </section>
 
       <section>
@@ -91,7 +100,7 @@ const MainPage = ({ history }) => {
           onChange={(e) => setConnectId(e.target.value)}
         />{" "}
         <br />
-        <button onClick={playGame}>Csatlakozás</button>
+        <button onClick={joinGameClick}>Csatlakozás</button>
       </section>
     </div>
   );

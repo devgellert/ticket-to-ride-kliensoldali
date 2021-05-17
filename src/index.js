@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { SocketContextProvider } from "./SocketContext";
 //
 import App from "./App";
 import "./index.css";
@@ -18,7 +19,9 @@ const store = createStore(
 
 const providedApp = (
   <Provider store={store}>
-    <App />
+    <SocketContextProvider>
+      <App />
+    </SocketContextProvider>
   </Provider>
 );
 

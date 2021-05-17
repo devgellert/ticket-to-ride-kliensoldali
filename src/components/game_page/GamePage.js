@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect } from "react";
 import css from "./GamePage.module.scss";
 import Navs from "./components/navs/Navs";
@@ -16,15 +16,9 @@ import prepareNextRound from "../../redux/business/prepareNextRound";
 import roundDerivativeSelectors from "../../redux/round/selectors/roundDerivativeSelectors";
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import roundActions from "../../redux/round/roundActions";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  withRouter,
-} from "react-router-dom";
-import MainPage from "../MainPage";
-import WaitingPage from "../WaitingPage";
-import FinalTable from "../final_table/FinalTable";
+import { withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { SocketContext } from "../../SocketContext";
 
 const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
@@ -36,6 +30,8 @@ const GamePage = ({ history }) => {
     playersDerivativeSelectors.getIsLastRoundNeeded
   );
   const isGameEnded = useSelector(roundDerivativeSelectors.isGameEnded);
+
+  const { isInRoom } = useContext(SocketContext);
 
   const createInitialPlayersViaMutation = (deck, destinations) =>
     map(players, (player) => ({
@@ -101,6 +97,9 @@ const GamePage = ({ history }) => {
     <div className={css["GamePage"]}>
       <Navs />
       <Map />
+
+      {!isInRoom && <Redirect to="/main" />}
+      {!!isInRoom && <Redirect to="/waiting" />}
     </div>
   );
 };

@@ -14,8 +14,6 @@ const Connection = ({ connection, imgWrapRef }) => {
     buildingEssentialSelectors.getHoverConnectionIds
   );
 
-
-
   const dispatch = useDispatch();
 
   const hasPointsToBuild = useSelector(
@@ -27,9 +25,8 @@ const Connection = ({ connection, imgWrapRef }) => {
 
   const isActive =
     hoverConnectionIds.includes(Number(connection.from)) &&
-    hoverConnectionIds.includes(Number(connection.to)) && isBuilt
-
-  console.log("active:", isActive, hoverConnectionIds);
+    hoverConnectionIds.includes(Number(connection.to)) &&
+    isBuilt;
 
   const isConnectionSelected = useSelector((state) =>
     buildingDerivativeSelectors.getIsConnectionSelectedById(
