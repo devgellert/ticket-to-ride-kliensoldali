@@ -9,16 +9,18 @@ const MainPage = ({ history }) => {
   const [connectName, setConnectName] = React.useState("");
   const [connectId, setConnectId] = React.useState(1);
 
-  const { createRoom, joinRoom } = useContext(SocketContext);
+  const { createRoom, joinRoom, emit } = useContext(SocketContext);
 
   const createRoomClick = () =>
-    createRoom(newCount, () => {
+    createRoom(newCount, newName, () => {
       history.push("/waiting");
     });
 
   const joinGameClick = () =>
-    joinRoom(connectId, () => {
+    joinRoom(connectId, (roomId) => {
       history.push("/waiting");
+
+      emit("sync-action");
     });
 
   return (

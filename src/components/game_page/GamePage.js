@@ -20,6 +20,24 @@ import { withRouter } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { SocketContext } from "../../SocketContext";
 
+const createInitialPlayersViaMutation = (deck, destinations, players) =>
+  map(players, (player) => ({
+    ...player,
+    hand: {
+      cards: getInitialPlayerCardsViaMutation(deck),
+      destinations: getInitialDestinationsViaMutation(destinations),
+    },
+  }));
+
+const createInitialFieldViaMutation = (deckToMutate) => {
+  const result = [];
+  const FIELD_SIZE = 5;
+  for (let i = 0; i < FIELD_SIZE; i++) {
+    result.push(deckToMutate.pop());
+  }
+  return result;
+};
+
 const GamePage = ({ history }) => {
   const deck = useSelector(generalEssentialSelectors.getDeck);
   const destinations = useSelector(generalEssentialSelectors.getDestinations);
@@ -33,31 +51,14 @@ const GamePage = ({ history }) => {
 
   const { isInRoom } = useContext(SocketContext);
 
-  const createInitialPlayersViaMutation = (deck, destinations) =>
-    map(players, (player) => ({
-      ...player,
-      hand: {
-        cards: getInitialPlayerCardsViaMutation(deck),
-        destinations: getInitialDestinationsViaMutation(destinations),
-      },
-    }));
-
-  const createInitialFieldViaMutation = (deckToMutate) => {
-    const result = [];
-    const FIELD_SIZE = 5;
-    for (let i = 0; i < FIELD_SIZE; i++) {
-      result.push(deckToMutate.pop());
-    }
-    return result;
-  };
-
   const initGame = () => {
     const mutatedDeck = [...deck];
     const mutatedDestinations = [...destinations];
 
     const newPlayers = createInitialPlayersViaMutation(
       mutatedDeck,
-      mutatedDestinations
+      mutatedDestinations,
+      players
     );
 
     const newField = createInitialFieldViaMutation(mutatedDeck);

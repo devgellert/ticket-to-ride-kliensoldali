@@ -1,28 +1,21 @@
+import { map } from "lodash";
 import { playerConstants } from "./playersActions";
 import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
-import { map } from "lodash";
 import { buildingConstants } from "../building/buildingActions";
+
+// Player
+// {
+//   name: "Player 1",
+//   hand: {
+//     cards: [],
+//     destinations: [],
+//   },
+//   connections: [],
+// },
 
 const initialState = {
   activePlayerIndex: 0,
-  players: [
-    {
-      name: "Player 1",
-      hand: {
-        cards: [],
-        destinations: [],
-      },
-      connections: [],
-    },
-    {
-      name: "Player 2",
-      hand: {
-        cards: [],
-        destinations: [],
-      },
-      connections: [],
-    },
-  ],
+  players: [],
 };
 
 const playersReducer = (state = initialState, action) => {
@@ -49,18 +42,6 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         activePlayerIndex: action.payload.activePlayerIndex,
-        // players: map(state.players, (player, index) => {
-        //   if (index === action.payload.prevActivePlayerIndex) {
-        //     return {
-        //       ...player,
-        //       hand: {
-        //         ...player.hand,
-        //         cards: [...player.hand.cards, ...action.payload.selectedCards],
-        //       },
-        //     };
-        //   }
-        //   return player;
-        // }),
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
