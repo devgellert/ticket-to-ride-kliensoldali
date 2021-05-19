@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
-import css from "./WaitingPage.module.scss";
+//
 import { SocketContext } from "../SocketContext";
+//
+import css from "./WaitingPage.module.scss";
 
 const WaitingPage = () => {
   const { roomId, isInRoom, connectedPlayers } = useContext(SocketContext);
