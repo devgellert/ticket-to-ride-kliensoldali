@@ -10,6 +10,7 @@ export const SocketContext = createContext(null);
 
 export const SocketContextProvider = ({ children }) => {
   const dispatch = useDispatch();
+  const state = useSelector((state) => state);
   const players = useSelector(playersEssentialSelectors.getPlayers);
   const [socket, setSocket] = useState(null);
   const [roomId, setRoomId] = useState(null);
@@ -54,6 +55,7 @@ export const SocketContextProvider = ({ children }) => {
         if (isFunction(cb)) cb();
         setIsRoomLeader(true);
         dispatch(playerActions.setPlayers([createInitialPlayer(name)]));
+        socket.emit("sync-state", ack.roomId, state);
       });
     },
     [socket]
