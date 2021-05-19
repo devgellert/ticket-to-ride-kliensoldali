@@ -78,7 +78,7 @@ export const SocketContextProvider = ({ children }) => {
       isInRoom: roomId !== null,
       roomId,
       connectedPlayers,
-      emit: socket.emit,
+      emit: () => {},
     }),
     [createRoom, roomId, joinRoom, connectedPlayers]
   );

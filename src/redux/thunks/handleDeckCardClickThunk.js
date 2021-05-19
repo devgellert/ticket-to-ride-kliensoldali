@@ -3,7 +3,7 @@ import playersEssentialSelectors from "../players/selectors/playersEssentialSele
 import playerActions from "../players/playersActions";
 import roundActions from "../round/roundActions";
 
-const handleDeckCardClick = () => async (dispatch, getState) => {
+const handleDeckCardClickThunk = () => async (dispatch, getState) => {
   const state = getState();
 
   const activePlayer = playersEssentialSelectors.getActivePlayer(state);
@@ -29,4 +29,4 @@ const handleDeckCardClick = () => async (dispatch, getState) => {
   );
 };
 
-export default handleDeckCardClick;
+export default handleDeckCardClickThunk;

@@ -1,10 +1,11 @@
-import buildingEssentialSelectors from "../../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import playersDerivativeSelectors from "../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 import { compact, map } from "lodash";
-import buildingActions from "../../../../../../../redux/building/buildingActions";
-import playerActions from "../../../../../../../redux/players/playersActions";
+//
+import buildingEssentialSelectors from "../building/selectors/buildingEssentialSelectors";
+import playersDerivativeSelectors from "../players/selectors/playersDerivativeSelectors";
+import buildingActions from "../building/buildingActions";
+import playerActions from "../players/playersActions";
 
-const selectCardForBuilding = (type) => async (dispatch, getState) => {
+const selectCardForBuildingThunk = (type) => async (dispatch, getState) => {
   const state = getState();
   const selectedConnection = buildingEssentialSelectors.getSelectedConnection(
     state
@@ -30,4 +31,4 @@ const selectCardForBuilding = (type) => async (dispatch, getState) => {
   dispatch(playerActions.setActivePlayersCards(newActivePlayerCards));
 };
 
-export default selectCardForBuilding;
+export default selectCardForBuildingThunk;

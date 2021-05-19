@@ -15,7 +15,16 @@ import { buildingConstants } from "../building/buildingActions";
 
 const initialState = {
   activePlayerIndex: 0,
-  players: [],
+  players: [
+    {
+      name: "Player 1",
+      hand: {
+        cards: [],
+        destinations: [],
+      },
+      connections: [],
+    },
+  ],
 };
 
 const playersReducer = (state = initialState, action) => {

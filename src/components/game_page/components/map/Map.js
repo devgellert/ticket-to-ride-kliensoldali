@@ -1,10 +1,13 @@
 import React from "react";
 import { createRef } from "react";
-import { ticketToRideData as data } from "../../../../ticket-to-ride-data";
 import { keys, map } from "lodash";
-import css from "./Map.module.scss";
+//
+import { ticketToRideData as data } from "../../../../ticket-to-ride-data";
+//
 import City from "./compontents/city/City";
 import Connection from "./compontents/connection/Connection";
+//
+import css from "./Map.module.scss";
 
 const { cities, connections } = data;
 

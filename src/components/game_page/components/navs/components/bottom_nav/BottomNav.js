@@ -5,25 +5,24 @@ import SelectedCardDisplay from "./components/selected_card_display/SelectedCard
 import Destinations from "./components/destinations/Destinations";
 import Cards from "./components/cards/Cards";
 import Logs from "./components/logs/Logs";
-import roundDerivativeSelectors from "../../../../../../redux/round/selectors/roundDerivativeSelectors"
+import roundDerivativeSelectors from "../../../../../../redux/round/selectors/roundDerivativeSelectors";
 
 const BottomNav = () => {
   const isGameEnded = useSelector(roundDerivativeSelectors.isGameEnded);
 
-  if (!isGameEnded)
-    return (
-      <>
-        <SelectedCardDisplay />
+  if (isGameEnded) return <nav className={css["bottom-nav"]} />;
 
-        <nav className={css["bottom-nav"]}>
-          <Destinations />
-          <Cards />
-          <Logs />
-        </nav>
-      </>
-    );
+  return (
+    <>
+      <SelectedCardDisplay />
 
-  return <nav className={css["bottom-nav"]} />
+      <nav className={css["bottom-nav"]}>
+        <Destinations />
+        <Cards />
+        <Logs />
+      </nav>
+    </>
+  );
 };
 
 export default BottomNav;

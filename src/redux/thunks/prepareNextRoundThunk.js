@@ -3,7 +3,7 @@ import { prepareNextRoundSuccess } from "../actions";
 import buildingEssentialSelectors from "../building/selectors/buildingEssentialSelectors";
 import roundActions from "../round/roundActions";
 
-const prepareNextRound = () => async (dispatch, getState) => {
+const prepareNextRoundThunk = () => async (dispatch, getState) => {
   const state = getState();
   const activePlayerIndex = playersEssentialSelectors.getActivePlayerIndex(
     state
@@ -31,4 +31,4 @@ const prepareNextRound = () => async (dispatch, getState) => {
   );
 };
 
-export default prepareNextRound;
+export default prepareNextRoundThunk;

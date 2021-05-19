@@ -1,9 +1,12 @@
 import React from "react";
-import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
 import { map } from "lodash";
-import PlayerDestinationCard from "../player_destination_card/PlayerDestinationCard";
 import { useSelector } from "react-redux";
+//
 import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
+//
+import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
+import PlayerDestinationCard from "../player_destination_card/PlayerDestinationCard";
+//
 import css from "./Destinations.module.scss";
 
 const Destinations = () => {

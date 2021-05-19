@@ -1,15 +1,18 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import css from "./SelectedCardDisplay.module.scss";
+import { map, isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+//
 import buildingEssentialSelectors from "../../../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import build from "../../thunks/build";
-import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
-import buildingActions from "../../../../../../../../redux/building/buildingActions";
-import { map, isEmpty, find, filter } from "lodash";
+import buildThunk from "../../../../../../../../redux/thunks/buildThunk";
+import cancelBuildThunk from "../../../../../../../../redux/thunks/cancelBuildThunk";
+import unselectCardThunk from "../../../../../../../../redux/thunks/unselectCardThunk";
+//
+import css from "./SelectedCardDisplay.module.scss";
 
 const SelectedCardDisplay = () => {
   const dispatch = useDispatch();
+
   const selectedConnection = useSelector(
     buildingEssentialSelectors.getSelectedConnection
   );
@@ -19,53 +22,11 @@ const SelectedCardDisplay = () => {
 
   if (!selectedConnection) return null;
 
-  const onBuildClick = () => dispatch(build());
+  const onBuildClick = () => dispatch(buildThunk());
 
-  const onCancelClick = () => {
-    dispatch(async (dispatch, getState) => {
-      const state = getState();
-      const selectedCards = buildingEssentialSelectors.getSelectedCards(state);
-      const activePlayerCards = playersDerivativeSelectors.getActivePlayerCards(
-        state
-      );
-      const newActivePlayerCards = [...activePlayerCards, ...selectedCards];
+  const onCancelClick = () => dispatch(cancelBuildThunk());
 
-      dispatch(
-        buildingActions.cancelBuildingSuccess({
-          activePlayerCards: newActivePlayerCards,
-        })
-      );
-    });
-  };
-
-  //TODO: separate
-  const unselectCard = (type) => {
-    dispatch(async (dispatch, getState) => {
-      const state = getState();
-      const selectedCards = buildingEssentialSelectors.getSelectedCards(state);
-      const cardToUnselect = find(selectedCards, (card) => card.type === type);
-
-      if (!cardToUnselect) throw new Error("No card found");
-
-      const newSelectedCards = filter(
-        selectedCards,
-        (card) => card.id !== cardToUnselect.id
-      );
-
-      const activePlayerCards = playersDerivativeSelectors.getActivePlayerCards(
-        state
-      );
-
-      const newActivePlayerCards = [...activePlayerCards, cardToUnselect];
-
-      dispatch(
-        buildingActions.unselectCardSuccess({
-          activePlayerCards: newActivePlayerCards,
-          selectedCards: newSelectedCards,
-        })
-      );
-    });
-  };
+  const unselectCard = (type) => dispatch(unselectCardThunk(type));
 
   return createPortal(
     <div className={css["selected-card-display"]}>
@@ -73,14 +34,13 @@ const SelectedCardDisplay = () => {
       <h4>Kiválasztott kártyák:</h4>
 
       {!!isEmpty(selectedCards) && <div>Válasszon kártyákat</div>}
-      {map(selectedCards, (card, index) => {
-        return (
-          <p key={index}>
-            {card.type}{" "}
-            <button onClick={() => unselectCard(card.type)}>Törlés</button>
-          </p>
-        );
-      })}
+
+      {map(selectedCards, (card, index) => (
+        <p key={index}>
+          {card.type}
+          <button onClick={() => unselectCard(card.type)}>Törlés</button>
+        </p>
+      ))}
 
       {!isEmpty(selectedCards) && (
         <button onClick={onBuildClick}>Építés</button>

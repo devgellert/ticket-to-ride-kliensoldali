@@ -1,10 +1,13 @@
 import React from "react";
-import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
 import { keys, map } from "lodash";
 import { useSelector } from "react-redux";
+//
 import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
-import css from "./Cards.module.scss";
+//
 import PlayerLocomotiveCard from "../player_locomotive_card/PlayerLocomotiveCard";
+import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
+//
+import css from "./Cards.module.scss";
 
 const Cards = () => {
   const activePlayerCardTypeNumbers = useSelector(

@@ -1,13 +1,15 @@
 import React from "react";
 import { useState } from "react";
-import Element from "./components/element/Element";
 import { useDispatch, useSelector } from "react-redux";
+import { map } from "lodash";
+//
 import roundDerivativeSelectors from "../../../../../../redux/round/selectors/roundDerivativeSelectors";
 import playersDerivativeSelectors from "../../../../../../redux/players/selectors/playersDerivativeSelectors";
 import buildingActions from "../../../../../../redux/building/buildingActions";
 import buildingDerivativeSelectors from "../../../../../../redux/building/selectors/buildingDerivativeSelectors";
-import { map } from "lodash";
 import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
+//
+import Element from "./components/element/Element";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const hoverConnectionIds = useSelector(
@@ -41,26 +43,22 @@ const Connection = ({ connection, imgWrapRef }) => {
   const onClick = () =>
     dispatch(buildingActions.setSelectedConnection(connection));
 
-  return (
-    <>
-      {map(elements, (elem, index) => (
-        <Element
-          isActive={isActive}
-          isSelected={isConnectionSelected}
-          isBuilt={isBuilt}
-          isDisabled={!hasPointsToBuild || !!isBuilt}
-          key={index}
-          isHovered={isHovered}
-          setIsHovered={setIsHovered}
-          element={elem}
-          imgWrapRef={imgWrapRef}
-          color={connection.color}
-          connectionId={connection.id}
-          onClick={onClick}
-        />
-      ))}
-    </>
-  );
+  return map(elements, (elem, index) => (
+    <Element
+      isActive={isActive}
+      isSelected={isConnectionSelected}
+      isBuilt={isBuilt}
+      isDisabled={!hasPointsToBuild || !!isBuilt}
+      key={index}
+      isHovered={isHovered}
+      setIsHovered={setIsHovered}
+      element={elem}
+      imgWrapRef={imgWrapRef}
+      color={connection.color}
+      connectionId={connection.id}
+      onClick={onClick}
+    />
+  ));
 };
 
 export default Connection;

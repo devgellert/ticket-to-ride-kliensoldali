@@ -1,13 +1,17 @@
 import React from "react";
 import cn from "classnames";
-import css from "./PlayerLocomotiveCard.module.scss";
-import selectCardForBuilding from "../../thunks/selectCardForBuilding";
 import { useDispatch, useSelector } from "react-redux";
+import { noop } from "lodash";
+//
+import selectCardForBuildingThunk from "../../../../../../../../redux/thunks/selectCardForBuildingThunk";
 import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 import buildingEssentialSelectors from "../../../../../../../../redux/building/selectors/buildingEssentialSelectors";
+//
+import css from "./PlayerLocomotiveCard.module.scss";
 
 const PlayerLocomotiveCard = ({ type }) => {
   const dispatch = useDispatch();
+
   const activePlayerCardTypeNumbers = useSelector(
     playersDerivativeSelectors.getActivePlayerCardTypeNumbers
   );
@@ -15,12 +19,7 @@ const PlayerLocomotiveCard = ({ type }) => {
     buildingEssentialSelectors.getSelectedConnection
   );
 
-  const isDisabled = !selectedConnection;
-
-  const onClick = () => {
-    if (isDisabled) return;
-    dispatch(selectCardForBuilding(type));
-  };
+  const onClick = () => dispatch(selectCardForBuildingThunk(type));
 
   const quantity = activePlayerCardTypeNumbers[type];
 
@@ -28,6 +27,8 @@ const PlayerLocomotiveCard = ({ type }) => {
 
   const backgroundColor = type !== "locomotive" ? type : "khaki";
   const backgroundImage = type === "locomotive" ? `url(/loco.jpg)` : undefined;
+
+  const isDisabled = !selectedConnection;
 
   return (
     <div
@@ -38,7 +39,7 @@ const PlayerLocomotiveCard = ({ type }) => {
         backgroundColor,
         backgroundImage,
       }}
-      onClick={onClick}
+      onClick={isDisabled ? noop : onClick}
     >
       <span>{quantity}</span>
     </div>

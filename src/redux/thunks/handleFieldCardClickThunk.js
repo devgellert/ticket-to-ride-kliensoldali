@@ -5,7 +5,7 @@ import playerActions from "../players/playersActions";
 import { compact } from "lodash";
 import roundActions from "../round/roundActions";
 
-const handleFieldCardClick = (id) => async (dispatch, getState) => {
+const handleFieldCardClickThunk = (id) => async (dispatch, getState) => {
   const state = getState();
 
   const activePlayer = playersEssentialSelectors.getActivePlayer(state);
@@ -57,4 +57,4 @@ const handleFieldCardClick = (id) => async (dispatch, getState) => {
   );
 };
 
-export default handleFieldCardClick;
+export default handleFieldCardClickThunk;
