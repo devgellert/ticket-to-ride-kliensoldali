@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { createContext } from "react";
-import io from "socket.io-client";
 import { isFunction } from "lodash";
 import { useDispatch } from "react-redux";
+import { withRouter } from "react-router-dom";
+import io from "socket.io-client";
+//
 import initGameThunk from "./redux/thunks/initGameThunk";
 import { syncState } from "./redux/actions";
 import playersEssentialSelectors from "./redux/players/selectors/playersEssentialSelectors";
@@ -10,7 +12,7 @@ import playerActions from "./redux/players/playersActions";
 
 export const SocketContext = createContext(null);
 
-export const SocketContextProvider = ({ children }) => {
+export const SocketContextProvider = withRouter(({ children, history }) => {
   const dispatch = useDispatch();
   const [socket, setSocket] = useState(null);
   const [roomId, setRoomId] = useState(null);
@@ -25,23 +27,41 @@ export const SocketContextProvider = ({ children }) => {
     try {
       const socket = connect();
 
-      socket.on("state-changed", ({ roomId, state }) => {
+      socket.on("state-changed", ({ roomId: _, state }) => {
         dispatch(syncState(state));
       });
 
-      socket.on("player-left", ({ roomId, socketId }) => {
-        dispatch(playerActions.filterOutPlayerBySocketId(socketId));
+      socket.on("room-is-full", ({ roomId, player, state }) => {
+        history.push("/");
       });
 
-      socket.on("disconnect", () => {
-        socket.emit("leave-room", roomId, () => {
-          console.log("Room left...");
+      socket.on("player-left", async ({ roomId, socketId }) => {
+        dispatch(async (dispatch, getState) => {
+          const players = playersEssentialSelectors.getPlayers(getState());
+          dispatch(playerActions.filterOutPlayerBySocketId(socketId));
+          while (true) {
+            await wait();
+            const state = getState();
+            if (state.players.players.length === players.length - 1) break;
+          }
+          const state = getState();
+          socket.emit("sync-state", roomId, state, false, (args) => {
+            console.log(args);
+          });
         });
       });
     } catch (e) {
       console.error(e);
     }
   }, []);
+
+  const leaveRoom = () => {
+    if (!roomId) return;
+
+    socket.emit("leave-room", roomId, () => {
+      console.log("Room left...");
+    });
+  };
 
   const wait = async () =>
     await new Promise((resolve) => setTimeout(resolve, 300));
@@ -127,12 +147,12 @@ export const SocketContextProvider = ({ children }) => {
       joinRoom,
       isInRoom: roomId !== null,
       roomId,
-      emit: () => {},
+      leaveRoom,
     }),
-    [createRoom, roomId, joinRoom]
+    [createRoom, roomId, joinRoom, leaveRoom]
   );
 
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
-};
+});

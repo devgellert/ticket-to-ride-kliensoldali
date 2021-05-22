@@ -21,9 +21,7 @@ const store = createStore(reducer, composed);
 
 const providedApp = (
   <Provider store={store}>
-    <SocketContextProvider>
-      <App />
-    </SocketContextProvider>
+    <App />
   </Provider>
 );
 

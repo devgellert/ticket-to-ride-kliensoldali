@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import playersEssentialSelectors from "../redux/players/selectors/playersEssentialSelectors";
 
 const WaitingPage = () => {
-  const { roomId, isInRoom, connectedPlayers } = useContext(SocketContext);
+  const { roomId, isInRoom, leaveRoom } = useContext(SocketContext);
 
   const players = useSelector(playersEssentialSelectors.getPlayers);
 
@@ -22,7 +22,9 @@ const WaitingPage = () => {
           <li>{player.name}</li>
         ))}
       </ul>
-      <a href="/main">Vissza a főoldalra</a>
+      <a href="/main" onClick={leaveRoom}>
+        Vissza a főoldalra
+      </a>
     </div>
   );
 };
