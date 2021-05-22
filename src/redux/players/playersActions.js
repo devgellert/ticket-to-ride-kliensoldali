@@ -5,12 +5,20 @@ export const playerConstants = {
   CARD_DRAW_FROM_DECK_SUCCESS: "CARD_DRAW_FROM_DECK_SUCCESS",
   PUSH_TO_BUILD_CONNECTION_IDS: "PUSH_TO_BUILD_CONNECTION_IDS",
   SET_ACTIVE_PLAYERS_CARDS: "SET_ACTIVE_PLAYERS_CARDS",
+  FILTER_OUT_PLAYER_BY_SOCKET_ID: "FILTER_OUT_PLAYER_BY_SOCKET_ID",
 };
 
 const setActivePlayerIndex = (value) => ({
   type: playerConstants.SET_ACTIVE_PLAYER_INDEX,
   payload: {
     value,
+  },
+});
+
+const filterOutPlayerBySocketId = (socketId) => ({
+  type: playerConstants.FILTER_OUT_PLAYER_BY_SOCKET_ID,
+  payload: {
+    socketId,
   },
 });
 
@@ -58,6 +66,7 @@ const playerActions = {
   cardDrawFromDeckSuccess,
   pushToBuildConnectionIds,
   setActivePlayersCards,
+  filterOutPlayerBySocketId,
 };
 
 export default playerActions;

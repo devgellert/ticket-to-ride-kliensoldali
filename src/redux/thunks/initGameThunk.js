@@ -4,7 +4,7 @@ import playerActions from "../players/playersActions";
 import generalActions from "../general/generalActions";
 import roundActions from "../round/roundActions";
 
-const initGameThunk = (name) => async (dispatch, getState) => {
+const initGameThunk = (name, socketId) => async (dispatch, getState) => {
   const state = getState();
 
   const deck = generalEssentialSelectors.getDeck(state);
@@ -18,6 +18,7 @@ const initGameThunk = (name) => async (dispatch, getState) => {
         destinations: [],
       },
       connections: [],
+      socketId,
     },
   ];
 

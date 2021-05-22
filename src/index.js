@@ -9,13 +9,15 @@ import reducer from "./redux/reducer";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-const store = createStore(
-  reducer,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
-);
+const composed = window.__REDUX_DEVTOOLS_EXTENSION__
+  ? compose(
+      applyMiddleware(thunk),
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
+  : applyMiddleware(thunk);
+
+const store = createStore(reducer, composed);
 
 const providedApp = (
   <Provider store={store}>

@@ -19,6 +19,14 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...playersEssentialSelectors.getState(action.payload.state),
       };
+
+    case playerConstants.FILTER_OUT_PLAYER_BY_SOCKET_ID:
+      return {
+        ...state,
+        players: state.players.filter(
+          (player) => player.socketId !== action.payload.socketId
+        ),
+      };
     case playerConstants.SET_ACTIVE_PLAYER_INDEX:
       return {
         ...state,
