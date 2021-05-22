@@ -2,60 +2,62 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { createContext } from "react";
 import io from "socket.io-client";
 import { isFunction } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import playerActions from "./redux/players/playersActions";
-import playersEssentialSelectors from "./redux/players/selectors/playersEssentialSelectors";
+import { useDispatch } from "react-redux";
+import initGameThunk from "./redux/thunks/initGameThunk";
+import { syncState } from "./redux/actions";
 
 export const SocketContext = createContext(null);
 
 export const SocketContextProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
-  const players = useSelector(playersEssentialSelectors.getPlayers);
   const [socket, setSocket] = useState(null);
   const [roomId, setRoomId] = useState(null);
-  const [connectedPlayers, setConnectedPlayers] = useState([]);
-  const [isRoomLeader, setIsRoomLeader] = useState(false);
+  const [connectedPlayers] = useState([]);
 
-  const createInitialPlayer = (name) => ({
-    name: name,
-    hand: {
-      cards: [],
-      destinations: [],
-    },
-    connections: [],
-  });
+  const connect = () => {
+    const socket = io("http://webprogramozas.inf.elte.hu:3031");
+    setSocket(socket);
+    return socket;
+  };
 
   useEffect(() => {
+    console.log("useEffect");
     try {
-      const socket = io("http://webprogramozas.inf.elte.hu:3031");
-      setSocket(socket);
+      const socket = connect();
 
-      socket.on("player-joined", (payload) => {
-        dispatch(
-          playerActions.setPlayers([
-            ...players,
-            createInitialPlayer("Rasputin"),
-          ])
-        );
-      });
-
-      socket.on("player-joined", ({ roomId, socketId }) => {
-        setConnectedPlayers([...connectedPlayers, socketId]);
+      socket.on("state-changed", (args) => {
+        console.log("state-changed", args);
+        dispatch(syncState(args.state));
       });
     } catch (e) {
       console.error(e);
     }
   }, []);
 
+  const wait = async () =>
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
   const createRoom = useCallback(
     (roomSize, name, cb) => {
-      socket.emit("create-room", roomSize, (ack) => {
-        setRoomId(ack.roomId);
-        if (isFunction(cb)) cb();
-        setIsRoomLeader(true);
-        dispatch(playerActions.setPlayers([createInitialPlayer(name)]));
-        socket.emit("sync-state", ack.roomId, state);
+      socket.emit("create-room", Number(roomSize), (ack) => {
+        if (ack.status === "ok") {
+          setRoomId(ack.roomId);
+          if (isFunction(cb)) cb();
+
+          dispatch(async (dispatch, getState) => {
+            dispatch(initGameThunk(name));
+            while (true) {
+              await wait();
+              const state = getState();
+              if (state.players.players.length > 0) {
+                // TODO: better state validation
+                break;
+              }
+            }
+            const state = getState();
+            socket.emit("sync-state", ack.roomId, state);
+          });
+        }
       });
     },
     [socket]
@@ -63,10 +65,12 @@ export const SocketContextProvider = ({ children }) => {
 
   const joinRoom = useCallback(
     (roomId, cb) => {
-      socket.emit("join-room", roomId, (ack) => {
-        if (ack.status === "ok") {
+      socket.emit("join-room", roomId, ({ status, state }) => {
+        if (status === "ok") {
           setRoomId(roomId);
           if (isFunction(cb)) cb(roomId);
+
+          dispatch(syncState(state));
         }
       });
     },

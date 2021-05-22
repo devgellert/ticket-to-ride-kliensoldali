@@ -1,34 +1,24 @@
 import { map } from "lodash";
 import { playerConstants } from "./playersActions";
-import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
+import {
+  BUILD_SUCCESS,
+  PREPARE_NEXT_ROUND_SUCCESS,
+  SYNC_STATE,
+} from "../constants";
 import { buildingConstants } from "../building/buildingActions";
-
-// Player
-// {
-//   name: "Player 1",
-//   hand: {
-//     cards: [],
-//     destinations: [],
-//   },
-//   connections: [],
-// },
+import playersEssentialSelectors from "./selectors/playersEssentialSelectors";
 
 const initialState = {
   activePlayerIndex: 0,
-  players: [
-    {
-      name: "Player 1",
-      hand: {
-        cards: [],
-        destinations: [],
-      },
-      connections: [],
-    },
-  ],
+  players: [],
 };
 
 const playersReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...playersEssentialSelectors.getState(action.payload.state),
+      };
     case playerConstants.SET_ACTIVE_PLAYER_INDEX:
       return {
         ...state,

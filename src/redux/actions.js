@@ -1,10 +1,18 @@
 import {
   SET_BUILD_CONNECTION_IDS,
   SET_LOCOMOTIVE_FIELD,
+  SYNC_STATE,
   SET_PLAYER_HAND,
   PREPARE_NEXT_ROUND_SUCCESS,
   BUILD_SUCCESS,
 } from "./constants";
+
+export const syncState = (state) => ({
+  type: SYNC_STATE,
+  payload: {
+    state,
+  },
+});
 
 export const setLocomotiveField = (value) => ({
   type: SET_LOCOMOTIVE_FIELD,

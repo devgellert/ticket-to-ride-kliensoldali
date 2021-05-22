@@ -14,11 +14,10 @@ const setDestinations = (value) => ({
   payload: { value },
 });
 
-const initGameSuccess = ({ deck, destinations, field }) => ({
+const initGameSuccess = ({ deck, field }) => ({
   type: generalConstants.INIT_GAME_SUCCESS,
   payload: {
     deck,
-    destinations,
     field,
   },
 });

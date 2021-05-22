@@ -7,6 +7,7 @@ const getDestinations = (state) => getState(state).destinations;
 const getField = (state) => getState(state).field;
 
 const generalEssentialSelectors = {
+  getState,
   getDeck,
   getDestinations,
   getField,

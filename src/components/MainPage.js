@@ -19,8 +19,7 @@ const MainPage = ({ history }) => {
   const joinGameClick = () =>
     joinRoom(connectId, (roomId) => {
       history.push("/waiting");
-
-      emit("sync-action");
+      // emit("sync-action");
     });
 
   return (

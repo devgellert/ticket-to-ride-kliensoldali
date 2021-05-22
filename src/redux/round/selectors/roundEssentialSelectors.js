@@ -11,6 +11,7 @@ const getNth = (state) => getState(state).nth;
 const getLogs = (state) => getState(state).logs;
 
 const roundEssentialSelectors = {
+  getState,
   isRoundEnded,
   getPoints,
   getLastRoundsCount,

@@ -1,6 +1,11 @@
 import { playerConstants } from "../players/playersActions";
 import { roundConstants } from "./roundActions";
-import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
+import {
+  BUILD_SUCCESS,
+  PREPARE_NEXT_ROUND_SUCCESS,
+  SYNC_STATE,
+} from "../constants";
+import roundEssentialSelectors from "./selectors/roundEssentialSelectors";
 
 const initialState = {
   points: 2,
@@ -11,6 +16,10 @@ const initialState = {
 
 const roundReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...roundEssentialSelectors.getState(action.payload.state),
+      };
     case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,

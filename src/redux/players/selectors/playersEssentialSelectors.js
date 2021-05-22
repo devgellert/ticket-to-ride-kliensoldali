@@ -27,8 +27,6 @@ const getActivePlayerDestinations = (state) =>
 const getActivePlayerConnections = (state) =>
   getPlayer(state, getActivePlayerIndex(state)).connections;
 
-
-
 const getActivePlayerCards = (state) =>
   getPlayerCards(state, getActivePlayerIndex(state));
 
@@ -38,6 +36,7 @@ const getPlayerConnections = (state, index) =>
   getPlayer(state, index).connections;
 
 const playersEssentialSelectors = {
+  getState,
   getPlayers,
   getActivePlayerIndex,
   getActivePlayer,

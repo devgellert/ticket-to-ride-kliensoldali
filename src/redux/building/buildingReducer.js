@@ -1,5 +1,10 @@
 import { buildingConstants } from "./buildingActions";
-import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
+import {
+  BUILD_SUCCESS,
+  PREPARE_NEXT_ROUND_SUCCESS,
+  SYNC_STATE,
+} from "../constants";
+import buildingEssentialSelectors from "./selectors/buildingEssentialSelectors";
 
 const initialState = {
   selectedConnection: null,
@@ -13,6 +18,11 @@ const initialState = {
 
 const buildingReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...buildingEssentialSelectors.getState(action.payload.state),
+      };
+
     case buildingConstants.SET_SELECTED_CONNECTION:
       return {
         ...state,

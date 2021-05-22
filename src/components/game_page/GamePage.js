@@ -19,9 +19,9 @@ const GamePage = ({ history }) => {
 
   const { isInRoom } = useContext(SocketContext);
 
-  useEffect(() => {
-    dispatch(initGameThunk());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(initGameThunk());
+  // }, []);
 
   useEffect(() => {
     if (isRoundEnded) {

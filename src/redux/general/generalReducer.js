@@ -2,6 +2,8 @@ import { generalConstants } from "./generalActions";
 import createInitialDeck from "./helpers/createInitialDeck";
 import createInitialDestinations from "./helpers/createInitialDestinations";
 import { playerConstants } from "../players/playersActions";
+import { SYNC_STATE } from "../constants";
+import generalEssentialSelectors from "./selectors/generalEssentialSelectors";
 
 export const cardTypes = [
   "purple",
@@ -23,6 +25,10 @@ const initialState = {
 
 const generalReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...generalEssentialSelectors.getState(action.payload.state),
+      };
     case generalConstants.SET_DECK:
       return {
         ...state,
