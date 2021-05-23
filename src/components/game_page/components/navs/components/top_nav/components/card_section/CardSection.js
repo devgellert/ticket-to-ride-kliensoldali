@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cn from "classnames";
 //
@@ -11,6 +11,8 @@ import generalDerivativeSelectors from "../../../../../../../../redux/general/se
 import FieldLocomotiveCard from "./components/field_locomotive_card/FieldLocomotiveCard";
 //
 import css from "./CardSection.module.scss";
+import { SocketContext } from "../../../../../../../../SocketContext";
+import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 
 const CardSection = () => {
   const dispatch = useDispatch();
@@ -23,24 +25,33 @@ const CardSection = () => {
   const isCardDeckEmpty = useSelector(
     generalDerivativeSelectors.isCardDeckEmpty
   );
+  const { playerIndex } = useContext(SocketContext);
+  const isMyTurn = useSelector((state) =>
+    playersDerivativeSelectors.isMyTurn(state, playerIndex)
+  );
 
   const isCardClickDisabled =
     isDisabledByDebounce || selectedConnection !== null;
 
-  const onCardClick = (id) => {
-    if (isCardClickDisabled) return;
+  const handleDebounce = () => {
     setIsDisabledByDebounce(true);
     setTimeout(() => {
       setIsDisabledByDebounce(false);
     }, 500);
+  };
+
+  const onCardClick = (id) => {
+    if (isCardClickDisabled) return;
+    handleDebounce();
     dispatch(handleFieldCardClickThunk(id));
   };
 
   const isDeckClickDisabled =
-    isDisabledByDebounce || isCardClickDisabled || isCardDeckEmpty;
+    !isMyTurn || isDisabledByDebounce || isCardClickDisabled || isCardDeckEmpty;
 
   const onDeckClick = () => {
     if (isDeckClickDisabled) return;
+    handleDebounce();
     dispatch(handleDeckCardClickThunk());
   };
 

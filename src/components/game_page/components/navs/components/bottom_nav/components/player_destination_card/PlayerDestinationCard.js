@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 //
@@ -8,21 +8,23 @@ import showHoveredDestinationThunk from "../../../../../../../../redux/thunks/sh
 import hideHoveredDestinationThunk from "../../../../../../../../redux/thunks/hideHoveredDestinationThunk";
 //
 import css from "./PlayerDestinationCard.module.scss";
+import { SocketContext } from "../../../../../../../../SocketContext";
 
 const PlayerDestinationCard = ({ from, to, points, fromId, toId }) => {
   const dispatch = useDispatch();
 
-  const activePlayerConnections = useSelector(
-    playersEssentialSelectors.getActivePlayerConnections
+  const { playerIndex } = useContext(SocketContext);
+  const playerConnections = useSelector((state) =>
+    playersEssentialSelectors.getPlayerConnections(state, playerIndex)
   );
 
   const isActive = useMemo(() => {
     const connections = GraphModel.createUndirectedFromDirectedData(
-      activePlayerConnections
+      playerConnections
     );
     const graphModel = new GraphModel(connections);
     return graphModel.areVertexesConnected(Number(fromId), Number(toId));
-  }, [activePlayerConnections.length]);
+  }, [playerConnections.length]);
 
   const onMouseEnter = () =>
     dispatch(showHoveredDestinationThunk(fromId, toId));

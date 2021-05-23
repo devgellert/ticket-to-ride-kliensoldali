@@ -4,7 +4,7 @@ import playersEssentialSelectors from "./playersEssentialSelectors";
 import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
-import { reduce, size } from "lodash";
+import { reduce } from "lodash";
 import GraphModel from "../../../services/GraphModel";
 
 const {
@@ -14,14 +14,13 @@ const {
   getPlayerDestinations,
   getPlayerCards,
   getPlayerConnections,
-  getPlayer,
 } = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {
   const players = getPlayers(state);
 
   return map(players, (player, index) => {
-    const { hand, connections } = player;
+    const { hand } = player;
 
     const isActive = isPlayerIndexActive(state, index);
     const points =
@@ -115,7 +114,7 @@ const getPlayerRoutePoints = (state, playerIndex) => {
 };
 
 const getPlayerAvailableVagons = (state, playerIndex) => {
-  let result = 5; // TODO: 45
+  let result = 45;
 
   const connections = getPlayerConnections(state, playerIndex);
 
@@ -218,6 +217,8 @@ const getFinalDestinationConnections = (state) => {
   return destinations;
 };
 
+const isMyTurn = (state, index) => index === getActivePlayerIndex(state);
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
@@ -231,6 +232,9 @@ const playersDerivativeSelectors = {
   getFinalDestinationConnections,
   getPlayerAvailableVagons,
   getActivePlayerAvailableVagons,
+  getPlayerCardTypeNumbers,
+  isMyTurn,
+  getPlayerDestinations,
 };
 
 export default playersDerivativeSelectors;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { map } from "lodash";
@@ -11,11 +11,17 @@ import buildingEssentialSelectors from "../../../../../../redux/building/selecto
 //
 import Element from "./components/element/Element";
 import playersEssentialSelectors from "../../../../../../redux/players/selectors/playersEssentialSelectors";
+import { SocketContext } from "../../../../../../SocketContext";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const hoverConnectionIds = useSelector(
     buildingEssentialSelectors.getHoverConnectionIds
   );
+  const { playerIndex } = useContext(SocketContext);
+  const isMyTurn = useSelector((state) =>
+    playersDerivativeSelectors.isMyTurn(state, playerIndex)
+  );
+
   const activePlayer = useSelector(playersEssentialSelectors.getActivePlayer);
 
   const dispatch = useDispatch();
@@ -55,7 +61,7 @@ const Connection = ({ connection, imgWrapRef }) => {
       isActive={isActive}
       isSelected={isConnectionSelected}
       isBuilt={isBuilt}
-      isDisabled={!hasPointsToBuild || !!isBuilt}
+      isDisabled={!isMyTurn || !hasPointsToBuild || !!isBuilt}
       key={index}
       isHovered={isHovered}
       setIsHovered={setIsHovered}

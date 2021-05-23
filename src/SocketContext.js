@@ -9,6 +9,7 @@ import { syncState } from "./redux/actions";
 import handleJoinRoomThunk from "./redux/thunks/socket/handleJoinRoomThunk";
 import handleInitGameThunk from "./redux/thunks/socket/handleInitGameThunk";
 import handlePlayerLeftThunk from "./redux/thunks/socket/handlePlayerLeftThunk";
+import playersEssentialSelectors from "./redux/players/selectors/playersEssentialSelectors";
 
 export const SocketContext = createContext(null);
 
@@ -28,6 +29,7 @@ export const SocketContextProvider = withRouter(({ children, history }) => {
   const dispatch = useDispatch();
   const [roomId, setRoomId] = useState(null);
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [playerIndex, setPlayerIndex] = useState(null);
 
   const registerListeners = (socket) => {
     socket.on(MESSAGES.STATE_CHANGED, ({ roomId: _, state }) => {
@@ -35,9 +37,10 @@ export const SocketContextProvider = withRouter(({ children, history }) => {
     });
 
     // props: roomId, player, state
-    socket.on(MESSAGES.ROOM_IS_FULL, ({}) => {
+    socket.on(MESSAGES.ROOM_IS_FULL, ({ player }) => {
       setIsGameStarted(true);
       setTimeout(() => history.push("/"), 3000); // TODO: game starting in 3 secs alert..
+      setPlayerIndex(player - 1);
     });
 
     socket.on(MESSAGES.PLAYER_LEFT, ({ roomId, socketId }) => {
@@ -66,7 +69,8 @@ export const SocketContextProvider = withRouter(({ children, history }) => {
       if (status !== "ok") return;
       setRoomId(roomId);
       socketRoomId = roomId;
-      dispatch(syncState(JSON.parse(state)));
+      const parsedState = JSON.parse(state);
+      dispatch(syncState(parsedState));
       dispatch(handleJoinRoomThunk(socket, name, roomId, cb));
     });
   };
@@ -80,6 +84,7 @@ export const SocketContextProvider = withRouter(({ children, history }) => {
         roomId,
         leaveRoom,
         isGameStarted,
+        playerIndex,
       }}
     >
       {children}

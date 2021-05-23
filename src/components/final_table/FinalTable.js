@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { map } from "lodash";
@@ -9,6 +9,8 @@ import GraphModel from "../../services/GraphModel";
 import playersEssentialSelectors from "../../redux/players/selectors/playersEssentialSelectors";
 //
 import css from "./FinalTable.module.scss";
+import { Redirect } from "react-router-dom";
+import { SocketContext } from "../../SocketContext";
 
 const FinalTable = () => {
   const playerFinalStatistics = useSelector(
@@ -18,6 +20,12 @@ const FinalTable = () => {
   const finalDestinationConnections = useSelector(
     playersDerivativeSelectors.getFinalDestinationConnections
   );
+
+  const { isGameStarted, isInRoom } = useContext(SocketContext);
+
+  if (!isGameStarted) {
+    return <Redirect to={isInRoom ? "/waiting" : "/main"} />;
+  }
 
   const makeDestinations = (playerIndex) => {
     const destinationConnection = finalDestinationConnections[playerIndex];

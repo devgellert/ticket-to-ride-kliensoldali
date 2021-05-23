@@ -1,1 +1,0 @@
-Játékoldal: összegző táblázatban a leghosszabb út (1pt)

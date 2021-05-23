@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createPortal } from "react-dom";
 import { map, isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,10 +9,15 @@ import cancelBuildThunk from "../../../../../../../../redux/thunks/cancelBuildTh
 import unselectCardThunk from "../../../../../../../../redux/thunks/unselectCardThunk";
 //
 import css from "./SelectedCardDisplay.module.scss";
+import { SocketContext } from "../../../../../../../../SocketContext";
+import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 
 const SelectedCardDisplay = () => {
   const dispatch = useDispatch();
-
+  const { playerIndex } = useContext(SocketContext);
+  const isMyTurn = useSelector((state) =>
+    playersDerivativeSelectors.isMyTurn(state, playerIndex)
+  );
   const selectedConnection = useSelector(
     buildingEssentialSelectors.getSelectedConnection
   );
@@ -38,14 +43,16 @@ const SelectedCardDisplay = () => {
       {map(selectedCards, (card, index) => (
         <p key={index}>
           {card.type}
-          <button onClick={() => unselectCard(card.type)}>Törlés</button>
+          {!!isMyTurn && (
+            <button onClick={() => unselectCard(card.type)}>Törlés</button>
+          )}
         </p>
       ))}
 
-      {!isEmpty(selectedCards) && (
+      {!!isMyTurn && !isEmpty(selectedCards) && (
         <button onClick={onBuildClick}>Építés</button>
       )}
-      <button onClick={onCancelClick}>Mégsem</button>
+      {!!isMyTurn && <button onClick={onCancelClick}>Mégsem</button>}
     </div>,
     document.body
   );
