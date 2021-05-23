@@ -6,6 +6,7 @@ import wait from "../helpers/wait";
 import generalEssentialSelectors from "../../general/selectors/generalEssentialSelectors";
 import getInitialDestinationsViaMutation from "../helpers/getInitialDestinationsViaMutation";
 import { joinSuccess } from "../../actions";
+import getInitialPlayerCardsViaMutation from "../helpers/getInitialPlayerCardsViaMutation";
 
 const handleJoinRoomThunk = (socket, name, roomId, cb) => async (
   dispatch,
@@ -21,20 +22,23 @@ const handleJoinRoomThunk = (socket, name, roomId, cb) => async (
   const destinations = getInitialDestinationsViaMutation(
     generalEssentialSelectors.getDestinations(state)
   );
+  const deck = generalEssentialSelectors.getDeck(state);
+  const mutatedDeck = [...deck];
+  const playerCards = getInitialPlayerCardsViaMutation(mutatedDeck);
 
   const players = [
     ...oldPlayers,
     {
       name,
       hand: {
-        cards: [],
+        cards: playerCards,
         destinations,
       },
       connections: [],
       socketId: socket.id,
     },
   ];
-  dispatch(joinSuccess({ players, destinations }));
+  dispatch(joinSuccess({ players, destinations, deck: mutatedDeck }));
   while (true) {
     await wait();
     const state = getState();

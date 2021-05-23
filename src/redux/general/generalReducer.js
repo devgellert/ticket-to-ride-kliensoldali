@@ -71,6 +71,7 @@ const generalReducer = (state = initialState, action) => {
       return {
         ...state,
         destinations: action.payload.destinations,
+        deck: action.payload.deck,
       };
 
     default:

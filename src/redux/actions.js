@@ -112,10 +112,11 @@ export const cardDrawFromFieldSuccess = ({
   payload: { field, players, points, deck, log },
 });
 
-export const joinSuccess = ({ players, destinations }) => ({
+export const joinSuccess = ({ players, destinations, deck }) => ({
   type: JOIN_SUCCESS,
   payload: {
     players,
     destinations,
+    deck,
   },
 });
