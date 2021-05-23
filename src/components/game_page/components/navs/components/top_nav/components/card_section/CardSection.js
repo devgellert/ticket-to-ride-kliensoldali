@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cn from "classnames";
 //
@@ -14,6 +14,7 @@ import css from "./CardSection.module.scss";
 
 const CardSection = () => {
   const dispatch = useDispatch();
+  const [isDisabledByDebounce, setIsDisabledByDebounce] = useState(false);
 
   const field = useSelector(generalEssentialSelectors.getField);
   const selectedConnection = useSelector(
@@ -23,14 +24,20 @@ const CardSection = () => {
     generalDerivativeSelectors.isCardDeckEmpty
   );
 
-  const isCardClickDisabled = selectedConnection !== null;
+  const isCardClickDisabled =
+    isDisabledByDebounce || selectedConnection !== null;
 
   const onCardClick = (id) => {
     if (isCardClickDisabled) return;
+    setIsDisabledByDebounce(true);
+    setTimeout(() => {
+      setIsDisabledByDebounce(false);
+    }, 500);
     dispatch(handleFieldCardClickThunk(id));
   };
 
-  const isDeckClickDisabled = isCardClickDisabled || isCardDeckEmpty;
+  const isDeckClickDisabled =
+    isDisabledByDebounce || isCardClickDisabled || isCardDeckEmpty;
 
   const onDeckClick = () => {
     if (isDeckClickDisabled) return;

@@ -24,7 +24,9 @@ const getPlayersStatistics = (state) => {
     const { hand, connections } = player;
 
     const isActive = isPlayerIndexActive(state, index);
-    const points = getPlayerRoutePoints(state, index) + getPlayerDestinationPoints(state, index);
+    const points =
+      getPlayerRoutePoints(state, index) +
+      getPlayerDestinationPoints(state, index);
     const isPlayerActive =
       index === playersEssentialSelectors.getActivePlayerIndex(state);
     const cards =
@@ -36,7 +38,8 @@ const getPlayersStatistics = (state) => {
     const vagons = getPlayerAvailableVagons(state, index);
 
     const playerCount = playersEssentialSelectors.getPlayers(state).length;
-    const round = Math.floor(roundEssentialSelectors.getNth(state) / playerCount) + 1;
+    const round =
+      Math.floor(roundEssentialSelectors.getNth(state) / playerCount) + 1;
 
     return {
       destinations: hand.destinations.length,
@@ -112,7 +115,7 @@ const getPlayerRoutePoints = (state, playerIndex) => {
 };
 
 const getPlayerAvailableVagons = (state, playerIndex) => {
-  let result = 45;
+  let result = 5; // TODO: 45
 
   const connections = getPlayerConnections(state, playerIndex);
 
@@ -227,7 +230,7 @@ const playersDerivativeSelectors = {
   getFinalStatistics,
   getFinalDestinationConnections,
   getPlayerAvailableVagons,
-  getActivePlayerAvailableVagons
+  getActivePlayerAvailableVagons,
 };
 
 export default playersDerivativeSelectors;
