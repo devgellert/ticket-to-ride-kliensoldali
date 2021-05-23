@@ -5,6 +5,7 @@ import { playerConstants } from "../players/playersActions";
 import {
   CARD_DRAW_FROM_FIELD_SUCCESS,
   INIT_GAME_SUCCESS,
+  JOIN_SUCCESS,
   SYNC_STATE,
 } from "../constants";
 import generalEssentialSelectors from "./selectors/generalEssentialSelectors";
@@ -50,6 +51,7 @@ const generalReducer = (state = initialState, action) => {
         ...state,
         field: action.payload.field,
         deck: action.payload.deck,
+        destinations: action.payload.destinations,
       };
 
     case CARD_DRAW_FROM_FIELD_SUCCESS:
@@ -63,6 +65,12 @@ const generalReducer = (state = initialState, action) => {
       return {
         ...state,
         deck: action.payload.deck,
+      };
+
+    case JOIN_SUCCESS:
+      return {
+        ...state,
+        destinations: action.payload.destinations,
       };
 
     default:

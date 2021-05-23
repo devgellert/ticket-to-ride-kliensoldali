@@ -9,6 +9,7 @@ import {
   INIT_GAME_SUCCESS,
   UNSELECT_CARD_SUCCESS,
   CARD_DRAW_FROM_FIELD_SUCCESS,
+  JOIN_SUCCESS,
 } from "./constants";
 
 export const selectCardForBuildingSuccess = (card, cards, log) => ({
@@ -70,13 +71,20 @@ export const buildSuccess = ({
   },
 });
 
-export const initGameSuccess = ({ players, deck, field, log }) => ({
+export const initGameSuccess = ({
+  players,
+  deck,
+  field,
+  log,
+  destinations,
+}) => ({
   type: INIT_GAME_SUCCESS,
   payload: {
     players,
     deck,
     field,
     log,
+    destinations,
   },
 });
 
@@ -102,4 +110,12 @@ export const cardDrawFromFieldSuccess = ({
 }) => ({
   type: CARD_DRAW_FROM_FIELD_SUCCESS,
   payload: { field, players, points, deck, log },
+});
+
+export const joinSuccess = ({ players, destinations }) => ({
+  type: JOIN_SUCCESS,
+  payload: {
+    players,
+    destinations,
+  },
 });

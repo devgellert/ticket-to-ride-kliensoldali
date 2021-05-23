@@ -4,6 +4,7 @@ import {
   BUILD_SUCCESS,
   CARD_DRAW_FROM_FIELD_SUCCESS,
   INIT_GAME_SUCCESS,
+  JOIN_SUCCESS,
   PREPARE_NEXT_ROUND_SUCCESS,
   SELECT_CARD_FOR_BUILDING_SUCCESS,
   SYNC_STATE,
@@ -144,6 +145,12 @@ const playersReducer = (state = initialState, action) => {
           }
           return player;
         }),
+      };
+
+    case JOIN_SUCCESS:
+      return {
+        ...state,
+        players: action.payload.players,
       };
 
     default:

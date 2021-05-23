@@ -14,18 +14,9 @@ const setDestinations = (value) => ({
   payload: { value },
 });
 
-const initGameSuccess = ({ deck, field }) => ({
-  type: generalConstants.INIT_GAME_SUCCESS,
-  payload: {
-    deck,
-    field,
-  },
-});
-
 const generalActions = {
   setDeck,
   setDestinations,
-  initGameSuccess,
 };
 
 export default generalActions;
