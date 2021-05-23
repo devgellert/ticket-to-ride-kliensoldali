@@ -1,8 +1,6 @@
 import getInitialFieldViaMutation from "./helpers/getInitialFieldViaMutation";
 import generalEssentialSelectors from "../general/selectors/generalEssentialSelectors";
-import playerActions from "../players/playersActions";
-import generalActions from "../general/generalActions";
-import roundActions from "../round/roundActions";
+import { initGameSuccess } from "../actions";
 
 const initGameThunk = (name, socketId) => async (dispatch, getState) => {
   const state = getState();
@@ -24,14 +22,14 @@ const initGameThunk = (name, socketId) => async (dispatch, getState) => {
 
   const newField = getInitialFieldViaMutation(mutatedDeck);
 
-  dispatch(playerActions.setPlayers(newPlayers));
   dispatch(
-    generalActions.initGameSuccess({
+    initGameSuccess({
+      players: newPlayers,
       deck: mutatedDeck,
       field: newField,
+      log: "A játék elkezdődött.",
     })
   );
-  dispatch(roundActions.pushLog({ value: "A játék elkezdődött" }));
 };
 
 export default initGameThunk;

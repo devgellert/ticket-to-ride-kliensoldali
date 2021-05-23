@@ -2,8 +2,12 @@ import { map } from "lodash";
 import { playerConstants } from "./playersActions";
 import {
   BUILD_SUCCESS,
+  CARD_DRAW_FROM_FIELD_SUCCESS,
+  INIT_GAME_SUCCESS,
   PREPARE_NEXT_ROUND_SUCCESS,
+  SELECT_CARD_FOR_BUILDING_SUCCESS,
   SYNC_STATE,
+  UNSELECT_CARD_SUCCESS,
 } from "../constants";
 import { buildingConstants } from "../building/buildingActions";
 import playersEssentialSelectors from "./selectors/playersEssentialSelectors";
@@ -33,13 +37,20 @@ const playersReducer = (state = initialState, action) => {
         activePlayerIndex: action.payload.value,
       };
 
+    // TODO delete if not used
     case playerConstants.SET_PLAYERS:
       return {
         ...state,
         players: action.payload.value,
       };
 
-    case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
+    case INIT_GAME_SUCCESS:
+      return {
+        ...state,
+        players: action.payload.players,
+      };
+
+    case CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,
         players: action.payload.players,
@@ -62,7 +73,7 @@ const playersReducer = (state = initialState, action) => {
         players: newPlayers,
       };
 
-    case playerConstants.SET_ACTIVE_PLAYERS_CARDS:
+    case SELECT_CARD_FOR_BUILDING_SUCCESS:
       return {
         ...state,
         players: map(state.players, (player, index) =>
@@ -72,7 +83,7 @@ const playersReducer = (state = initialState, action) => {
                 ...player,
                 hand: {
                   ...player.hand,
-                  cards: action.payload,
+                  cards: action.payload.cards,
                 },
               }
         ),
@@ -118,7 +129,7 @@ const playersReducer = (state = initialState, action) => {
         }),
       };
 
-    case buildingConstants.UNSELECT_CARD_SUCCESS:
+    case UNSELECT_CARD_SUCCESS:
       return {
         ...state,
         players: map(state.players, (player, index) => {

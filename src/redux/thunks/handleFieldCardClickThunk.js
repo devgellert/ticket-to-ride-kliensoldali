@@ -3,7 +3,7 @@ import generalEssentialSelectors from "../general/selectors/generalEssentialSele
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
 import playerActions from "../players/playersActions";
 import { compact } from "lodash";
-import roundActions from "../round/roundActions";
+import { cardDrawFromFieldSuccess } from "../actions";
 
 const handleFieldCardClickThunk = (id) => async (dispatch, getState) => {
   const state = getState();
@@ -15,11 +15,9 @@ const handleFieldCardClickThunk = (id) => async (dispatch, getState) => {
   const clickedCard = field.find((elem) => elem.id === id);
   if (!clickedCard) return;
 
-  // new card from deck
   const deck = generalEssentialSelectors.getDeck(state);
   const newCardFromDeck = deck.pop();
 
-  //const newField = field.filter((elem) => elem.id !== clickedCard.id);
   const newField = compact(
     map(field, (elem) => (elem.id !== clickedCard.id ? elem : newCardFromDeck))
   );
@@ -42,17 +40,12 @@ const handleFieldCardClickThunk = (id) => async (dispatch, getState) => {
   });
 
   dispatch(
-    playerActions.cardDrawFromFieldSuccess({
+    cardDrawFromFieldSuccess({
       field: newField,
       players,
       points: clickedCard.points,
       deck,
-    })
-  );
-
-  dispatch(
-    roundActions.pushLog({
-      value: `${activePlayer.name} húzott egy kártyát a kintlévők közül (${clickedCard.type})`,
+      log: `${activePlayer.name}: ${clickedCard.type} kártya felhúzva a mezőről.`,
     })
   );
 };

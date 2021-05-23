@@ -2,13 +2,15 @@ export const buildingConstants = {
   SET_SELECTED_CONNECTION: "SET_SELECTED_CONNECTION",
   PUSH_SELECTED_CARD: "PUSH_SELECTED_CARD",
   CANCEL_BUILDING_SUCCESS: "CANCEL_BUILDING_SUCCESS",
-  UNSELECT_CARD_SUCCESS: "UNSELECT_CARD_SUCCESS",
   SET_HOVER: "SET_HOVER",
 };
 
-const setSelectedConnection = (selectedConnection) => ({
+const setSelectedConnection = (selectedConnection, log) => ({
   type: buildingConstants.SET_SELECTED_CONNECTION,
-  payload: selectedConnection,
+  payload: {
+    selectedConnection,
+    log,
+  },
 });
 
 const pushSelectedCard = (card) => ({
@@ -16,18 +18,11 @@ const pushSelectedCard = (card) => ({
   payload: card,
 });
 
-const cancelBuildingSuccess = ({ activePlayerCards }) => ({
+const cancelBuildingSuccess = ({ activePlayerCards, log }) => ({
   type: buildingConstants.CANCEL_BUILDING_SUCCESS,
   payload: {
     activePlayerCards,
-  },
-});
-
-const unselectCardSuccess = ({ selectedCards, activePlayerCards }) => ({
-  type: buildingConstants.UNSELECT_CARD_SUCCESS,
-  payload: {
-    selectedCards,
-    activePlayerCards,
+    log,
   },
 });
 
@@ -40,7 +35,6 @@ const buildingActions = {
   setSelectedConnection,
   pushSelectedCard,
   cancelBuildingSuccess,
-  unselectCardSuccess,
   setHover,
 };
 

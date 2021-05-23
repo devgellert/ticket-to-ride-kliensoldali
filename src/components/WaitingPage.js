@@ -12,7 +12,9 @@ const WaitingPage = () => {
 
   const players = useSelector(playersEssentialSelectors.getPlayers);
 
-  if (!isInRoom) return <Redirect to="/main" />;
+  if (!isInRoom) {
+    return <Redirect to="/main" />;
+  }
 
   return (
     <div className={css["waiting-page"]}>

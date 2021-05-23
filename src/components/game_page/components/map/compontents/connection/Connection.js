@@ -10,11 +10,13 @@ import buildingDerivativeSelectors from "../../../../../../redux/building/select
 import buildingEssentialSelectors from "../../../../../../redux/building/selectors/buildingEssentialSelectors";
 //
 import Element from "./components/element/Element";
+import playersEssentialSelectors from "../../../../../../redux/players/selectors/playersEssentialSelectors";
 
 const Connection = ({ connection, imgWrapRef }) => {
   const hoverConnectionIds = useSelector(
     buildingEssentialSelectors.getHoverConnectionIds
   );
+  const activePlayer = useSelector(playersEssentialSelectors.getActivePlayer);
 
   const dispatch = useDispatch();
 
@@ -41,7 +43,12 @@ const Connection = ({ connection, imgWrapRef }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const onClick = () =>
-    dispatch(buildingActions.setSelectedConnection(connection));
+    dispatch(
+      buildingActions.setSelectedConnection(
+        connection,
+        `${activePlayer.name}: építkezni szeretne.`
+      )
+    );
 
   return map(elements, (elem, index) => (
     <Element

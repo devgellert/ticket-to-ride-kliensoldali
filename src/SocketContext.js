@@ -1,158 +1,88 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 import { isFunction } from "lodash";
 import { useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import io from "socket.io-client";
 //
-import initGameThunk from "./redux/thunks/initGameThunk";
 import { syncState } from "./redux/actions";
-import playersEssentialSelectors from "./redux/players/selectors/playersEssentialSelectors";
-import playerActions from "./redux/players/playersActions";
+import handleJoinRoomThunk from "./redux/thunks/socket/handleJoinRoomThunk";
+import handleInitGameThunk from "./redux/thunks/socket/handleInitGameThunk";
+import handlePlayerLeftThunk from "./redux/thunks/socket/handlePlayerLeftThunk";
 
 export const SocketContext = createContext(null);
 
+export const MESSAGES = {
+  STATE_CHANGED: "state-changed",
+  ROOM_IS_FULL: "room-is-full",
+  PLAYER_LEFT: "player-left",
+  SYNC_STATE: "sync-state",
+  LEAVE_ROOM: "leave-room",
+  CREATE_ROOM: "create-room",
+};
+
+export const socket = io("http://webprogramozas.inf.elte.hu:3031");
+export let socketRoomId = null;
+
 export const SocketContextProvider = withRouter(({ children, history }) => {
   const dispatch = useDispatch();
-  const [socket, setSocket] = useState(null);
   const [roomId, setRoomId] = useState(null);
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
-  const connect = () => {
-    const socket = io("http://webprogramozas.inf.elte.hu:3031");
-    setSocket(socket);
-    return socket;
-  };
+  const registerListeners = (socket) => {
+    socket.on(MESSAGES.STATE_CHANGED, ({ roomId: _, state }) => {
+      dispatch(syncState(state));
+    });
 
-  useEffect(() => {
-    try {
-      const socket = connect();
+    // props: roomId, player, state
+    socket.on(MESSAGES.ROOM_IS_FULL, ({}) => {
+      setIsGameStarted(true);
+      setTimeout(() => history.push("/"), 3000); // TODO: game starting in 3 secs alert..
+    });
 
-      socket.on("state-changed", ({ roomId: _, state }) => {
-        dispatch(syncState(state));
-      });
-
-      socket.on("room-is-full", ({ roomId, player, state }) => {
-        history.push("/");
-      });
-
-      socket.on("player-left", async ({ roomId, socketId }) => {
-        dispatch(async (dispatch, getState) => {
-          const players = playersEssentialSelectors.getPlayers(getState());
-          dispatch(playerActions.filterOutPlayerBySocketId(socketId));
-          while (true) {
-            await wait();
-            const state = getState();
-            if (state.players.players.length === players.length - 1) break;
-          }
-          const state = getState();
-          socket.emit("sync-state", roomId, state, false, (args) => {
-            console.log(args);
-          });
-        });
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  const leaveRoom = () => {
-    if (!roomId) return;
-
-    socket.emit("leave-room", roomId, () => {
-      console.log("Room left...");
+    socket.on(MESSAGES.PLAYER_LEFT, ({ roomId, socketId }) => {
+      dispatch(handlePlayerLeftThunk(socket, roomId, socketId));
     });
   };
 
-  const wait = async () =>
-    await new Promise((resolve) => setTimeout(resolve, 300));
+  useEffect(() => {
+    registerListeners(socket);
+  }, []);
 
-  const createRoom = useCallback(
-    (roomSize, name, cb) => {
-      socket.emit("create-room", Number(roomSize), (ack) => {
-        if (ack.status === "ok") {
-          setRoomId(ack.roomId);
-          if (isFunction(cb)) cb();
+  const leaveRoom = () => socket.emit(MESSAGES.LEAVE_ROOM, roomId);
 
-          dispatch(async (dispatch, getState) => {
-            dispatch(initGameThunk(name, socket.id));
-            while (true) {
-              await wait();
-              const state = getState();
-              if (state.players.players.length > 0) {
-                // TODO: better state validation
-                break;
-              }
-            }
-            const state = getState();
-            socket.emit("sync-state", ack.roomId, state, false, (args) => {
-              console.log(args);
-            });
-          });
-        }
-      });
-    },
-    [socket]
-  );
+  const createRoom = (roomSize, name, cb) => {
+    socket.emit(MESSAGES.CREATE_ROOM, roomSize, ({ status, roomId }) => {
+      if (status !== "ok") return;
+      setRoomId(roomId);
+      socketRoomId = roomId;
+      dispatch(handleInitGameThunk(name, socket, roomId));
+      if (isFunction(cb)) cb();
+    });
+  };
 
-  const joinRoom = useCallback(
-    (roomId, name, cb) => {
-      socket.emit("join-room", roomId, ({ status, state }) => {
-        if (status === "ok") {
-          setRoomId(roomId);
-          const parsedState = JSON.parse(state);
-          dispatch(syncState(parsedState));
-
-          dispatch(async (dispatch, getState) => {
-            while (true) {
-              await wait();
-              const state = getState();
-              if (state?.players?.players?.length ?? 0 > 0) break;
-            }
-            const state = getState();
-            const oldPlayers = playersEssentialSelectors.getPlayers(state);
-            const players = [
-              ...oldPlayers,
-              {
-                name,
-                hand: {
-                  cards: [],
-                  destinations: [],
-                },
-                connections: [],
-                socketId: socket.id,
-              },
-            ];
-            dispatch(playerActions.setPlayers(players));
-            while (true) {
-              await wait();
-              const state = getState();
-              if (state?.players?.players?.length === oldPlayers.length + 1)
-                break;
-            }
-            socket.emit("sync-state", roomId, getState(), true, (args) => {
-              console.log(args);
-            });
-
-            if (isFunction(cb)) cb(roomId);
-          });
-        }
-      });
-    },
-    [socket]
-  );
-
-  const value = useMemo(
-    () => ({
-      createRoom,
-      joinRoom,
-      isInRoom: roomId !== null,
-      roomId,
-      leaveRoom,
-    }),
-    [createRoom, roomId, joinRoom, leaveRoom]
-  );
+  const joinRoom = (roomId, name, cb) => {
+    socket.emit("join-room", roomId, ({ status, state }) => {
+      if (status !== "ok") return;
+      setRoomId(roomId);
+      socketRoomId = roomId;
+      dispatch(syncState(JSON.parse(state)));
+      dispatch(handleJoinRoomThunk(socket, name, roomId, cb));
+    });
+  };
 
   return (
-    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+    <SocketContext.Provider
+      value={{
+        createRoom,
+        joinRoom,
+        isInRoom: roomId !== null,
+        roomId,
+        leaveRoom,
+        isGameStarted,
+      }}
+    >
+      {children}
+    </SocketContext.Provider>
   );
 });

@@ -5,11 +5,11 @@ import { SocketContext } from "../SocketContext";
 
 const MainPage = ({ history }) => {
   const [newName, setNewName] = React.useState("");
-  const [newCount, setNewCount] = React.useState(1);
+  const [newCount, setNewCount] = React.useState(2);
   const [connectName, setConnectName] = React.useState("");
-  const [connectId, setConnectId] = React.useState(1);
+  const [connectId, setConnectId] = React.useState("");
 
-  const { createRoom, joinRoom, emit } = useContext(SocketContext);
+  const { createRoom, joinRoom } = useContext(SocketContext);
 
   const createRoomClick = () =>
     createRoom(newCount, newName, () => {
@@ -19,7 +19,6 @@ const MainPage = ({ history }) => {
   const joinGameClick = () =>
     joinRoom(connectId, connectName, (roomId) => {
       history.push("/waiting");
-      // emit("sync-action");
     });
 
   return (
@@ -70,7 +69,7 @@ const MainPage = ({ history }) => {
           value={newCount}
           onChange={(e) => {
             const newVal = e.target.value;
-            if (newVal < 1 || newVal > 6) return;
+            if (newVal < 2 || newVal > 6) return;
             setNewCount(newVal);
           }}
         />

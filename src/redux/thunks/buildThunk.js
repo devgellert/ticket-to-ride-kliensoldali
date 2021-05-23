@@ -2,7 +2,6 @@ import { compact, map, reduce } from "lodash";
 //
 import buildingEssentialSelectors from "../building/selectors/buildingEssentialSelectors";
 import { buildSuccess } from "../actions";
-import roundActions from "../round/roundActions";
 import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
 import { cardTypes } from "../general/generalReducer";
 import playersDerivativeSelectors from "../players/selectors/playersDerivativeSelectors";
@@ -120,11 +119,7 @@ const buildThunk = () => async (dispatch, getState) => {
     buildSuccess({
       cardsToPutBackToHand,
       selectedConnection: selectedConnection,
-    })
-  );
-  dispatch(
-    roundActions.pushLog({
-      value: `${activePlayer.name} megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
+      log: `${activePlayer.name}: megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
     })
   );
 };

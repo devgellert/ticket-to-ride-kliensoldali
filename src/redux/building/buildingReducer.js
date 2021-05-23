@@ -2,7 +2,9 @@ import { buildingConstants } from "./buildingActions";
 import {
   BUILD_SUCCESS,
   PREPARE_NEXT_ROUND_SUCCESS,
+  SELECT_CARD_FOR_BUILDING_SUCCESS,
   SYNC_STATE,
+  UNSELECT_CARD_SUCCESS,
 } from "../constants";
 import buildingEssentialSelectors from "./selectors/buildingEssentialSelectors";
 
@@ -26,13 +28,13 @@ const buildingReducer = (state = initialState, action) => {
     case buildingConstants.SET_SELECTED_CONNECTION:
       return {
         ...state,
-        selectedConnection: action.payload,
+        selectedConnection: action.payload.selectedConnection,
       };
 
-    case buildingConstants.PUSH_SELECTED_CARD:
+    case SELECT_CARD_FOR_BUILDING_SUCCESS:
       return {
         ...state,
-        selectedCards: [...state.selectedCards, action.payload],
+        selectedCards: [...state.selectedCards, action.payload.card],
       };
 
     case BUILD_SUCCESS:
@@ -56,7 +58,7 @@ const buildingReducer = (state = initialState, action) => {
         selectedConnection: null,
       };
 
-    case buildingConstants.UNSELECT_CARD_SUCCESS:
+    case UNSELECT_CARD_SUCCESS:
       return {
         ...state,
         selectedCards: action.payload.selectedCards,
