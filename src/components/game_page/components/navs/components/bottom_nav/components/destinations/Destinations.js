@@ -1,14 +1,19 @@
-import React from "react";
-import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
+import React, { useContext } from "react";
 import { map } from "lodash";
-import PlayerDestinationCard from "../player_destination_card/PlayerDestinationCard";
 import { useSelector } from "react-redux";
+//
 import playersDerivativeSelectors from "../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
+//
+import PlayerCardsWrap from "../player_cards_wrap/PlayerCardsWrap";
+import PlayerDestinationCard from "../player_destination_card/PlayerDestinationCard";
+//
 import css from "./Destinations.module.scss";
+import { SocketContext } from "../../../../../../../../SocketContext";
 
 const Destinations = () => {
-  const activePlayerDestinations = useSelector(
-    playersDerivativeSelectors.getActivePlayerDestinations
+  const { playerIndex } = useContext(SocketContext);
+  const playerDestinations = useSelector((state) =>
+    playersDerivativeSelectors.getPlayerDestinations(state, playerIndex)
   );
 
   return (
@@ -18,7 +23,7 @@ const Destinations = () => {
       </div>
 
       <PlayerCardsWrap>
-        {map(activePlayerDestinations, (destination, index) => (
+        {map(playerDestinations, (destination, index) => (
           <PlayerDestinationCard
             connectionIds={destination.elements}
             key={index}

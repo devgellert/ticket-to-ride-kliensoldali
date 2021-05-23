@@ -2,6 +2,13 @@ import { generalConstants } from "./generalActions";
 import createInitialDeck from "./helpers/createInitialDeck";
 import createInitialDestinations from "./helpers/createInitialDestinations";
 import { playerConstants } from "../players/playersActions";
+import {
+  CARD_DRAW_FROM_FIELD_SUCCESS,
+  INIT_GAME_SUCCESS,
+  JOIN_SUCCESS,
+  SYNC_STATE,
+} from "../constants";
+import generalEssentialSelectors from "./selectors/generalEssentialSelectors";
 
 export const cardTypes = [
   "purple",
@@ -23,6 +30,10 @@ const initialState = {
 
 const generalReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...generalEssentialSelectors.getState(action.payload.state),
+      };
     case generalConstants.SET_DECK:
       return {
         ...state,
@@ -35,13 +46,15 @@ const generalReducer = (state = initialState, action) => {
         destinations: action.payload.value,
       };
 
-    case generalConstants.INIT_GAME_SUCCESS:
+    case INIT_GAME_SUCCESS:
       return {
         ...state,
-        ...action.payload,
+        field: action.payload.field,
+        deck: action.payload.deck,
+        destinations: action.payload.destinations,
       };
 
-    case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
+    case CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,
         field: action.payload.field,
@@ -51,6 +64,13 @@ const generalReducer = (state = initialState, action) => {
     case playerConstants.CARD_DRAW_FROM_DECK_SUCCESS:
       return {
         ...state,
+        deck: action.payload.deck,
+      };
+
+    case JOIN_SUCCESS:
+      return {
+        ...state,
+        destinations: action.payload.destinations,
         deck: action.payload.deck,
       };
 

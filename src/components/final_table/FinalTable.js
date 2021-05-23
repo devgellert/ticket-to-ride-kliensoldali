@@ -1,12 +1,16 @@
-import React, { useMemo } from "react";
-import css from "./FinalTable.module.scss";
+import React, { useContext, useMemo } from "react";
+import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { map } from "lodash";
+//
 import playersDerivativeSelectors from "../../redux/players/selectors/playersDerivativeSelectors";
 import buildingActions from "../../redux/building/buildingActions";
 import GraphModel from "../../services/GraphModel";
 import playersEssentialSelectors from "../../redux/players/selectors/playersEssentialSelectors";
-import cn from "classnames";
+//
+import css from "./FinalTable.module.scss";
+import { Redirect } from "react-router-dom";
+import { SocketContext } from "../../SocketContext";
 
 const FinalTable = () => {
   const playerFinalStatistics = useSelector(
@@ -17,6 +21,12 @@ const FinalTable = () => {
     playersDerivativeSelectors.getFinalDestinationConnections
   );
 
+  const { isGameStarted, isInRoom } = useContext(SocketContext);
+
+  if (!isGameStarted) {
+    return <Redirect to={isInRoom ? "/waiting" : "/main"} />;
+  }
+
   const makeDestinations = (playerIndex) => {
     const destinationConnection = finalDestinationConnections[playerIndex];
 
@@ -26,11 +36,13 @@ const FinalTable = () => {
           const FinalDestination = () => {
             const dispatch = useDispatch();
 
-            const activePlayerConnections = useSelector(state =>
+            const activePlayerConnections = useSelector((state) =>
               playersEssentialSelectors.getPlayerConnections(state, playerIndex)
             );
             const isActive = useMemo(() => {
-              const connections = GraphModel.createUndirectedFromDirectedData(activePlayerConnections);
+              const connections = GraphModel.createUndirectedFromDirectedData(
+                activePlayerConnections
+              );
               const graphModel = new GraphModel(connections);
               return graphModel.areVertexesConnected(
                 Number(destination.from),
@@ -46,13 +58,16 @@ const FinalTable = () => {
                   );
                   const graphModel = new GraphModel(connections);
 
-                  const connectionIds = graphModel.getPath(Number(destination.from), Number(destination.to));
+                  const connectionIds = graphModel.getPath(
+                    Number(destination.from),
+                    Number(destination.to)
+                  );
 
                   dispatch(
                     buildingActions.setHover({
                       from: destination.from,
                       to: destination.to,
-                      connectionIds
+                      connectionIds,
                     })
                   );
                 }}
@@ -61,7 +76,7 @@ const FinalTable = () => {
                     buildingActions.setHover({
                       from: null,
                       to: null,
-                      connectionIds: []
+                      connectionIds: [],
                     })
                   );
                 }}

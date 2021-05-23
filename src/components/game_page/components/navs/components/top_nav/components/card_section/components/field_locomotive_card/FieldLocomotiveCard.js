@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { noop } from "lodash";
-import css from "./FieldLocomotiveCard.module.scss";
-import { useSelector } from "react-redux";
-import roundDerivativeSelectors from "../../../../../../../../../../redux/round/selectors/roundDerivativeSelectors";
 import cn from "classnames";
+import { useSelector } from "react-redux";
+//
+import roundDerivativeSelectors from "../../../../../../../../../../redux/round/selectors/roundDerivativeSelectors";
+//
+import css from "./FieldLocomotiveCard.module.scss";
+import { SocketContext } from "../../../../../../../../../../SocketContext";
+import playersDerivativeSelectors from "../../../../../../../../../../redux/players/selectors/playersDerivativeSelectors";
 
 const FieldLocomotiveCard = ({
   color,
@@ -14,9 +18,15 @@ const FieldLocomotiveCard = ({
   const canDrawLocomotive = useSelector(
     roundDerivativeSelectors.canDrawLocomotive
   );
+  const { playerIndex } = useContext(SocketContext);
+  const isMyTurn = useSelector((state) =>
+    playersDerivativeSelectors.isMyTurn(state, playerIndex)
+  );
 
   const isDisabled =
-    isDisabledProp || (color === "locomotive" && !canDrawLocomotive);
+    !isMyTurn ||
+    isDisabledProp ||
+    (color === "locomotive" && !canDrawLocomotive);
 
   return (
     <div

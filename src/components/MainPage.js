@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withRouter } from "react-router-dom";
 import css from "./MainPage.module.scss";
+import { SocketContext } from "../SocketContext";
 
 const MainPage = ({ history }) => {
   const [newName, setNewName] = React.useState("");
-  const [newCount, setNewCount] = React.useState(1);
+  const [newCount, setNewCount] = React.useState(2);
   const [connectName, setConnectName] = React.useState("");
-  const [connectId, setConnectId] = React.useState(1);
+  const [connectId, setConnectId] = React.useState("");
 
-  const playGame = () => {
-    history.push("/");
-  };
+  const { createRoom, joinRoom } = useContext(SocketContext);
+
+  const createRoomClick = () =>
+    createRoom(newCount, newName, () => {
+      history.push("/waiting");
+    });
+
+  const joinGameClick = () =>
+    joinRoom(connectId, connectName, (roomId) => {
+      history.push("/waiting");
+    });
 
   return (
     <div className={css["main-page"]}>
@@ -60,7 +69,7 @@ const MainPage = ({ history }) => {
           value={newCount}
           onChange={(e) => {
             const newVal = e.target.value;
-            if (newVal < 1 || newVal > 6) return;
+            if (newVal < 2 || newVal > 6) return;
             setNewCount(newVal);
           }}
         />
@@ -72,7 +81,7 @@ const MainPage = ({ history }) => {
           onChange={(e) => setNewName(e.target.value)}
         />
         <br />
-        <button onClick={playGame}>Indítás</button>
+        <button onClick={createRoomClick}>Indítás</button>
       </section>
 
       <section>
@@ -91,7 +100,7 @@ const MainPage = ({ history }) => {
           onChange={(e) => setConnectId(e.target.value)}
         />{" "}
         <br />
-        <button onClick={playGame}>Csatlakozás</button>
+        <button onClick={joinGameClick}>Csatlakozás</button>
       </section>
     </div>
   );

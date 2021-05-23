@@ -4,7 +4,7 @@ import playersEssentialSelectors from "./playersEssentialSelectors";
 import mapConnectionLengthToPoints from "../../../utils/mapConnectionLengthToPoints";
 import buildingEssentialSelectors from "../../building/selectors/buildingEssentialSelectors";
 import roundEssentialSelectors from "../../round/selectors/roundEssentialSelectors";
-import { reduce, size } from "lodash";
+import { reduce } from "lodash";
 import GraphModel from "../../../services/GraphModel";
 
 const {
@@ -14,17 +14,18 @@ const {
   getPlayerDestinations,
   getPlayerCards,
   getPlayerConnections,
-  getPlayer,
 } = playersEssentialSelectors;
 
 const getPlayersStatistics = (state) => {
   const players = getPlayers(state);
 
   return map(players, (player, index) => {
-    const { hand, connections } = player;
+    const { hand } = player;
 
     const isActive = isPlayerIndexActive(state, index);
-    const points = getPlayerRoutePoints(state, index) + getPlayerDestinationPoints(state, index);
+    const points =
+      getPlayerRoutePoints(state, index) +
+      getPlayerDestinationPoints(state, index);
     const isPlayerActive =
       index === playersEssentialSelectors.getActivePlayerIndex(state);
     const cards =
@@ -36,7 +37,8 @@ const getPlayersStatistics = (state) => {
     const vagons = getPlayerAvailableVagons(state, index);
 
     const playerCount = playersEssentialSelectors.getPlayers(state).length;
-    const round = Math.floor(roundEssentialSelectors.getNth(state) / playerCount) + 1;
+    const round =
+      Math.floor(roundEssentialSelectors.getNth(state) / playerCount) + 1;
 
     return {
       destinations: hand.destinations.length,
@@ -215,6 +217,8 @@ const getFinalDestinationConnections = (state) => {
   return destinations;
 };
 
+const isMyTurn = (state, index) => index === getActivePlayerIndex(state);
+
 const playersDerivativeSelectors = {
   getActivePlayerCardTypeNumbers,
   getActivePlayerDestinations,
@@ -227,7 +231,10 @@ const playersDerivativeSelectors = {
   getFinalStatistics,
   getFinalDestinationConnections,
   getPlayerAvailableVagons,
-  getActivePlayerAvailableVagons
+  getActivePlayerAvailableVagons,
+  getPlayerCardTypeNumbers,
+  isMyTurn,
+  getPlayerDestinations,
 };
 
 export default playersDerivativeSelectors;

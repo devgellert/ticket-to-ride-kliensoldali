@@ -7,14 +7,37 @@ import { createStore, applyMiddleware, compose } from "redux";
 import reducer from "./redux/reducer";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { socketRoomId, socket, MESSAGES } from "./SocketContext";
 
-const store = createStore(
-  reducer,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
-);
+const afterStateManipulationMw = (store) => (next) => (action) => {
+  if (action.disableSync === true) {
+    return next(action);
+  }
+  const result = next(action);
+
+  if (!socket || !socketRoomId) return;
+  store.dispatch(async () => {
+    socket.emit(
+      MESSAGES.SYNC_STATE,
+      socketRoomId,
+      store.getState(),
+      true,
+      (args) => {
+        console.log("state sync message sent..", args);
+      }
+    );
+  });
+};
+
+const composed = window.__REDUX_DEVTOOLS_EXTENSION__
+  ? compose(
+      applyMiddleware(thunk, afterStateManipulationMw),
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
+  : applyMiddleware(thunk, afterStateManipulationMw);
+
+const store = createStore(reducer, composed);
 
 const providedApp = (
   <Provider store={store}>

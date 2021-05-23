@@ -1,53 +1,40 @@
-import React, { useCallback, useMemo } from "react";
-import css from "./PlayerDestinationCard.module.scss";
+import React, { useContext, useMemo } from "react";
+import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import buildingActions from "../../../../../../../../redux/building/buildingActions";
+//
 import playersEssentialSelectors from "../../../../../../../../redux/players/selectors/playersEssentialSelectors";
 import GraphModel from "../../../../../../../../services/GraphModel";
-import buildingEssentialSelectors from "../../../../../../../../redux/building/selectors/buildingEssentialSelectors";
-import cn from "classnames";
+import showHoveredDestinationThunk from "../../../../../../../../redux/thunks/showHoveredDestinationThunk";
+import hideHoveredDestinationThunk from "../../../../../../../../redux/thunks/hideHoveredDestinationThunk";
+//
+import css from "./PlayerDestinationCard.module.scss";
+import { SocketContext } from "../../../../../../../../SocketContext";
 
 const PlayerDestinationCard = ({ from, to, points, fromId, toId }) => {
   const dispatch = useDispatch();
 
-  const activePlayerConnections = useSelector(
-    playersEssentialSelectors.getActivePlayerConnections
+  const { playerIndex } = useContext(SocketContext);
+  const playerConnections = useSelector((state) =>
+    playersEssentialSelectors.getPlayerConnections(state, playerIndex)
   );
 
   const isActive = useMemo(() => {
     const connections = GraphModel.createUndirectedFromDirectedData(
-      activePlayerConnections
+      playerConnections
     );
     const graphModel = new GraphModel(connections);
     return graphModel.areVertexesConnected(Number(fromId), Number(toId));
-  }, [activePlayerConnections.length]);
+  }, [playerConnections.length]);
+
+  const onMouseEnter = () =>
+    dispatch(showHoveredDestinationThunk(fromId, toId));
+
+  const onMouseLeave = () => dispatch(hideHoveredDestinationThunk());
 
   return (
     <div
-      onMouseEnter={() => {
-        const connections = GraphModel.createUndirectedFromDirectedData(
-          activePlayerConnections
-        );
-        const graphModel = new GraphModel(connections);
-
-        const connectionIds = graphModel.getPath(fromId, toId);
-        dispatch(
-          buildingActions.setHover({
-            from: fromId,
-            to: toId,
-            connectionIds,
-          })
-        );
-      }}
-      onMouseLeave={() => {
-        dispatch(
-          buildingActions.setHover({
-            from: null,
-            to: null,
-            connectionIds: [],
-          })
-        );
-      }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={cn(css["player-destination-card"], {
         [css["active"]]: isActive,
       })}

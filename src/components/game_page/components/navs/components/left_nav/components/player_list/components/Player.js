@@ -1,6 +1,7 @@
 import React from "react";
-import css from "./Player.module.scss";
 import cn from "classnames";
+//
+import css from "./Player.module.scss";
 
 const Player = ({
   name,

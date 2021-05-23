@@ -1,45 +1,57 @@
-import { playerConstants } from "./playersActions";
-import { BUILD_SUCCESS, PREPARE_NEXT_ROUND_SUCCESS } from "../constants";
 import { map } from "lodash";
+import { playerConstants } from "./playersActions";
+import {
+  BUILD_SUCCESS,
+  CARD_DRAW_FROM_FIELD_SUCCESS,
+  INIT_GAME_SUCCESS,
+  JOIN_SUCCESS,
+  PREPARE_NEXT_ROUND_SUCCESS,
+  SELECT_CARD_FOR_BUILDING_SUCCESS,
+  SYNC_STATE,
+  UNSELECT_CARD_SUCCESS,
+} from "../constants";
 import { buildingConstants } from "../building/buildingActions";
+import playersEssentialSelectors from "./selectors/playersEssentialSelectors";
 
 const initialState = {
   activePlayerIndex: 0,
-  players: [
-    {
-      name: "Player 1",
-      hand: {
-        cards: [],
-        destinations: [],
-      },
-      connections: [],
-    },
-    {
-      name: "Player 2",
-      hand: {
-        cards: [],
-        destinations: [],
-      },
-      connections: [],
-    },
-  ],
+  players: [],
 };
 
 const playersReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SYNC_STATE:
+      return {
+        ...playersEssentialSelectors.getState(action.payload.state),
+      };
+
+    case playerConstants.FILTER_OUT_PLAYER_BY_SOCKET_ID:
+      return {
+        ...state,
+        players: state.players.filter(
+          (player) => player.socketId !== action.payload.socketId
+        ),
+      };
     case playerConstants.SET_ACTIVE_PLAYER_INDEX:
       return {
         ...state,
         activePlayerIndex: action.payload.value,
       };
 
+    // TODO delete if not used
     case playerConstants.SET_PLAYERS:
       return {
         ...state,
         players: action.payload.value,
       };
 
-    case playerConstants.CARD_DRAW_FROM_FIELD_SUCCESS:
+    case INIT_GAME_SUCCESS:
+      return {
+        ...state,
+        players: action.payload.players,
+      };
+
+    case CARD_DRAW_FROM_FIELD_SUCCESS:
       return {
         ...state,
         players: action.payload.players,
@@ -49,18 +61,6 @@ const playersReducer = (state = initialState, action) => {
       return {
         ...state,
         activePlayerIndex: action.payload.activePlayerIndex,
-        // players: map(state.players, (player, index) => {
-        //   if (index === action.payload.prevActivePlayerIndex) {
-        //     return {
-        //       ...player,
-        //       hand: {
-        //         ...player.hand,
-        //         cards: [...player.hand.cards, ...action.payload.selectedCards],
-        //       },
-        //     };
-        //   }
-        //   return player;
-        // }),
       };
 
     case playerConstants.PUSH_TO_BUILD_CONNECTION_IDS:
@@ -74,7 +74,7 @@ const playersReducer = (state = initialState, action) => {
         players: newPlayers,
       };
 
-    case playerConstants.SET_ACTIVE_PLAYERS_CARDS:
+    case SELECT_CARD_FOR_BUILDING_SUCCESS:
       return {
         ...state,
         players: map(state.players, (player, index) =>
@@ -84,7 +84,7 @@ const playersReducer = (state = initialState, action) => {
                 ...player,
                 hand: {
                   ...player.hand,
-                  cards: action.payload,
+                  cards: action.payload.cards,
                 },
               }
         ),
@@ -130,7 +130,7 @@ const playersReducer = (state = initialState, action) => {
         }),
       };
 
-    case buildingConstants.UNSELECT_CARD_SUCCESS:
+    case UNSELECT_CARD_SUCCESS:
       return {
         ...state,
         players: map(state.players, (player, index) => {
@@ -145,6 +145,12 @@ const playersReducer = (state = initialState, action) => {
           }
           return player;
         }),
+      };
+
+    case JOIN_SUCCESS:
+      return {
+        ...state,
+        players: action.payload.players,
       };
 
     default:

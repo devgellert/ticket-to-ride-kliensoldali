@@ -1,10 +1,10 @@
-import buildingEssentialSelectors from "../../../../../../../redux/building/selectors/buildingEssentialSelectors";
 import { compact, map, reduce } from "lodash";
-import { buildSuccess } from "../../../../../../../redux/actions";
-import roundActions from "../../../../../../../redux/round/roundActions";
-import playersEssentialSelectors from "../../../../../../../redux/players/selectors/playersEssentialSelectors";
-import { cardTypes } from "../../../../../../../redux/general/generalReducer";
-import playersDerivativeSelectors from "../../../../../../../redux/players/selectors/playersDerivativeSelectors";
+//
+import buildingEssentialSelectors from "../building/selectors/buildingEssentialSelectors";
+import { buildSuccess } from "../actions";
+import playersEssentialSelectors from "../players/selectors/playersEssentialSelectors";
+import { cardTypes } from "../general/generalReducer";
+import playersDerivativeSelectors from "../players/selectors/playersDerivativeSelectors";
 
 const isLoco = (elem) => elem.type === "locomotive";
 
@@ -47,7 +47,7 @@ const forNumber = (num, cb) => {
 const dropType = (cards, type) =>
   cMap(cards, (card) => (card.type === type ? null : card));
 
-const build = () => async (dispatch, getState) => {
+const buildThunk = () => async (dispatch, getState) => {
   const state = getState();
 
   const activePlayer = playersEssentialSelectors.getActivePlayer(state);
@@ -64,7 +64,9 @@ const build = () => async (dispatch, getState) => {
   } = selectedConnection;
   const isGray = color === "gray";
   const cardsNeeded = elements.length;
-  const availableVagons = playersDerivativeSelectors.getActivePlayerAvailableVagons(state);
+  const availableVagons = playersDerivativeSelectors.getActivePlayerAvailableVagons(
+    state
+  );
   if (availableVagons - cardsNeeded < 0) {
     return alert("Nincs elég vagon...");
   }
@@ -90,7 +92,8 @@ const build = () => async (dispatch, getState) => {
     const isNoLocoEnough = moreLocos < moreLocoNeeded;
     if (isNoLocoEnough)
       return alert(
-        `Több kell ebből a színből: ${!isGray ? color : grayType
+        `Több kell ebből a színből: ${
+          !isGray ? color : grayType
         }, nem lehet pótolni elég mozdonnyal sem...`
       );
     moreLocosCount = moreLocos;
@@ -116,13 +119,9 @@ const build = () => async (dispatch, getState) => {
     buildSuccess({
       cardsToPutBackToHand,
       selectedConnection: selectedConnection,
-    })
-  );
-  dispatch(
-    roundActions.pushLog({
-      value: `${activePlayer.name} megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
+      log: `${activePlayer.name}: megépített egy utat ${selectedConnection.fromCity} és ${selectedConnection.toCity} között`,
     })
   );
 };
 
-export default build;
+export default buildThunk;

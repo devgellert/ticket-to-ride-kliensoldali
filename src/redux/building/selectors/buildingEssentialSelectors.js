@@ -9,6 +9,7 @@ const getHover = (state) => getState(state).hover;
 const getHoverConnectionIds = (state) => getHover(state).connectionIds;
 
 const buildingEssentialSelectors = {
+  getState,
   getSelectedConnection,
   getSelectedCards,
   getHover,

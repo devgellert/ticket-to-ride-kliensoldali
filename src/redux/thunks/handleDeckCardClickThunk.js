@@ -3,7 +3,7 @@ import playersEssentialSelectors from "../players/selectors/playersEssentialSele
 import playerActions from "../players/playersActions";
 import roundActions from "../round/roundActions";
 
-const handleDeckCardClick = () => async (dispatch, getState) => {
+const handleDeckCardClickThunk = () => async (dispatch, getState) => {
   const state = getState();
 
   const activePlayer = playersEssentialSelectors.getActivePlayer(state);
@@ -20,13 +20,13 @@ const handleDeckCardClick = () => async (dispatch, getState) => {
     playersEssentialSelectors.getActivePlayerIndex(state)
   ].hand.cards.push(firstElement);
 
-  dispatch(playerActions.cardDrawFromDeckSuccess({ players, deck }));
-
   dispatch(
-    roundActions.pushLog({
-      value: `${activePlayer.name} húzott egy kártyát a pakliból`,
+    playerActions.cardDrawFromDeckSuccess({
+      players,
+      deck,
+      log: `${activePlayer.name}: ${firstElement} kártya felhúzva a pakliból.`,
     })
   );
 };
 
-export default handleDeckCardClick;
+export default handleDeckCardClickThunk;
